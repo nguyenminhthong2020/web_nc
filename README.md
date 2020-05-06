@@ -9,7 +9,6 @@ https://github.com/nguyenminhthong2020/web_nc
 dùng Vuejs
 
 ## Cách chạy : 
-npm start
 
 ## Nhóm 13
 Mã số | Họ tên | Email 
