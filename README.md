@@ -6,7 +6,7 @@
 https://github.com/nguyenminhthong2020/web_nc
 
 ## Front-end : 
-dùng Vuejs
+dùng Vuejs / Reactjs
 
 ## Cách chạy : 
 
