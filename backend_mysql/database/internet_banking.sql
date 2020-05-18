@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th5 18, 2020 lúc 05:51 AM
+-- Thời gian đã tạo: Th5 18, 2020 lúc 04:44 PM
 -- Phiên bản máy phục vụ: 10.4.11-MariaDB
 -- Phiên bản PHP: 7.4.4
 
@@ -211,24 +211,10 @@ ALTER TABLE `account`
   ADD CONSTRAINT `account_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
--- Các ràng buộc cho bảng `list_receiver`
---
-ALTER TABLE `list_receiver`
-  ADD CONSTRAINT `list_receiver_ibfk_1` FOREIGN KEY (`receiver_account_number`) REFERENCES `account` (`account_number`),
-  ADD CONSTRAINT `list_receiver_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
-
---
 -- Các ràng buộc cho bảng `otp`
 --
 ALTER TABLE `otp`
   ADD CONSTRAINT `otp_ibfk_1` FOREIGN KEY (`transaction_id`) REFERENCES `transaction_history` (`transaction_id`);
-
---
--- Các ràng buộc cho bảng `transaction_history`
---
-ALTER TABLE `transaction_history`
-  ADD CONSTRAINT `transaction_history_ibfk_1` FOREIGN KEY (`sender_account_number`) REFERENCES `account` (`account_number`),
-  ADD CONSTRAINT `transaction_history_ibfk_2` FOREIGN KEY (`receiver_account_number`) REFERENCES `account` (`account_number`);
 
 --
 -- Các ràng buộc cho bảng `user_refresh_token`
