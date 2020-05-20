@@ -10,7 +10,8 @@ module.exports = {
   },
 
   singleByUserName: userName => db.load(`select * from users where username = '${userName}'`),
-
+  singleById: id => db.load(`select username, fullname, cmnd, birthday, phone, address, email
+                             from users where id = '${id}'`),
   updateRefreshToken: async (userId, token) => {
 
     await db.del({ ID: userId }, 'userRefreshTokenExt');

@@ -9,6 +9,7 @@
     },
     "auth": {
       "secret": "secretKey",
+      "secretPartner" : "",
       "expiresIn": "10m",
       "refreshTokenSz": 80
     }
