@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -28,6 +29,7 @@
     "mysql": "^2.18.1",
     "node-rsa": "^1.0.8",
     "nodemailer": "^6.4.6",
+    "openpgp": "^4.10.4",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
