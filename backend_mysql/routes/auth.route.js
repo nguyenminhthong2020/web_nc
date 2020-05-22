@@ -14,6 +14,14 @@ const router = express.Router();
 /**
  * login
  */
+const generateAccessToken = userId => {
+  const payload = { userId };
+  const accessToken = jwt.sign(payload, config.auth.secret, {
+    expiresIn: config.auth.expiresIn
+  });
+
+  return accessToken;
+}
 
 router.post('/', async (req, res) => {
   // req.body = {
@@ -27,8 +35,13 @@ router.post('/', async (req, res) => {
       authenticated: false
     })
   }
+  // return res.json({
+  //   authenticated: true
+  // }) // code này chạy đc
 
-  const userId = ret.id;
+  // Lỗi phát sinh ở code dưới. Giải quyết: red.id sửa thành red.user_id
+  // const userId = ret.id;
+  const userId = ret.user_id;
   const accessToken = generateAccessToken(userId);
 
   const refreshToken = randToken.generate(config.auth.refreshTokenSz);
@@ -64,13 +77,6 @@ router.post('/refresh', async (req, res) => {
   })
 });
 
-const generateAccessToken = userId => {
-  const payload = { userId };
-  const accessToken = jwt.sign(payload, config.auth.secret, {
-    expiresIn: config.auth.expiresIn
-  });
 
-  return accessToken;
-}
 
 module.exports = router;

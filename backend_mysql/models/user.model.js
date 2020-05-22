@@ -2,10 +2,11 @@ const bcrypt = require('bcryptjs');
 const moment = require('moment');
 const db = require('../utils/db');
 
+// Lỗi: trong hàm singleById, sửa id => user_id
 module.exports = {
   add: entity => {
-    const hash = bcrypt.hashSync(entity.password_hash, 8);
-    entity.password_hash = hash;
+    const hash = bcrypt.hashSync(entity.password, 8);
+    entity.password = hash;
     return db.add(entity, 'users');
   },
 

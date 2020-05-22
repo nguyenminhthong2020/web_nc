@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
     ...req.body
   }
 
-  delete ret.password_hash;
+  delete ret.password;
   res.status(201).json(ret);
 })
 

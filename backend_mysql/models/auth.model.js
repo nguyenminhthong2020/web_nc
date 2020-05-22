@@ -13,7 +13,7 @@ module.exports = {
     if (rows.length === 0)
       return null;
 
-    const hashPwd = rows[0].password_hash;
+    const hashPwd = rows[0].password;
     if (bcrypt.compareSync(entity.password, hashPwd)) {
       return rows[0];
     }

@@ -1,0 +1,36 @@
+1. File trong thư mục middlewares: 
+    ** Export phương thức dùng để xác thực token **
+    + Truyền vào token lấy từ header của gói tin
+    + Verify token, kết quả nhận được là payload của gói tin
+    + Đặt req.tokenPayload = payload của gói tin (không rõ ý nghĩa của công đoạn này và tại sao lại đặt là req.tokenPayload)
+
+2. File trong thư mục models
+    2.1 auth.model.js
+    ** Cung cấp phương thức đăng nhập **
+    // <Solved>:  ~~Chưa thấy hàm generate token để gửi cho client. Cần thêm chức năng tạo token trong hàm login này~~
+    2.2 user.model.js
+    ** Cung cấp các phương thức **
+        - Thêm tài khoản người dùng
+        - Tìm tài khoản bằng tên tài khoản/ ID
+        - updateRefreshToken: nhập vào user và refreshToken, cập nhật dữ liệu refreshToken mới vào bảng userRefreshTokenExt
+        - verifyRefreshToken: nhập vào user và refreshToken, kiểm tra thông tin vừa nhập có tồn tại hay không (true/false)
+    
+3. File trong thư mục routes
+    3.1 auth.route.js
+
+
+* vấn đề password và password_hash: viết password/password_hash sai: 
++ giải quyết 1: sửa password_hash thành password trong project
++ giải quyết 2: sửa cột password thành password_hash trong sql db server
+
+* vấn đề 2: login (http://localhost:3000/api/auth) chạy đúng khi nhập sai password, khi post đúng username/password thì hàm chạy sai
+* vấn đề 3: const userId = ret.id; => const userId = ret.user_id;
+* vấn đề 4: userRefreshTokenExt ? bảng này nằm ở đâu? => updateRefreshToken và verifyRefreshToken không thể chạy
+<< Hình như ông code trước nhưng chưa tạo db table phải không? >>
+- App.js
+
+
+
+1. Chưa thấy hàm generate token để gửi cho client
+=> Công việc nên đặt ở hàm login
+2. Ý nghĩa của 2 hàm refresh token
