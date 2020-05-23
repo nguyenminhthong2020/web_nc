@@ -12,7 +12,7 @@ const router = express.Router();
 const confirm = (req) => {
   const ts = +req.get("ts"); // const ts = +req.headers['ts'];
   const partnerCode = req.get("partnerCode");
-  const sig = req.get("sign");
+  const sig = req.get("sig");
   const hashSecretKey = md5(config.auth.secretPartner);
   const comparingSign = md5(ts + req.body + hashSecretKey);
 
