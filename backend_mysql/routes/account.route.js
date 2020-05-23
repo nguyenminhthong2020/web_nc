@@ -13,8 +13,8 @@ const confirm = (req) => {
   const ts = +req.get("ts"); // const ts = +req.headers['ts'];
   const partnerCode = req.get("partnerCode");
   const sig = req.get("sign");
-
-  const comparingSign = md5(ts + req.body + config.auth.secretPartner);
+  const hashSecretKey = md5(config.auth.secretPartner);
+  const comparingSign = md5(ts + req.body + hashSecretKey);
 
   const currentTime = moment().valueOf();
   if (currentTime - ts > config.auth.expireTime) {
