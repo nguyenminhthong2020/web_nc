@@ -24,7 +24,7 @@ app.use(limiter);
 
 
 app.get('/', (req, res) => {              
-    res.json('Welcome to Internet Banking');
+    res.json('Welcome to Nodemon.');
 });
 
 // Routes 

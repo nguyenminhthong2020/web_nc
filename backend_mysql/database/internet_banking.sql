@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th5 21, 2020 lúc 01:28 AM
+-- Thời gian đã tạo: Th5 23, 2020 lúc 05:02 AM
 -- Phiên bản máy phục vụ: 10.4.11-MariaDB
 -- Phiên bản PHP: 7.4.4
 
@@ -103,7 +103,7 @@ CREATE TABLE `transaction_history` (
 CREATE TABLE `users` (
   `user_id` int(11) UNSIGNED NOT NULL,
   `username` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `password_hash` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `fullname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `cmnd` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `birthday` date NOT NULL,

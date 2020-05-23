@@ -8,7 +8,8 @@ module.exports = {
     entity.password_hash = hash;
     return db.add(entity, 'users');
   },
-
+  
+  getAllUser: () => db.load(`select * from users`),
   singleByUserName: userName => db.load(`select * from users where username = '${userName}'`),
   singleById: id => db.load(`select username, fullname, cmnd, birthday, phone, address, email
                              from users where id = '${id}'`),
