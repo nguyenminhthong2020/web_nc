@@ -2,6 +2,7 @@ const express = require("express");
 const moment = require("moment");
 const md5 = require("md5");
 const NodeRSA = require("node-rsa");
+const openpgp = require('openpgp');
 const config = require("../config/default.json");
 const process = require("../config/process.config");
 const accountModel = require("../models/account.model");
@@ -9,18 +10,18 @@ const accountModel = require("../models/account.model");
 const router = express.Router();
 
 const confirm = (req) => {
-  const ts = req.get("ts"); // const ts = req.headers['ts'];
+  const ts = +req.get("ts"); // const ts = +req.headers['ts'];
   const partnerCode = req.get("partnerCode");
   const sig = req.get("sign");
 
   const comparingSign = md5(ts + req.body + config.auth.secretPartner);
 
-  if (ts <= moment().unix() - 150) {
+  const currentTime = moment().valueOf();
+  if (currentTime - ts > config.auth.expireTime) {
     return 1;
   }
 
-  if (partnerCode != "...") {
-    //điền Code của bank - partner
+  if (partnerCode != "...") {  //điền Code của bank - partner
     return 2;
   }
 
@@ -37,7 +38,7 @@ const confirm = (req) => {
 
 
 // nộp tiền vào tài khoản
-router.post("/add-money", async function (req, res) {
+router.post("/recharge", async function (req, res) {
   const sign = req.get("sign"); // sig hay sign ?
   const keyPublic = new NodeRSA(process.partner.RSA_PUBLICKEY);
   var veri = keyPublic.verify(req, sign, "base64", "base64");
@@ -80,19 +81,67 @@ router.post("/add-money", async function (req, res) {
         res.send("Number not found");
         throw createError(401, "Number not found");
       }
-    const newMoney = +account[0].balance + +req.body.money; //cong voi tien can nap vo
+    const accBal = await accountModel.singleById(account[0].user_id); //lay so du tai khoan
+    const newMoney = +accBal[0].balance + (+req.body.money); //cong voi tien can nap vo
 
+    const entity = {
+      balance: newMoney
+    }
+    const ret = await accountModel.updateMoney(account[0].user_id, entity); //update lai so du tai khoan
     
+     // response về cho ngân hàng B :
+     
+    //  const currentTime = moment().valueOf();
+    //         const data = req.body.money + ', ' + account_num + ', ' + currentTime;
+    //         console.log(data);
+    //         const mySig = await signData(data);
+    //         res.status(203).json({
+    //             status: "success",
+    //             responseSignature: mySig
+    //         });
+
+
+
+
   }catch (err) {
     console.log("error: ", err.message);
     return res.status(500).send({ message: "Error." });
   }
 
-  
-
-  
-
-  
-
-  
 });
+
+// async function signData(data){
+//   const privateKeyArmored =  config.privatePGPArmored; // encrypted private key
+//   const passphrase = config.passpharse; // what the private key is encrypted with
+
+//   const { keys: [privateKey] } =  await openpgp.key.readArmored(privateKeyArmored);
+//   await privateKey.decrypt(passphrase);
+
+//   const {data: text} = await openpgp.sign({
+//       message: openpgp.cleartext.fromText(data), // CleartextMessage or Message object
+//       privateKeys: [privateKey]                             // for signing
+//   });
+//   return text;
+// };
+
+// async function verifyData(publicKeyArmored, sig){
+//   const realSignature = sig.split("\\n").join("\n");
+//   const realPubKeyArmored = publicKeyArmored.split("\\n").join("\n");
+//   try {
+//       const verified = await openpgp.verify({
+//           message: await openpgp.cleartext.readArmored(realSignature),  // CleartextMessage or Message object
+//           publicKeys: (await openpgp.key.readArmored(realPubKeyArmored)).keys // for verification
+//       });
+//       const { valid } = verified.signatures[0];
+      
+//       if (valid) {
+//           console.log('signed by key id ' + verified.signatures[0].keyid.toHex());
+//           return true;
+//       } else {
+//           return false;
+//       }
+//   } catch (error) {
+//       console.log(error);
+//       return false;
+//   }
+// }

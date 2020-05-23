@@ -11,6 +11,7 @@
       "secret": "secretKey",
       "secretPartner" : "",
       "expiresIn": "10m",
+      "expireTime": 600000,
       "refreshTokenSz": 80
     },
 

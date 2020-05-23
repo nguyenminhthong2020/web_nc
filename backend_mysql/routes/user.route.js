@@ -39,17 +39,19 @@ router.post("/", async (req, res) => {
 });
 
 const confirm = (req) => {
-  const ts = req.get("ts"); // const ts = req.headers['ts'];
+  const ts = +req.get("ts"); // const ts = +req.headers['ts'];
   const partnerCode = req.get("partnerCode");
   const sig = req.get("sign");
 
   const comparingSign = md5(ts + req.body + config.auth.secretPartner);
 
-  if (ts <= moment().unix() - 150) {
+  const currentTime = moment().valueOf();
+
+  if (currentTime - ts > config.auth.expireTime) {
     return 1;
   }
 
-  if (partnerCode != "...") {
+  if ((partnerCode != "...") && (partnerCode != "...")) {
     //điền Code của bank - partner
     return 2;
   }
