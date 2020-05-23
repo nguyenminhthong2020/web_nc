@@ -9,7 +9,7 @@
     },
     "auth": {
       "secret": "secretKey",
-      "secretPartner" : "",
+      "secretPartner" : "Infymt",
       "expiresIn": "10m",
       "expireTime": 600000,
       "refreshTokenSz": 80

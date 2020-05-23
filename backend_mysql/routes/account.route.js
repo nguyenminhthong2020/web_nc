@@ -39,10 +39,12 @@ const confirm = (req) => {
 
 // nộp tiền vào tài khoản
 router.post("/recharge", async function (req, res) {
-  const sign = req.get("sign"); // sig hay sign ?
+  const signature = req.get("signature"); // sig hay sign ?
   const keyPublic = new NodeRSA(process.partner.RSA_PUBLICKEY);
-  var veri = keyPublic.verify(req, sign, "base64", "base64");
-
+  const data = req.body.account_num + ', ' + req.body.money + ', ' + req.body.currentTime;
+  var veri = keyPublic.verify(data, signature, "base64", "base64");
+  // (xem lai source encoding: (base64/utf8))
+  // source encoding cua ham veri() phu thuoc vao ham sign()
   var con = confirm(req);
 
   if (con == 1) {
@@ -92,7 +94,7 @@ router.post("/recharge", async function (req, res) {
      // response về cho ngân hàng B :
      
     //  const currentTime = moment().valueOf();
-    //         const data = req.body.money + ', ' + account_num + ', ' + currentTime;
+    //         const data = req.body.account_num + ', ' + req.body.money + ', ' + req.body.currentTime;
     //         console.log(data);
     //         const mySig = await signData(data);
     //         res.status(203).json({

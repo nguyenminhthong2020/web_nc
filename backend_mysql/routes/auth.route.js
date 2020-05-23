@@ -27,12 +27,13 @@ router.post('/', async (req, res) => {
       authenticated: false
     })
   }
+  const userId = ret.user_id;
 
-  const userId = ret.id;
   const accessToken = generateAccessToken(userId);
-
   const refreshToken = randToken.generate(config.auth.refreshTokenSz);
+
   await userModel.updateRefreshToken(userId, refreshToken);
+ 
 
   res.json({
     // authenticated: true,

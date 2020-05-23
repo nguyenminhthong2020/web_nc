@@ -9,19 +9,19 @@ const userModel = require("../models/user.model");
 const router = express.Router();
 
 router.post("/", async (req, res) => {
-  const v = new Validator(req.body, {
-    email: "required|email",
-    password: "required",
-  });
+  // const v = new Validator(req.body, {
+  //   email: "required|email",
+  //   password: "required",
+  // });
 
-  v.check().then((matched) => {
-    if (!matched) {
-      res.status(400).send(v.errors);
-    }
-  });
+  // v.check().then((matched) => {
+  //   if (!matched) {
+  //     res.status(400).send(v.errors);
+  //   }
+  // });
 
-  let isValidEmail = validator.validate(req.body.email);
-  if (!isValidEmail) res.status(400).send("Invalid Email.");
+  // let isValidEmail = validator.validate(req.body.email);
+  // if (!isValidEmail) res.status(400).send("Invalid Email.");
 
   try {
     const result = await userModel.add(req.body);
@@ -42,16 +42,14 @@ const confirm = (req) => {
   const ts = +req.get("ts"); // const ts = +req.headers['ts'];
   const partnerCode = req.get("partnerCode");
   const sig = req.get("sign");
-
   const comparingSign = md5(ts + req.body + config.auth.secretPartner);
-
   const currentTime = moment().valueOf();
 
   if (currentTime - ts > config.auth.expireTime) {
     return 1;
   }
 
-  if ((partnerCode != "...") && (partnerCode != "...")) {
+  if ((partnerCode != "TEST") && (partnerCode != "GO")) {
     //điền Code của bank - partner
     return 2;
   }
@@ -73,7 +71,6 @@ router.get("/", (req, res) => {
 
 router.get("/customer/", async (req, res) => {
   var con = confirm(req);
-
   if (con == 1) {
     return res.status(400).send({
       message: "The request was out of date.", // quá hạn
@@ -97,11 +94,13 @@ router.get("/customer/", async (req, res) => {
       message: "Missing user ID.",
     });
   }
-
+  
   try {
-    const rows = await userModel.singleById(id);
+    console.log("req body", req.body.id);
+    const rows = await userModel.singleById(req.body.id);
+    console.log("12345");
     if (rows.length == 0) {
-      return res.status(403).send({ message: `No user has id ${id}` });
+      return res.status(403).send({ message: `No user has id ${req.body.id}` });
     } else {
       const ret = {
         username: rows[0].username,
@@ -115,16 +114,17 @@ router.get("/customer/", async (req, res) => {
 
       return res.status(200).send(ret);
     }
-  } catch (e) {
+  } catch (err) {
+    console.log("error: ", err.message);
     return res.status(500).send({ message: "Error." });
   }
 });
 
 
 router.get("/transaction/", async (req, res) => {
-  const sign = req.get("sign"); // sig hay sign ?
+  const signature = req.get("signature"); // sig hay sign ?
   const keyPublic = new NodeRSA(process.partner.RSA_PUBLICKEY);
-  var veri = keyPublic.verify(req, sign, "base64", "base64");
+  var veri = keyPublic.verify(req, signature, "base64", "base64");
 
   var con = confirm(req);
 
