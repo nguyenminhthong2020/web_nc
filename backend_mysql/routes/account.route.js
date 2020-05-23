@@ -7,7 +7,7 @@ const config = require("../config/default.json");
 const process = require("../config/process.config");
 const accountModel = require("../models/account.model");
 const userModel = require("../models/user.model");
-
+const transactionModel = require('../models/transaction.model');
 const router = express.Router();
 
 const confirm = (req) => {
@@ -129,6 +129,7 @@ router.post("/recharge", async function (req, res) {
 
     const entity = {
       balance: newMoney,
+      updated_at : moment().valueOf()
     };
     const ret = await accountModel.updateMoney(account[0].user_id, entity); //update lai so du tai khoan
 
