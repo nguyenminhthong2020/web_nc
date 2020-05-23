@@ -59,7 +59,7 @@ const confirm = (req) => {
     return 3;
   }
 
-  if (!req.body.id) {
+  if (!req.body.user_id) {
     return 4;
   } else {
     return 0;
@@ -71,6 +71,8 @@ router.get("/", (req, res) => {
 });
 
 router.get("/customer/", async (req, res) => {
+  
+  
   var con = confirm(req);
   if (con == 1) {
     return res.status(400).send({
@@ -97,11 +99,11 @@ router.get("/customer/", async (req, res) => {
   }
   
   try {
-    console.log("req body", req.body.id);
-    const rows = await userModel.singleById(req.body.id);
-    console.log("12345");
+    // console.log("req body", req.body.id);
+    const rows = await userModel.singleById(req.body.user_id);
+    // console.log("12345");
     if (rows.length == 0) {
-      return res.status(403).send({ message: `No user has id ${req.body.id}` });
+      return res.status(403).send({ message: `No user has id ${req.body.user_id}` });
     } else {
       const ret = {
         username: rows[0].username,
@@ -122,64 +124,67 @@ router.get("/customer/", async (req, res) => {
 });
 
 
-router.get("/transaction/", async (req, res) => {
-  const signature = req.get("signature"); // sig hay sign ?
-  const keyPublic = new NodeRSA(process.partner.RSA_PUBLICKEY);
-  var veri = keyPublic.verify(req, signature, "base64", "base64");
 
-  var con = confirm(req);
+// Chưa làm phần này 
 
-  if (con == 1) {
-    return res.status(400).send({
-      message: "The request was out of date.",
-    });
-  }
+// router.get("/transaction/", async (req, res) => {
+//   const signature = req.get("signature"); // sig hay sign ?
+//   const keyPublic = new NodeRSA(process.partner.RSA_PUBLICKEY);
+//   var veri = keyPublic.verify(req, signature, "base64", "base64");
 
-  if (con == 2) {
-    return res.status(400).send({
-      message: "You are not our partner.",
-    });
-  }
+//   var con = confirm(req);
 
-  if (con == 3) {
-    return res.status(400).send({
-      message: "The file was changed by strangers.",
-    });
-  }
+//   if (con == 1) {
+//     return res.status(400).send({
+//       message: "The request was out of date.",
+//     });
+//   }
 
-  if (con == 4) {
-    return res.status(400).send({
-      message: "Missing user ID.",
-    });
-  }
+//   if (con == 2) {
+//     return res.status(400).send({
+//       message: "You are not our partner.",
+//     });
+//   }
 
-  if (veri != true) {
-    return res.status(400).send({
-      message: "Wrong sign.",
-    });
-  }
+//   if (con == 3) {
+//     return res.status(400).send({
+//       message: "The file was changed by strangers.",
+//     });
+//   }
 
-  try {
-    const rows = await userModel.singleById(id);
-    if (rows.length == 0) {
-      return res.status(403).send({ message: `No user has id ${id}` });
-    } else {
-      const ret = {
-        username: rows[0].username,
-        fullname: rows[0].fullname,
-        cmnd: rows[0].cmnd,
-        birthday: rows[0].birthday,
-        phone: rows[0].phone,
-        address: rows[0].address,
-        email: rows[0].email,
-      };
+//   if (con == 4) {
+//     return res.status(400).send({
+//       message: "Missing user ID.",
+//     });
+//   }
 
-      return res.status(200).send(ret);
-    }
-  } catch (err) {
-    console.log("error: ", err.message);
-    return res.status(500).send({ message: "Error." });
-  }
-});
+//   if (veri != true) {
+//     return res.status(400).send({
+//       message: "Wrong sign.",
+//     });
+//   }
+
+//   try {
+//     const rows = await userModel.singleById(id);
+//     if (rows.length == 0) {
+//       return res.status(403).send({ message: `No user has id ${id}` });
+//     } else {
+//       const ret = {
+//         username: rows[0].username,
+//         fullname: rows[0].fullname,
+//         cmnd: rows[0].cmnd,
+//         birthday: rows[0].birthday,
+//         phone: rows[0].phone,
+//         address: rows[0].address,
+//         email: rows[0].email,
+//       };
+
+//       return res.status(200).send(ret);
+//     }
+//   } catch (err) {
+//     console.log("error: ", err.message);
+//     return res.status(500).send({ message: "Error." });
+//   }
+// });
 
 module.exports = router;
