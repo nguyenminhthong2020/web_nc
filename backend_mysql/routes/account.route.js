@@ -114,7 +114,7 @@ router.get("/partner", async (req, res) => {
       const ret = {
         fullname: rows[0].fullname
       };
-      //update Recharge_Partner_Code
+      //update partner_call_log
         const entityUpdateLog1 = {
           bank_code: req.get("partnerCode"),
           account_number : req.body.account_number,
@@ -217,6 +217,7 @@ router.post("/partner/recharge", async function (req, res) {
      //update Recharge_Partner_Code
     const entityUpdateLog = {
       bank_code: req.get("partnerCode"),
+      receive_account_number : req.body.account_number,
       money : moneySend,
       created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
     }
