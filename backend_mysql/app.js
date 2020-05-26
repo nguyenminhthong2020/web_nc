@@ -44,7 +44,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.get('/', (req, res) => {              
-    res.json('Welcome to TTS Banking RSA!');
+    res.json('Welcome to TTS Banking RSA!\n #Update to Tuesday, 26/05/2020');
 });
 
 // Routes 
@@ -65,6 +65,14 @@ app.use(function (err, req, res, next) {        // default error-handler
         res.status(err.status).send(err);
       }
 })
+
+const mystr =
+`-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTJstKm8Uzb5fsi2dneTG4fPsR
+WTxX4fsL7sHq9w0SilwSSS7AM4TZrK0/HhwzuXGotVPwxln9JRflZHnx8tzt1zwE
+prBAuXaTnZwD15JHrF17jS2C0mze2j9olErB7oJa+OJ6hRYIB/kB4NaOTcl1f9n1
+C0yM2o2SIGlTWWRd5QIDAQAB
+-----END PUBLIC KEY-----`;
 
 const PORT = process.env.PORT ||3000;
 app.listen(PORT,()=>{
