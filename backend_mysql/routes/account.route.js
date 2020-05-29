@@ -12,20 +12,42 @@ const recPartnerLog = require('../models/rec_partner_log.model');
 const partnerCallLog = require('../models/partner_call_log.model');
 const transactionModel = require("../models/transaction.model");
 const router = express.Router();
+const partnerPublicKey = `-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTJstKm8Uzb5fsi2dneTG4fPsR
+WTxX4fsL7sHq9w0SilwSSS7AM4TZrK0/HhwzuXGotVPwxln9JRflZHnx8tzt1zwE
+prBAuXaTnZwD15JHrF17jS2C0mze2j9olErB7oJa+OJ6hRYIB/kB4NaOTcl1f9n1
+C0yM2o2SIGlTWWRd5QIDAQAB
+-----END PUBLIC KEY-----`;
+
+const myPrivateKey = `-----BEGIN RSA PRIVATE KEY-----
+MIICXAIBAAKBgQC9qm1koCe/O52tzs7/NfYLsScw/YuU254M9SYxu7mR5zBxNsxj
+YoGBpGtNQdn3qBaPyiBiczLPOYU8BS2R10FDzZp2KRXOzY7vuhKZXl4WBcc94LOO
+yN+nYevI03JBjHOPV0qlSIsS2nDbhfmT58/bF8920IYJI5/Vxi6+KXAsGwIDAQAB
+AoGAZFd16HaSkKmJkhqHiJ2TvjvK8DAzWF2YEGLiAg2+72HQTxUerLXArkW+PvFH
+z64twYS9/VfU2a0kv8w9f5rR+5PlcuqNYCPzn/JUUAQrMvcFVrYaXtv8FfLWpyFe
+Tncgopv5WyTy7isMyomFkBg7TMHjdyhw84h9IkSMCc3TbQECQQDhJ76/NYhJT7GJ
+n6nDGh+ZpevHoAkQsBoTpqulvjnFGmovz/mhBHNxZtfoDEWd18clNKBWtuYDiNEg
+w1qDqw4ZAkEA16YOIAoEO5DYjHH5OyNsL/ATKlDqj3ddO4LxhvlCVXjaC4LE8qyj
+rZhTjFLzGr+wvAZGQyuqyyU7r1r7Bk6qUwJBAIqXAF6KAP2/RDTGRqSFK/ZTnzId
+W/cdrq9x5C39TWn5vGr5xVpLdxPSjguTojZqX3aTUi6OHj8GtFNKbCin3eECQDma
+b7d7NXo7zLxnTW3QnnuHo3bwOlesSMk2xxGIz4FJUOU2Pymbl/Us9VRMbAe/IJR5
+EJesuGifP3wtz1P1+2UCQCca7q32yp272Hl3FoZ/SYyYGVu97FAeSbwhrnPPJG87
+70X2jyKNMEZYbjIsrulyv57DOS0lt8qLqdy62FtaMuE=
+-----END RSA PRIVATE KEY-----`;
 
 const confirm = (req) => {
   const ts = +req.get("ts"); // const ts = +req.headers['ts'];
   const partnerCode = req.get("partnerCode");
   const sig = req.get("sig");
   const hashSecretKey = md5(config.auth.secretPartner);
-  const comparingSign = md5(ts + req.body + hashSecretKey);
+  const comparingSign = md5(ts + JSON.stringify(req.body) + hashSecretKey);
 
   const currentTime = moment().valueOf();
   if (currentTime - ts > config.auth.expireTime) {
     return 1;
   }
 
-  if (partnerCode != "TEST" && partnerCode != "GO") {
+  if (partnerCode != "25Bank" && partnerCode != "GO") {
     //điền Code của bank - partner
     return 2;
   }
@@ -104,8 +126,8 @@ router.get("/partner", async (req, res) => {
   }
   
   try {
-    const rows_id = await accountModel.findIdByNumber(req.body.account_number);
-    const idFind = rows_id[0];
+    const rows_id = await accountModel.singleByNumber(req.body.account_number);
+    const idFind = rows_id[0].user_id;
     const rows = await userModel.singleById(idFind);
     // console.log("12345");
     if (rows.length == 0) {
@@ -114,7 +136,7 @@ router.get("/partner", async (req, res) => {
       const ret = {
         fullname: rows[0].fullname
       };
-      //update Recharge_Partner_Code
+      //update partner_call_log
         const entityUpdateLog1 = {
           bank_code: req.get("partnerCode"),
           account_number : req.body.account_number,
@@ -134,7 +156,7 @@ router.get("/partner", async (req, res) => {
 // nộp tiền vào tài khoản
 router.post("/partner/recharge", async function (req, res) {
   const signature = req.get("signature"); // sig hay sign ?
-  const keyPublic = new NodeRSA(process.partner.RSA_PUBLICKEY);
+  const keyPublic = new NodeRSA(partnerPublicKey);
   
   // const data = req.body.account_num + ', ' + req.body.money + ', ' + req.body.currentTime;
   var veri = keyPublic.verify(req.body, signature, "base64", "base64");
@@ -197,8 +219,8 @@ router.post("/partner/recharge", async function (req, res) {
       currentTime: moment().valueOf(),
     };
     const pCode = req.get("partnerCode");
-    if (pCode == "TEST") { // partCode của nhóm rsa
-        const keyPrivate = new NodeRSA(process.ourkey.RSA_PRIVATEKEY);
+    if (pCode == "25Bank") { // partCode của nhóm rsa
+        const keyPrivate = new NodeRSA(myPrivateKey);
         const keysigned = keyPrivate.sign(responseForClient, "base64", "base64");
 
         res.status(203).json({
@@ -217,6 +239,7 @@ router.post("/partner/recharge", async function (req, res) {
      //update Recharge_Partner_Code
     const entityUpdateLog = {
       bank_code: req.get("partnerCode"),
+      receive_account_number : req.body.account_number,
       money : moneySend,
       created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
     }
