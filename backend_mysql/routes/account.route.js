@@ -87,7 +87,7 @@ router.post("/add", async function (req, res) {
 });
 
 // truy vấn thông tin tài khoản
-router.get("/partner", async (req, res) => {
+router.post("/partner", async (req, res) => {
   var con = confirm(req);
   if (con == 1) {
     return res.status(400).send({
