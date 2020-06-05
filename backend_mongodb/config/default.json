@@ -1,0 +1,15 @@
+{
+    "auth": {
+      "bankcode": "GO",
+      "secret": "secretKey",
+      "partnerRSA": "25Bank",
+      "secretPartnerRSA": "Infymt",
+      "partnerPGP": "20PGP",
+      "secretPartnerPGP": "InfymtPGP",
+      "partnerForTestRSA": "VCB",
+      "secretPartnerForTestRSA": "Vietcombank",
+      "expiresIn": "10m",
+      "expireTime": 600000,
+      "refreshTokenSz": 80
+    }
+  }
