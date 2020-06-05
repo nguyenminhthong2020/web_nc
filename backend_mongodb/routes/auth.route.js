@@ -72,6 +72,7 @@ router.post('/refresh', async (req, res) => {
   // const { userId } = jwt_decode(req.body.accessToken);
   jwt.verify(req.body.accessToken, config.auth.secret, { ignoreExpiration: true }, async function (err, payload) {
     const { userId } = payload;
+    //console.log(payload);
     const ret = await verifyRefreshToken(userId, req.body.refreshToken);
     if (ret === false) {
       throw createError(400, 'Invalid refresh token.');

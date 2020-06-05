@@ -24,7 +24,7 @@ const limiter = rateLimit({
     max: 100 // limit each IP to 100 requests per windowMs
   });
 
-
+const verify = require('./middlewares/auth.mdw');
 
 const app = express();
 
@@ -40,6 +40,7 @@ app.get('/', (req, res) => {
 });
 
  /*  Routes */
+ app.use('/auth', require('./routes/auth.route'));
 // Dành cho Admin hoặc Employee
 app.use('/account', require('./routes/account.route'));
 app.use('/user', require('./routes/user.route'));
