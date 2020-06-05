@@ -12,6 +12,13 @@ const router = express.Router();
 + Muốn add account phải khai báo id employee/admin thực hiện.*/
 
 router.post("/", async function (req, res) {
+    // user_id phía trên này là lấy ra từ Payload qua middleware Verify
+    const {user_id} = req.tokenPayload;
+    const checkUser = await User.findOne({user_id: user_id});
+    if(checkUser.role == 0){
+        res.status(400).send("Bạn không đủ thẩm quyền.");
+    }
+
     const rows = await User.findOne({user_id: req.body.user_id});
     console.log(rows);
     if(!rows){
@@ -49,6 +56,13 @@ router.post("/", async function (req, res) {
 // Employee thực hiện chức năng này. Admin cũng thực hiện được.
 // Gửi lên body : account_number, money,   
 router.post("/edit", async function (req, res) {
+    // user_id phía trên này là lấy ra từ Payload qua middleware Verify
+    const {user_id} = req.tokenPayload;
+    const checkUser = await User.findOne({user_id: user_id});
+    if(checkUser.role == 0){
+        res.status(400).send("Bạn không đủ thẩm quyền.");
+    }
+
     const rows = await Account.findOne({account_number: req.body.account_number});
 
     if(!rows){

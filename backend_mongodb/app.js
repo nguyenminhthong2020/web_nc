@@ -42,10 +42,10 @@ app.get('/', (req, res) => {
  /*  Routes */
  app.use('/auth', require('./routes/auth.route'));
 // Dành cho Admin hoặc Employee
-app.use('/account', require('./routes/account.route'));
-app.use('/user', require('./routes/user.route'));
-// Dành cho Customer
-app.use('/customer', require('./routes/userCustomer.route'));
+app.use('/account',  verify, require('./routes/account.route'));
+app.use('/user', verify, require('./routes/user.route'));
+// Dành cho Customer ??? (chưa biết à nha)
+app.use('/customer', verify, require('./routes/userCustomer.route'));
 // APIs cho Partners
 app.use('/partner', require('./routes/_partner/partner.route'));
 

@@ -8,7 +8,7 @@ module.exports = function (req, res, next) {
   if (token) {
     jwt.verify(token, config.auth.secret, function (err, payload) {
       if (err)
-        throw createError(401, err);
+        throw createError(403, err);
 
       // console.log(payload);
       req.tokenPayload = payload;

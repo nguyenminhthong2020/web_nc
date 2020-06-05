@@ -15,16 +15,16 @@ const config = require('../config/default.json');
 const router = express.Router();
 
 
-async function updateRefreshToken(userId, token){
-  await UserFreshToken.findOneAndDelete({user_id: userId});
+async function updateRefreshToken(user_id, token){
+  await UserFreshToken.findOneAndDelete({user_id: user_id});
   let ret = await UserFreshToken.create({
-      user_id: userId,  
+      user_id: user_id,  
       refresh_token: token
     });
     return ret;
 }
-async function verifyRefreshToken(userId, token){
-  const rows = await UserFreshToken.findOne({user_id: userId, refresh_token: token});
+async function verifyRefreshToken(user_id, token){
+  const rows = await UserFreshToken.findOne({user_id: user_id, refresh_token: token});
   if (!rows)
     return false;
 
@@ -44,12 +44,12 @@ router.post('/login', async (req, res) => {
       authenticated: false
     })
   }
-  const userId = ret.user_id;
+  const user_id = ret.user_id;
 
-  const accessToken = generateAccessToken(userId);
+  const accessToken = generateAccessToken(user_id);
   const refreshToken = randToken.generate(config.auth.refreshTokenSz);
 
-  await updateRefreshToken(userId, refreshToken);
+  await updateRefreshToken(user_id, refreshToken);
  
 
   res.json({
@@ -69,22 +69,22 @@ router.post('/refresh', async (req, res) => {
   //   refreshToken
   // }
 
-  // const { userId } = jwt_decode(req.body.accessToken);
+  // const { user_id } = jwt_decode(req.body.accessToken);
   jwt.verify(req.body.accessToken, config.auth.secret, { ignoreExpiration: true }, async function (err, payload) {
-    const { userId } = payload;
+    const { user_id } = payload;
     //console.log(payload);
-    const ret = await verifyRefreshToken(userId, req.body.refreshToken);
+    const ret = await verifyRefreshToken(user_id, req.body.refreshToken);
     if (ret === false) {
       throw createError(400, 'Invalid refresh token.');
     }
 
-    const accessToken = generateAccessToken(userId);
+    const accessToken = generateAccessToken(user_id);
     res.json({ accessToken });
   })
 });
 
-const generateAccessToken = userId => {
-  const payload = { userId };
+const generateAccessToken = user_id => {
+  const payload = { user_id };
   const accessToken = jwt.sign(payload, config.auth.secret, {
     expiresIn: config.auth.expiresIn
   });

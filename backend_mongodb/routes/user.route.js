@@ -7,10 +7,19 @@ const express = require("express");
 
 const router = express.Router();
 
+
 //API create user use bank
 //Có thể bằng hàm register cho user không ?
 //Mà thôi, khi user đăng ký thì họ phải tới chỗ ngân hàng cho nhân viên tạo tài khoản
+
 router.post("/", async function (req, res) {
+    // user_id phía trên này là lấy ra từ Payload qua middleware Verify
+    const {user_id} = req.tokenPayload;
+    const checkUser = await User.findOne({user_id: user_id});
+    if(checkUser.role == 0){
+        res.status(400).send("Bạn không đủ thẩm quyền.");
+    }
+    
     try{
         const x = +req.body.role || 0;
         const passHash = await bcrypt.hash(req.body.password, 8);
