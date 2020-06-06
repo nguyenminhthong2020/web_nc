@@ -38,13 +38,13 @@ export default class Login extends Component {
     //login magic!
     if(username=='admin'&&password=='admin') {
       // Login Successfull
-      alert('Success!');
+      alert('Login Successfully! You will be redirected to the dashboard.');
       fakeAuth.authenticate();
       // Redirect to Dashboard
       this.props.history.push('/')
     }
     else{
-      alert('Fail!');
+      alert('Wrong login information!');
     }
   }
   render() {

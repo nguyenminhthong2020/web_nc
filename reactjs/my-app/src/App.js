@@ -16,5 +16,16 @@ function App2() {
       </div>
   );
 }
+function Dashboard() {
+  return (
+    <div style={{textAlign: 'center'}}>
+      <b>-------------</b>
+      <div></div>
+      <b>Dashboard</b>
+      <div></div>
+      <b>----------------------</b>
+    </div>    
+  );
+}
 
-export default {App1,App2};
+export default {App1,App2,Dashboard};

@@ -30,9 +30,13 @@ class Logout extends React.Component {
     fakeAuth.signout();
     // Render
     return(
-      <div>
-        Logout      
-    </div>
+      <div style={{textAlign: 'center', height: 600, background: 'green'}}>
+      <b>-------------</b>
+      <div></div>
+      <b>You singed out!</b>
+      <div></div>
+      <b>----------------------</b>
+    </div> 
     )
   }
 }
@@ -41,7 +45,6 @@ class Logout extends React.Component {
 ReactDOM.render(
   <React.Fragment>
     <Router>
-
     {/* Xác định các trang có thể thêm Navbar */}
     <Switch>
       <PrivateRoute exact path = "/" component = {Navbar} />
@@ -49,18 +52,23 @@ ReactDOM.render(
 
     {/* Phần body */}
     <Switch>
-      <PrivateRoute exact path = "/" component = {App.App2} />
+      <PrivateRoute exact path = "/" component = {App.Dashboard} />
       <PrivateRoute path = "/full" component = {Full} />
       <Route path = "/login" component = {Login} />
       <Route path = "/logout" component = {Logout} />
-
     </Switch>
 
-    {/* Phần footer */}
-    <Link to="/login">Go to Login</Link>
-    <Link to="/">Go Home</Link>
-    <div></div>
+    {/* Phần các đường dẫn đến các trang */}
+    <div style={{textAlign: 'center'}}>
+      <Link to="/">Go Home</Link>
+      <div></div>
+      <Link to="/login">Login</Link>
+      <div></div>    
+      <Link to="/logout">Sign out</Link>
+      <div></div>
+    </div>
 
+    {/* Phần footer */}
     <Footer/>
     </Router>    
   </React.Fragment>,

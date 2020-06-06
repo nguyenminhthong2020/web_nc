@@ -20,7 +20,7 @@ export default class Nav extends Component {
             <div className="col-md-8 order-md-last">
               <div className="row">
                 <div className="col-md-6 text-center">
-                  <a className="navbar-brand" href="/"><small>Ngân hàng trực tuyến nW</small>TTS <span>iB@nking</span> </a>
+                  <a className="navbar-brand" href="/"style={{fontSize: '45px'}}><small>Ngân hàng trực tuyến nW</small>TTS <span>iB@nking</span> </a>
                 </div>
                 <div className="col-md-6 d-md-flex justify-content-end mb-md-0 mb-3">
                   <form action="#" className="searchform order-lg-last">
@@ -51,12 +51,12 @@ export default class Nav extends Component {
             <div className="collapse navbar-collapse" id="ftco-nav">
               <ul className="navbar-nav m-auto">
                 <li className="nav-item active"><a href="/" className="nav-link"><span style={{fontSize: '22px'}} className="fa fa-home home-size"></span></a></li>
-                <li className="nav-item"><a href="about.html" className="nav-link">Thông tin tài khoản/ Thẻ</a></li>
-                <li className="nav-item"><a href="coming-soon.html" className="nav-link">Chuyển tiền</a></li>
-                <li className="nav-item"><a href="top-seller.html" className="nav-link">Thanh toán</a></li>
-                <li className="nav-item"><a href="book.html" className="nav-link">Tiết kiệm</a></li>
-                <li className="nav-item"><a href="author.html" className="nav-link">Tiện ích</a></li>
-                <li className="nav-item"><a href="blog.html" className="nav-link">Hỗ trợ</a></li>
+                <li className="nav-item"><a href="" className="nav-link">Thông tin tài khoản/ Thẻ</a></li>
+                <li className="nav-item"><a href="" className="nav-link">Chuyển tiền</a></li>
+                <li className="nav-item"><a href="" className="nav-link">Thanh toán</a></li>
+                <li className="nav-item"><a href="" className="nav-link">Tiết kiệm</a></li>
+                <li className="nav-item"><a href="" className="nav-link">Tiện ích</a></li>
+                <li className="nav-item"><a href="" className="nav-link">Hỗ trợ</a></li>
               </ul>
             </div>
           </div>
