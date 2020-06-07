@@ -1,15 +1,21 @@
+import './index.css';
+// Imprort lib & Fr
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-// import component
+import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
+import * as serviceWorker from './serviceWorker';
+
+// Import component (Now dont use)
 import App from './App';
 import Navbar from './navbar/index';
 import Footer from './footer/index';
 import Full from './full/index';
 import Login from './login/index';
-// import auth from './auth';
-import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
-import * as serviceWorker from './serviceWorker';
+
+// Import component with role
+import Admin from './admin/index';
+import Employee from './employee/index';
+import Customer from './customer/index';
 
 // Authention
 import fakeAuth from './auth';
@@ -41,37 +47,49 @@ class Logout extends React.Component {
   }
 }
 
+// Render by Role
+class Main extends React.Component {
+  render() {
+    let role = localStorage.getItem('role');
+    // Admin
+    switch(role) {
+      case 'admin':
+        {
+          return <Admin/>
+        }
+        break;
+      case 'employee':
+        {
+          return <Employee/>
+        }
+        break;
+      case 'customer':
+        {
+          return <Customer/>
+        }
+        break;
+      default:
+        {
+          // Only before login
+          return(
+            <React.Fragment>
+              <Router>
+              {/* Chuyển đến trang login */}
+              <Switch>
+                <Route exact path = "/login" component = {Login}/>
+              </Switch>
+              <Redirect to='/login' />
+              </Router>    
+          </React.Fragment>
+          )
+        }
+    }  
+  }
+}
+
 // Render
-ReactDOM.render(
-  <React.Fragment>
-    <Router>
-    {/* Xác định các trang có thể thêm Navbar */}
-    <Switch>
-      <PrivateRoute exact path = "/" component = {Navbar} />
-    </Switch>
-
-    {/* Phần body */}
-    <Switch>
-      <PrivateRoute exact path = "/" component = {App.Dashboard} />
-      <PrivateRoute path = "/full" component = {Full} />
-      <Route path = "/login" component = {Login} />
-      <Route path = "/logout" component = {Logout} />
-    </Switch>
-
-    {/* Phần các đường dẫn đến các trang */}
-    <div style={{textAlign: 'center'}}>
-      <Link to="/">Go Home</Link>
-      <div></div>
-      <Link to="/login">Login</Link>
-      <div></div>    
-      <Link to="/logout">Sign out</Link>
-      <div></div>
-    </div>
-
-    {/* Phần footer */}
-    <Footer/>
-    </Router>    
-  </React.Fragment>,
+ReactDOM.render(  
+  <Main/>,
   document.getElementById('root')
 );
 
