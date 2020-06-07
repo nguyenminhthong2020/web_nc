@@ -63,7 +63,7 @@ export default class Login extends Component {
             <div className="wrap-login100 p-l-85 p-r-85 p-t-55 p-b-55">
               <form onSubmit = {this.submitForm} className="login100-form validate-form flex-sb flex-w">
                 <span className="login100-form-title p-b-32">
-                  ĐĂNG NHẬP NW
+                  ĐĂNG NHẬP - DF
                 </span>
                 <span className="txt1 p-b-11">
                   Tên đăng nhập
