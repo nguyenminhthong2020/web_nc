@@ -42,7 +42,8 @@ export default class Login extends Component {
       fakeAuth.authenticate(username);
       alert(localStorage.getItem('role'));
       // Redirect to Dashboard
-      this.props.history.push('/')
+      window.location.href = '/';
+      // this.props.history.push('/')
     }
     else{
       alert('Wrong login information!');
@@ -50,6 +51,14 @@ export default class Login extends Component {
   }
   render() {
     // fakeAuth.signout();
+    if(localStorage.getItem('reload') == 'true')
+    {
+      //
+    }
+    else {
+      // window.location.reload();
+      localStorage.setItem('reload','true');
+    }
     return(
       <div>
       <title>Login V14</title>

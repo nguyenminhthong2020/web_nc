@@ -6,7 +6,8 @@ import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-ro
 import Navbar from './navbar/index';
 import Footer from './footer/index';
 import Full from './full/index';
-import Login from './login/index';
+import Login from './../login/index';
+import newLogout from './../logout/index';
 import Home from './home/index';
 import fakeAuth from './../auth';
 
@@ -50,16 +51,16 @@ export default class Admin extends React.Component {
       <PrivateRoute exact path = "/" component = {Home} />
       <PrivateRoute path = "/full" component = {Full} />
       <Route path = "/login" component = {Login} />
-      <Route path = "/logout" component = {Logout} />
+      <Route path = "/logout" component = {newLogout} />
     </Switch>
 
     {/* Phần các đường dẫn đến các trang */}
     <div style={{textAlign: 'center'}}>
-      <Link to="/">Go Home</Link>
+      <Link to="/">Go Home A</Link>
       <div></div>
-      <Link to="/login">Login</Link>
+      <Link to="/login">Login A</Link>
       <div></div>    
-      <Link to="/logout">Sign out</Link>
+      <Link to="/logout">Sign out A</Link>
       <div></div>
     </div>
 
