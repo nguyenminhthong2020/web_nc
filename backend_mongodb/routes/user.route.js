@@ -14,11 +14,11 @@ const router = express.Router();
 
 router.post("/", async function (req, res) {
     // user_id phía trên này là lấy ra từ Payload qua middleware Verify
-    const {user_id} = req.tokenPayload;
-    const checkUser = await User.findOne({user_id: user_id});
-    if(checkUser.role == 0){
-        res.status(400).send("Bạn không đủ thẩm quyền.");
-    }
+    // const {user_id} = req.tokenPayload;
+    // const checkUser = await User.findOne({user_id: user_id});
+    // if(checkUser.role == 0){
+    //     res.status(400).send("Bạn không đủ thẩm quyền.");
+    // }
     
     try{
         const x = +req.body.role || 0;

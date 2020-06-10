@@ -10,6 +10,8 @@ const SavingsAccountSchema = new Schema(
     saving_account_number: String,   // 15620 + saving_id + user_id
     user_id: Number,
     balance: Number,
+    status: Number,       // 1: đang hoạt động, 0 : bị chặn hoặc hủy
+    employee_id: Number,
     created_at: String,
     updated_at: String
   }

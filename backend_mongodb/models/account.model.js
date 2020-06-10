@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // Quy ước: mỗi account_number có dạng 5620 + user_id
-// Sở dĩ chọn 5620 vì code này tạo ra từ ngày 5/6/2020
 // Mỗi account_number đều có một list các receiver_account_number (danh sách người nhận)
 // mỗi receiver_account_number đều có số tài khoản và tên gợi nhớ
 const AccountSchema = new Schema(

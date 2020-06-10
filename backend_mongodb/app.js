@@ -3,6 +3,9 @@
 /*
    Đã tạo ra sẵn 3 username(admin) là thong, sy, tuan trong CSDL.
    password đều là 123
+
+   MONGODB_URL=mongodb+srv://secondwebnc2020:infymt6620@cluster0-me6ey.gcp.mongodb.net/internet_banking?retryWrites=true&w=majority
+
 */
 
 
@@ -43,7 +46,7 @@ app.get('/', (req, res) => {
  app.use('/auth', require('./routes/auth.route'));
 // Dành cho Admin hoặc Employee
 app.use('/account',  verify, require('./routes/account.route'));
-app.use('/user', verify, require('./routes/user.route'));
+app.use('/user', require('./routes/user.route'));
 // Dành cho Customer ??? (chưa biết à nha)
 app.use('/customer', verify, require('./routes/userCustomer.route'));
 // APIs cho Partners
