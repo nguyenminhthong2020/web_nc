@@ -25,7 +25,7 @@ function Full() {
                 <form action="#" className="searchform order-lg-last">
                   <div className="form-group d-flex">
                     <input type="text" className="form-control pl-3" placeholder="Tìm kiếm" />
-                    <button type="submit" placeholder className="form-control search"><span className="fa fa-search" /></button>
+                    <button type="submit"className="form-control search"><span className="fa fa-search" /></button>
                   </div>
                 </form>
               </div>

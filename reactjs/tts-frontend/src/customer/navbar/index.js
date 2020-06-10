@@ -9,7 +9,7 @@ export default class Nav extends Component {
   render() {
     return (
       <div>
-        <title>TTS - Banking</title>
+        <title>TTS - iBanking</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
@@ -26,7 +26,7 @@ export default class Nav extends Component {
                   <form action="#" className="searchform order-lg-last">
                     <div className="form-group d-flex">
                       <input type="text" className="form-control pl-3" placeholder="Tìm kiếm" />
-                      <button type="submit" placeholder className="form-control search"><span className="fa fa-search" /></button>
+                      <button type="submit"className="form-control search"><span className="fa fa-search" /></button>
                     </div>
                   </form>
                 </div>
@@ -51,7 +51,7 @@ export default class Nav extends Component {
             <div className="collapse navbar-collapse" id="ftco-nav">
               <ul className="navbar-nav m-auto">
                 <li className="nav-item active"><a href="/" className="nav-link"><span style={{fontSize: '22px'}} className="fa fa-home home-size"></span></a></li>
-                <li className="nav-item"><a href="" className="nav-link">Thông tin tài khoản/ Thẻ</a></li>
+                <li className="nav-item"><a href="/account_info" className="nav-link">Thông tin tài khoản/ Thẻ</a></li>
                 <li className="nav-item"><a href="" className="nav-link">Chuyển tiền</a></li>
                 <li className="nav-item"><a href="" className="nav-link">Thanh toán</a></li>
                 <li className="nav-item"><a href="" className="nav-link">Tiết kiệm</a></li>

@@ -58,8 +58,8 @@ export default class Login extends Component {
         <link rel="icon" type="image/png" href="images/icons/favicon.ico" />        
         {/*===============================================================================================*/}
         <div className="limiter">
-          <div className="container-login100">
-            <div className="wrap-login100 p-l-85 p-r-85 p-t-55 p-b-55">
+          <div className="container-page">
+            <div className="wrap-body p-l-85 p-r-85 p-t-55 p-b-55">
               <form onSubmit = {this.submitForm} className="login100-form validate-form flex-sb flex-w">
                 <span className="login100-form-title p-b-32">
                   ĐĂNG NHẬP
@@ -94,7 +94,7 @@ export default class Login extends Component {
                     </a>
                   </div>
                 </div>
-                <div className="container-login100-form-btn">
+                <div className="container-page-form-btn">
                   <button className="login100-form-btn">
                     Đăng nhập
                   </button>
