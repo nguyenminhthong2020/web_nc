@@ -179,7 +179,7 @@ iframe {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 15px;  
+  padding: 35px;  
   background-color: #ebebeb;
 }
 
@@ -202,6 +202,11 @@ iframe {
   width: 60%;
   background: #fff;
   border-radius: 10px;
+  position: relative;
+}
+
+.wrap-body-right {
+  width: 10%;
   position: relative;
 }
 

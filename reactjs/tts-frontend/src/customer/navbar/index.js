@@ -52,7 +52,7 @@ export default class Nav extends Component {
               <ul className="navbar-nav m-auto">
                 <li className="nav-item active"><a href="/" className="nav-link"><span style={{fontSize: '22px'}} className="fa fa-home home-size"></span></a></li>
                 <li className="nav-item"><a href="/account_info" className="nav-link">Thông tin tài khoản/ Thẻ</a></li>
-                <li className="nav-item"><a href="" className="nav-link">Chuyển tiền</a></li>
+                <li className="nav-item"><a href="/transfer" className="nav-link">Chuyển tiền</a></li>
                 <li className="nav-item"><a href="" className="nav-link">Thanh toán</a></li>
                 <li className="nav-item"><a href="" className="nav-link">Tiết kiệm</a></li>
                 <li className="nav-item"><a href="" className="nav-link">Tiện ích</a></li>
