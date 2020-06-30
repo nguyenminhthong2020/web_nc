@@ -9,7 +9,7 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema(
   {
     user_id: Number,
-    username: {type: String, required: true},
+    username: {type: String, required: true, unique: true},
     password: {type: String, required: true},
     fullname: {type: String, required: true},
     birthday: {type: String, required: true},

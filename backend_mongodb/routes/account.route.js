@@ -5,6 +5,7 @@ const Account = require("../models/account.model");
 
 const router = express.Router();
 
+
 router.get("/", async function (req, res) {
   const { user_id } = req.tokenPayload;
   //const checkUser = await User.findOne({user_id: user_id});
@@ -27,44 +28,45 @@ router.get("/", async function (req, res) {
 + Chỉ có nhân viên ngân hàng (admin, employee) mới có thể thêm mới 1 account
 + Trong request.body gửi lên là user_id và balance và id của employee / admin thực hiện việc này
 + Muốn add account phải khai báo id employee/admin thực hiện.*/
-router.post("/", async function (req, res) {
-  // user_id phía trên này là lấy ra từ Payload qua middleware Verify
-  const { user_id } = req.tokenPayload;
-  const checkUser = await User.findOne({ user_id: user_id });
-  if (checkUser.role == 0) {
-    res.status(400).send("Bạn không đủ thẩm quyền.");
-  }
 
-  const rows = await User.findOne({ user_id: req.body.user_id });
-  console.log(rows);
-  if (!rows) {
-    return res
-      .status(403)
-      .send({ message: `Không tìm ra user có id ${req.body.user_id}` });
-  }
+// router.post("/", async function (req, res) {
+//   // user_id phía trên này là lấy ra từ Payload qua middleware Verify
+//   const { user_id } = req.tokenPayload;
+//   const checkUser = await User.findOne({ user_id: user_id });
+//   if (checkUser.role == 0) {
+//     res.status(400).send("Bạn không đủ thẩm quyền.");
+//   }
 
-  // Quy ước: mỗi account_number có dạng 5620 + user_id
-  var _balance = +req.body.balance || 0;
-  let newAccount = await Account.create({
-    account_number: "5620" + req.body.user_id,
-    user_id: req.body.user_id,
-    balance: _balance,
-    status: 1,
-    employee_id: req.body.employee_id,
-    created_at: moment().format("YYYY-MM-DD HH:mm:ss").toString(),
-  });
+//   const rows = await User.findOne({ user_id: req.body.user_id });
+//   console.log(rows);
+//   if (!rows) {
+//     return res
+//       .status(403)
+//       .send({ message: `Không tìm ra user có id ${req.body.user_id}` });
+//   }
 
-  if (newAccount) {
-    return res.status(201).send({
-      message: "Thành công.",
-      newAccount,
-    });
-  } else {
-    return res.status(400).json({
-      message: "Tạo tài khoản thất bại.",
-    });
-  }
-});
+//   // Quy ước: mỗi account_number có dạng 12020 + user_id
+//   var _balance = +req.body.balance || 0;
+//   let newAccount = await Account.create({
+//     account_number: "12020" + req.body.user_id,
+//     user_id: req.body.user_id,
+//     balance: _balance,
+//     status: 1,
+//     employee_id: req.body.employee_id,
+//     created_at: moment().format("YYYY-MM-DD HH:mm:ss").toString(),
+//   });
+
+//   if (newAccount) {
+//     return res.status(201).send({
+//       message: "Thành công.",
+//       newAccount,
+//     });
+//   } else {
+//     return res.status(400).json({
+//       message: "Tạo tài khoản thất bại.",
+//     });
+//   }
+// });
 
 // Chỉ edit được số tiền trong tài khoản (nạp thêm)
 // Employee thực hiện chức năng này. Admin cũng thực hiện được.

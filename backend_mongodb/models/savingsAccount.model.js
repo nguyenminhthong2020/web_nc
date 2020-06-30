@@ -3,7 +3,7 @@ const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const Schema = mongoose.Schema;
 
-// Quy ước: mỗi tài khoản có dạng 15620 + saving_id + user_id 
+// Quy ước: mỗi tài khoản có dạng 22020 + saving_id + user_id 
 const SavingsAccountSchema = new Schema(
   {
     saving_id: Number,

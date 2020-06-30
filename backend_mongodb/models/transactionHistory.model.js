@@ -15,7 +15,7 @@ const TransactionSchema = new Schema(
     money: Number,
     transaction_fee: Number, 
     type_fee: String,    //*Chú ý là String. 1: người gửi trả, 0: người nhận trả. Thực ra phí là 0
-    message: String,     // Ví dụ: "gửi trả nợ cho ông A"
+    message: String,     // Nội dung cần chuyển, Ví dụ: "gửi trả nợ cho ông A"
     created_at: String
   }
 );
