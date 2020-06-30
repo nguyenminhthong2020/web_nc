@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import DB from './../database/index';
 import {  } from 'reactstrap';
 import {
     Button,
@@ -33,15 +34,30 @@ export default class TransferForm extends React.Component {
       password: '',
       isOpen: true,
       activeTab: 0,
+      selectAccount: DB.listAccounts()[0].balance,
       LoggedIn,
     }
     this.onChange = this.onChange.bind(this);
+    this.selectChange = this.selectChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
   } 
 
   onChange(e) {
     this.setState({
       [e.target.name]: e.target.value
+    })
+  } 
+
+  selectChange(e) {
+    const accountSelected = e.target.value;
+    let balanceOfAccount = '';
+    DB.listAccounts().forEach(element => {
+      if(`${element.number} - ${element.type}` == accountSelected) {
+        balanceOfAccount = element.balance;
+      }
+    });
+    this.setState({
+      [e.target.name] : balanceOfAccount
     })
   }
 
@@ -54,66 +70,30 @@ export default class TransferForm extends React.Component {
   }
   render() {
       // Tài khoản nguồn
-      const listAcc = [
-        {
-          number: "660255001",
-          balance: "1,500,500",
-          type: "Tài khoản thanh toán"
-        },
-        {
-          number: "660255002",
-          balance: "700,000",
-          type: "Tài khoản tiết kiệm"
-        },
-        {
-          number: "660255003",
-          balance: "2,500,000",
-          type: "Tài khoản tiết kiệm"
-        }
-      ]
-    
-      const listAccounts = listAcc    
+      const listAccounts = DB.listAccounts()  
         .map((item, index) => {
           return (
           <option>{item.number} - {item.type}</option>
           );
         });
-      // Người nhận
-      const listRec = [
-          {
-            number: "660255001",
-            name: "Nguyễn Minh Thông",
-            bankCode: "VCB"
-          },
-          {
-            number: "660255002",
-            name: "Phan Văn Anh Tuấn",
-            bankCode: "ACB"
-          },
-          {
-            number: "660255003",
-            name: "Phạm Đình Sỹ",
-            bankCode: "TTS"
-          }
-        ]
-      
-        const listReceivers = listRec    
+        
+      // Người nhận      
+        const listReceivers = DB.listReceivers()    
           .map((item, index) => {
             return (
               <option>{item.name} - {item.number}</option>
             );
           });
       // Thanh toán phí
-      const listType = [
-          {
-              type: "Người chuyển trả"
-          },
-          {
-              type: "Người nhận trả"
+        const listType = [
+            {
+                type: "Người chuyển trả"
+            },
+            {
+                type: "Người nhận trả"
 
-          }
-        ]
-      
+            }
+          ]      
         const listTypes = listType    
           .map((item, index) => {
             return (
@@ -135,10 +115,10 @@ export default class TransferForm extends React.Component {
                     <Card>
                         <CardBody>
                             <Label for="exampleSelect"><b style = {{color: 'green'}}>TÀI KHOẢN NGUỒN</b></Label>
-                            <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
+                            <Input onChange = {this.selectChange} type="select" name="selectAccount" id="exampleSelect" style = {{marginBottom: '5px'}}>
                             {listAccounts}
                             </Input>
-                            <Label for="exampleSelect">* Số dư khả dụng: 550,000</Label>
+                            <Label for="exampleSelect">* Số dư khả dụng: {this.state.selectAccount}</Label>
                         </CardBody>
                     </Card>
                 </FormGroup>                
