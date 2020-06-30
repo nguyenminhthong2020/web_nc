@@ -8,6 +8,10 @@ import NotFound from './notfound/index';
 import Login from './../login/index';
 import Logout from './../logout/index';
 import Home from './home/index';
+import AccountInfo from './account_info/index';
+import ReceiverInfo from './receiver_info/index';
+import Transfer from './transfer/index';
+
 import fakeAuth from './../auth';
 
 // Kiểm tra quyền đăng nhập
@@ -29,6 +33,10 @@ export default class Admin extends React.Component {
     <Switch>
       <PrivateRoute exact path = "/" component = {Navbar} />
       <PrivateRoute path = "/error-404" component = {Navbar} />
+      <PrivateRoute path = "/account_info" component = {Navbar} />
+      <PrivateRoute path = "/receiver_info" component = {Navbar} />
+      <PrivateRoute path = "/transfer" component = {Navbar} />      
+
       <Route path = "/login"/>
       <Redirect to="/error-404" />
     </Switch>
@@ -37,6 +45,9 @@ export default class Admin extends React.Component {
     <Switch>
     <PrivateRoute exact path = "/" component = {Home} />
       <PrivateRoute path = "/error-404" component = {NotFound} />
+      <PrivateRoute path = "/account_info" component = {AccountInfo} />
+      <PrivateRoute path = "/receiver_info" component = {ReceiverInfo} />
+      <PrivateRoute path = "/transfer" component = {Transfer} />  
       <Route path = "/login" component = {Login} />
       <Route path = "/logout" component = {Logout} />
       <Redirect to="/error-404" />

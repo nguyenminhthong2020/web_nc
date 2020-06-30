@@ -169,7 +169,7 @@ iframe {
   margin: 0 auto;
 }
 
-.container-login100 {
+.container-page {
   width: 100%;  
   min-height: 100vh;
   display: -webkit-box;
@@ -186,7 +186,7 @@ iframe {
 }
 
 
-.wrap-login100 {
+.wrap-body {
   width: 560px;
   background: #fff;
   border-radius: 10px;
@@ -376,7 +376,7 @@ iframe {
 
 /*------------------------------------------------------------------
 [ Button ]*/
-.container-login100-form-btn {
+.container-page-form-btn {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -492,7 +492,7 @@ iframe {
 [ Responsive ]*/
 
 @media (max-width: 576px) {
-  .wrap-login100 {
+  .wrap-body {
     padding-left: 15px;
     padding-right: 15px;
   }
