@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {  } from 'reactstrap';
 import {
     Button,
@@ -19,7 +19,6 @@ import {
     InputGroupAddon,
     InputGroupText,
     InputGroup,
-    Collapse
   } from "reactstrap";
 
 export default class TransferForm extends React.Component {
@@ -29,12 +28,11 @@ export default class TransferForm extends React.Component {
     this.state = {
       username: '',
       password: '',
-      isOpen: true,
-      LoggedIn,
+      LoggedIn
     }
     this.onChange = this.onChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
-  } 
+  }
 
   onChange(e) {
     this.setState({
@@ -46,7 +44,7 @@ export default class TransferForm extends React.Component {
     e.preventDefault()
     const {username, password} = this.state
     //login magic!
-    this.setState({isOpen: !this.state.isOpen});
+    alert('Wrong login information!');
   }
   render() {
       // Tài khoản nguồn
@@ -117,15 +115,14 @@ export default class TransferForm extends React.Component {
             );
           });
       return (
-      <div>          
-          <Collapse isOpen = {this.state.isOpen}>
-            <Card>
-                <CardHeader  style={{backgroundColor: 'coral', textAlign: 'center'}}>
-                    <strong>Chuyển tiền</strong>
-                </CardHeader>
-                </Card>          
-            <br/>
-            <Form onSubmit = {this.submitForm} >
+      <div>
+          <Card>
+              <CardHeader  style={{backgroundColor: 'coral', textAlign: 'center'}}>
+                  <strong>Chuyển tiền</strong>
+              </CardHeader>
+              </Card>          
+          <br/>      
+          <Form onSubmit = {this.submitForm}>
               <FormGroup>
                   <Card>
                       <CardBody>
@@ -149,8 +146,7 @@ export default class TransferForm extends React.Component {
                                   <InputGroupText>Số tài khoản</InputGroupText>
                               </InputGroupAddon>
                               <Input value = "660255001"/>
-                          </InputGroup>
-                          <Label for="exampleSelect">* Chủ tài khoản: Nguyễn Minh Thông</Label>
+                          </InputGroup>                            
                       </CardBody>
                   </Card>                  
               </FormGroup>
@@ -188,77 +184,6 @@ export default class TransferForm extends React.Component {
               {/* {Chuyển tiền}*/}
               <Button>XÁC NHẬN</Button>
           </Form>
-          </Collapse>          
-          <Collapse isOpen = {!this.state.isOpen}>
-            <Card>
-                <CardHeader  style={{backgroundColor: 'coral', textAlign: 'center'}}>
-                    <strong>Xác nhận thanh toán</strong>
-                </CardHeader>
-                </Card>          
-            <br/>
-            <Form onSubmit = {this.submitForm} >
-              <FormGroup>
-                  <Card>
-                      <CardBody>
-                          <Label for="exampleSelect"><b style = {{color: 'green'}}>NEW TÀI KHOẢN NGUỒN</b></Label>
-                          <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
-                          {listAccounts}
-                          </Input>
-                          <Label for="exampleSelect">* Số dư khả dụng: 500,000</Label>
-                      </CardBody>
-                  </Card>                    
-              </FormGroup>                
-              <FormGroup>
-                  <Card>
-                      <CardBody>
-                          <Label for="exampleSelect"><b style = {{color: 'green'}}>THÔNG TIN NGƯỜI NHẬN</b></Label>
-                          <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
-                          {listReceivers}
-                          </Input>
-                          <InputGroup>
-                              <InputGroupAddon addonType="prepend">
-                                  <InputGroupText>Số tài khoản</InputGroupText>
-                              </InputGroupAddon>
-                              <Input value = "660255001"/>
-                          </InputGroup>
-                      </CardBody>
-                  </Card>                  
-              </FormGroup>
-              
-              <FormGroup>
-                  <Card>
-                      <CardBody>
-                          <Label for="exampleSelect"><b style = {{color: 'green'}}>THÔNG TIN CHUYỂN TIỀN</b></Label>
-                          <InputGroup style = {{marginBottom: '5px'}}>
-                              <InputGroupAddon addonType="prepend">
-                                  <InputGroupText>Số tiền chuyển</InputGroupText>
-                              </InputGroupAddon>
-                              <Input />
-                          </InputGroup> 
-                          <InputGroup>
-                              <InputGroupAddon addonType="prepend">
-                                  <InputGroupText>Nội dung chuyển</InputGroupText>
-                              </InputGroupAddon>
-                              <Input />
-                          </InputGroup>                            
-                      </CardBody>
-                  </Card>                  
-              </FormGroup>
-              <FormGroup>
-                  <Card>
-                      <CardBody>
-                          <Label for="exampleSelect"><b style = {{color: 'green'}}>HÌNH THỨC THANH TOÁN PHÍ</b></Label>
-                          <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
-                          {listTypes}
-                          </Input>
-                          <Label for="exampleSelect">* Phí thanh toán: 3,300</Label>
-                      </CardBody>
-                  </Card>                    
-              </FormGroup>    
-              {/* {Chuyển tiền}*/}
-              <Button>XÁC NHẬN</Button>
-          </Form>
-          </Collapse>
       </div>      
       );
     }
