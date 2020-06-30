@@ -52,10 +52,10 @@ const listShortcut = () => {
         </CardHeader>
         <CardBody>
             <ListGroup style={{fontSize: '14px'}}>
-              <ListGroupItem><Badge pill>{'>'} </Badge> Danh sách tài khoản</ListGroupItem>
+              <ListGroupItem><Badge pill>{'>'} </Badge> <a href="/account_info" style={{color:'#6c757d'}}>Danh sách tài khoản</a></ListGroupItem>
               <ListGroupItem><Badge pill>{'>'} </Badge> <a href="/receiver_info" style={{color:'#6c757d'}}>Người nhận</a></ListGroupItem>
               <ListGroupItem><Badge pill>{'>'} </Badge> <a href="/transfer" style={{color:'#6c757d'}}>Chuyển tiền</a></ListGroupItem>
-              <ListGroupItem><Badge pill>{'>'} </Badge> Chuyển tiền liên ngân hàng</ListGroupItem>
+              <ListGroupItem><Badge pill>{'>'} </Badge> Chuyển tiền liên ngân hàng *</ListGroupItem>
               <ListGroupItem><Badge pill>{'>'} </Badge> Mở tài khoản</ListGroupItem>
             </ListGroup>   
         </CardBody>

@@ -19,7 +19,9 @@ import {
     InputGroupAddon,
     InputGroupText,
     InputGroup,
-    Collapse
+    Collapse,
+    TabContent,
+    TabPane
   } from "reactstrap";
 
 export default class TransferForm extends React.Component {
@@ -30,6 +32,7 @@ export default class TransferForm extends React.Component {
       username: '',
       password: '',
       isOpen: true,
+      activeTab: 0,
       LoggedIn,
     }
     this.onChange = this.onChange.bind(this);
@@ -46,7 +49,8 @@ export default class TransferForm extends React.Component {
     e.preventDefault()
     const {username, password} = this.state
     //login magic!
-    this.setState({isOpen: !this.state.isOpen});
+    this.setState({activeTab: 1});
+    window.scrollTo(0, 0);
   }
   render() {
       // Tài khoản nguồn
@@ -117,149 +121,150 @@ export default class TransferForm extends React.Component {
             );
           });
       return (
-      <div>          
-          <Collapse isOpen = {this.state.isOpen}>
-            <Card>
-                <CardHeader  style={{backgroundColor: 'coral', textAlign: 'center'}}>
-                    <strong>Chuyển tiền</strong>
-                </CardHeader>
-                </Card>          
-            <br/>
-            <Form onSubmit = {this.submitForm} >
-              <FormGroup>
-                  <Card>
-                      <CardBody>
-                          <Label for="exampleSelect"><b style = {{color: 'green'}}>TÀI KHOẢN NGUỒN</b></Label>
-                          <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
-                          {listAccounts}
-                          </Input>
-                          <Label for="exampleSelect">* Số dư khả dụng: 500,000</Label>
-                      </CardBody>
-                  </Card>                    
-              </FormGroup>                
-              <FormGroup>
-                  <Card>
-                      <CardBody>
-                          <Label for="exampleSelect"><b style = {{color: 'green'}}>THÔNG TIN NGƯỜI NHẬN</b></Label>
-                          <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
-                          {listReceivers}
-                          </Input>
-                          <InputGroup>
-                              <InputGroupAddon addonType="prepend">
-                                  <InputGroupText>Số tài khoản</InputGroupText>
-                              </InputGroupAddon>
-                              <Input value = "660255001"/>
-                          </InputGroup>
-                          <Label for="exampleSelect">* Chủ tài khoản: Nguyễn Minh Thông</Label>
-                      </CardBody>
-                  </Card>                  
-              </FormGroup>
-              
-              <FormGroup>
-                  <Card>
-                      <CardBody>
-                          <Label for="exampleSelect"><b style = {{color: 'green'}}>THÔNG TIN CHUYỂN TIỀN</b></Label>
-                          <InputGroup style = {{marginBottom: '5px'}}>
-                              <InputGroupAddon addonType="prepend">
-                                  <InputGroupText>Số tiền chuyển</InputGroupText>
-                              </InputGroupAddon>
-                              <Input />
-                          </InputGroup> 
-                          <InputGroup>
-                              <InputGroupAddon addonType="prepend">
-                                  <InputGroupText>Nội dung chuyển</InputGroupText>
-                              </InputGroupAddon>
-                              <Input />
-                          </InputGroup>                            
-                      </CardBody>
-                  </Card>                  
-              </FormGroup>
-              <FormGroup>
-                  <Card>
-                      <CardBody>
-                          <Label for="exampleSelect"><b style = {{color: 'green'}}>HÌNH THỨC THANH TOÁN PHÍ</b></Label>
-                          <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
-                          {listTypes}
-                          </Input>
-                          <Label for="exampleSelect">* Phí thanh toán: 3,300</Label>
-                      </CardBody>
-                  </Card>                    
-              </FormGroup>    
-              {/* {Chuyển tiền}*/}
-              <Button>XÁC NHẬN</Button>
-          </Form>
-          </Collapse>          
-          <Collapse isOpen = {!this.state.isOpen}>
-            <Card>
+      <div>
+        <TabContent activeTab={this.state.activeTab}>
+            <TabPane tabId={0}>
+              <Card>
+                  <CardHeader  style={{backgroundColor: 'coral', textAlign: 'center'}}>
+                      <strong>Chuyển tiền</strong>
+                  </CardHeader>
+                  </Card>          
+              <br/>
+              <Form onSubmit = {this.submitForm} >
+                <FormGroup>
+                    <Card>
+                        <CardBody>
+                            <Label for="exampleSelect"><b style = {{color: 'green'}}>TÀI KHOẢN NGUỒN</b></Label>
+                            <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
+                            {listAccounts}
+                            </Input>
+                            <Label for="exampleSelect">* Số dư khả dụng: 550,000</Label>
+                        </CardBody>
+                    </Card>
+                </FormGroup>                
+                <FormGroup>
+                    <Card>
+                        <CardBody>
+                            <Label for="exampleSelect"><b style = {{color: 'green'}}>THÔNG TIN NGƯỜI NHẬN</b></Label>
+                            <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
+                            {listReceivers}
+                            </Input>
+                            <InputGroup>
+                                <InputGroupAddon addonType="prepend">
+                                    <InputGroupText>Số tài khoản</InputGroupText>
+                                </InputGroupAddon>
+                                <Input value = "660255001"/>
+                            </InputGroup>
+                            <Label for="exampleSelect">* Chủ tài khoản: Nguyễn Minh Thông</Label>
+                        </CardBody>
+                    </Card>                  
+                </FormGroup>                
+                <FormGroup>
+                    <Card>
+                        <CardBody>
+                            <Label for="exampleSelect"><b style = {{color: 'green'}}>THÔNG TIN CHUYỂN TIỀN</b></Label>
+                            <InputGroup style = {{marginBottom: '5px'}}>
+                                <InputGroupAddon addonType="prepend">
+                                    <InputGroupText>Số tiền chuyển</InputGroupText>
+                                </InputGroupAddon>
+                                <Input />
+                            </InputGroup> 
+                            <InputGroup>
+                                <InputGroupAddon addonType="prepend">
+                                    <InputGroupText>Nội dung chuyển</InputGroupText>
+                                </InputGroupAddon>
+                                <Input />
+                            </InputGroup>                            
+                        </CardBody>
+                    </Card>                  
+                </FormGroup>
+                <FormGroup>
+                    <Card>
+                        <CardBody>
+                            <Label for="exampleSelect"><b style = {{color: 'green'}}>HÌNH THỨC THANH TOÁN PHÍ</b></Label>
+                            <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
+                            {listTypes}
+                            </Input>
+                            <Label for="exampleSelect">* Phí thanh toán: 3,300</Label>
+                        </CardBody>
+                    </Card>                    
+                </FormGroup>    
+                {/* {Chuyển tiền}*/}
+                <Button>XÁC NHẬN</Button>
+              </Form>
+            </TabPane>
+            <TabPane tabId={1}>
+              <Card>
                 <CardHeader  style={{backgroundColor: 'coral', textAlign: 'center'}}>
                     <strong>Xác nhận thanh toán</strong>
                 </CardHeader>
-                </Card>          
-            <br/>
-            <Form onSubmit = {this.submitForm} >
-              <FormGroup>
-                  <Card>
-                      <CardBody>
-                          <Label for="exampleSelect"><b style = {{color: 'green'}}>NEW TÀI KHOẢN NGUỒN</b></Label>
-                          <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
-                          {listAccounts}
-                          </Input>
-                          <Label for="exampleSelect">* Số dư khả dụng: 500,000</Label>
-                      </CardBody>
-                  </Card>                    
-              </FormGroup>                
-              <FormGroup>
-                  <Card>
-                      <CardBody>
-                          <Label for="exampleSelect"><b style = {{color: 'green'}}>THÔNG TIN NGƯỜI NHẬN</b></Label>
-                          <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
-                          {listReceivers}
-                          </Input>
-                          <InputGroup>
-                              <InputGroupAddon addonType="prepend">
-                                  <InputGroupText>Số tài khoản</InputGroupText>
-                              </InputGroupAddon>
-                              <Input value = "660255001"/>
-                          </InputGroup>
-                      </CardBody>
-                  </Card>                  
-              </FormGroup>
-              
-              <FormGroup>
-                  <Card>
-                      <CardBody>
-                          <Label for="exampleSelect"><b style = {{color: 'green'}}>THÔNG TIN CHUYỂN TIỀN</b></Label>
-                          <InputGroup style = {{marginBottom: '5px'}}>
-                              <InputGroupAddon addonType="prepend">
-                                  <InputGroupText>Số tiền chuyển</InputGroupText>
-                              </InputGroupAddon>
-                              <Input />
-                          </InputGroup> 
-                          <InputGroup>
-                              <InputGroupAddon addonType="prepend">
-                                  <InputGroupText>Nội dung chuyển</InputGroupText>
-                              </InputGroupAddon>
-                              <Input />
-                          </InputGroup>                            
-                      </CardBody>
-                  </Card>                  
-              </FormGroup>
-              <FormGroup>
-                  <Card>
-                      <CardBody>
-                          <Label for="exampleSelect"><b style = {{color: 'green'}}>HÌNH THỨC THANH TOÁN PHÍ</b></Label>
-                          <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
-                          {listTypes}
-                          </Input>
-                          <Label for="exampleSelect">* Phí thanh toán: 3,300</Label>
-                      </CardBody>
-                  </Card>                    
-              </FormGroup>    
-              {/* {Chuyển tiền}*/}
-              <Button>XÁC NHẬN</Button>
-          </Form>
-          </Collapse>
-      </div>      
+              </Card>          
+              <br/>
+              <Form onSubmit = {this.submitForm} >
+                <FormGroup>
+                    <Card>
+                        <CardBody>
+                            <Label for="exampleSelect"><b style = {{color: 'green'}}>NEW TÀI KHOẢN NGUỒN</b></Label>
+                            <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
+                            {listAccounts}
+                            </Input>
+                            <Label for="exampleSelect">* Số dư khả dụng: 500,000</Label>
+                        </CardBody>
+                    </Card>                    
+                </FormGroup>                
+                <FormGroup>
+                    <Card>
+                        <CardBody>
+                            <Label for="exampleSelect"><b style = {{color: 'green'}}>THÔNG TIN NGƯỜI NHẬN</b></Label>
+                            <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
+                            {listReceivers}
+                            </Input>
+                            <InputGroup>
+                                <InputGroupAddon addonType="prepend">
+                                    <InputGroupText>Số tài khoản</InputGroupText>
+                                </InputGroupAddon>
+                                <Input value = "660255001"/>
+                            </InputGroup>
+                        </CardBody>
+                    </Card>                  
+                </FormGroup>
+                
+                <FormGroup>
+                    <Card>
+                        <CardBody>
+                            <Label for="exampleSelect"><b style = {{color: 'green'}}>THÔNG TIN CHUYỂN TIỀN</b></Label>
+                            <InputGroup style = {{marginBottom: '5px'}}>
+                                <InputGroupAddon addonType="prepend">
+                                    <InputGroupText>Số tiền chuyển</InputGroupText>
+                                </InputGroupAddon>
+                                <Input />
+                            </InputGroup> 
+                            <InputGroup>
+                                <InputGroupAddon addonType="prepend">
+                                    <InputGroupText>Nội dung chuyển</InputGroupText>
+                                </InputGroupAddon>
+                                <Input />
+                            </InputGroup>                            
+                        </CardBody>
+                    </Card>                  
+                </FormGroup>
+                <FormGroup>
+                    <Card>
+                        <CardBody>
+                            <Label for="exampleSelect"><b style = {{color: 'green'}}>HÌNH THỨC THANH TOÁN PHÍ</b></Label>
+                            <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
+                            {listTypes}
+                            </Input>
+                            <Label for="exampleSelect">* Phí thanh toán: 3,300</Label>
+                        </CardBody>
+                    </Card>                    
+                </FormGroup>    
+                {/* {Chuyển tiền}*/}
+                <Button>XÁC NHẬN</Button>
+            </Form>
+          </TabPane>
+        </TabContent>
+          </div>      
       );
     }
 

@@ -10,27 +10,10 @@ import {
   CardBody,
   CardHeader,
 } from "reactstrap";
+import DB from './../database/index';
 
-const ListReceiver = () => {
-  const list = [
-    {
-      number: "660255001",
-      name: "Nguyễn Minh Thông",
-      bankCode: "VCB"
-    },
-    {
-      number: "660255002",
-      name: "Phan Văn Anh Tuấn",
-      bankCode: "ACB"
-    },
-    {
-      number: "660255003",
-      name: "Phạm Đình Sỹ",
-      bankCode: "TTS"
-    }
-  ]
-
-  const listReceivers = list    
+const receiversComponent = () => {
+  const selectReceivers = DB.listReceivers()  
     .map((item, index) => {
       return (
         <tr>
@@ -60,7 +43,7 @@ const ListReceiver = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {listReceivers}
+                  {selectReceivers}
                 </tbody>
               </Table>
               {/* <Pagination >
@@ -92,4 +75,4 @@ const ListReceiver = () => {
   );
 };
 
-export default ListReceiver;
+export default receiversComponent;

@@ -1,4 +1,5 @@
 import React from "react";
+import DB from "./../database/index";
 import {
   Card,
   Col,
@@ -11,26 +12,8 @@ import {
   CardHeader,
 } from "reactstrap";
 
-const ListAccount = () => {
-  const list = [
-    {
-      number: "660255001",
-      balance: "1,500,500",
-      type: "Tài khoản thanh toán"
-    },
-    {
-      number: "660255002",
-      balance: "700,000",
-      type: "Tài khoản tiết kiệm"
-    },
-    {
-      number: "660255003",
-      balance: "2,500,000",
-      type: "Tài khoản tiết kiệm"
-    }
-  ]
-
-  const listAccounts = list    
+const selectAccounts = () => {
+  const listAccounts = DB.listAccounts()    
     .map((item, index) => {
       return (
         <tr>
@@ -92,4 +75,4 @@ const ListAccount = () => {
   );
 };
 
-export default ListAccount;
+export default selectAccounts;
