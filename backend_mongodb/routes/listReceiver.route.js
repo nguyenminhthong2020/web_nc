@@ -2,7 +2,7 @@ const express = require("express");
 const moment = require("moment");
 const User = require("../models/user.model");
 const Account = require("../models/account.model");
-const { catch } = require("../utils/db");
+// const { catch } = require("../utils/db");
 
 const router = express.Router();
 
@@ -36,7 +36,7 @@ router.post("/", async function(req, res){
                   $push: {list: newReceiver}
                 });
 
-                res.status(201).send({"message" : "thêm thành công"});
+                res.status(201).send({message : "thêm thành công"});
 
            }else{
              const newReceiver1 = {
@@ -50,7 +50,7 @@ router.post("/", async function(req, res){
                  $push: {list: newReceiver1}
               });
 
-              res.status(201).send({"message" : "thêm thành công"});
+              res.status(201).send({message : "thêm thành công"});
 
            }
 
@@ -73,19 +73,70 @@ router.get("/", async function(req, res){
    }
 })
 
-/* chưa xong*/
+/* trong body gửi lên có account_number, receiver_account_number và remind_name
+   chỉ edit được trường remind_name 
+*/
 router.post("/edit", async function(req, res){
   try{
     const _account = await Account.findOne({account_number: req.body.account_number});
-    const ret = _account.list;
-    res.status(200).send(ret);
+    //const index = _account.list.findIndex(item => item.receiver_account_number == req.body.receiver_account_number);
+    
+    for (var i in _account.list) {
+      if (_account.list[i].receiver_account_number == req.body.receiver_account_number) {
+        _account.list[i].remind_name = req.body.remind_name;
+         break; 
+      }
+    }
+
+    await Account.findOneAndUpdate(
+        {account_number: req.body.account_number}, 
+        {
+          list: _account.list
+        });
+    
+      // await Account.updateOne(
+      //   {
+      //      account_number: req.body.account_number,
+      //      list: { $elemMatch: { receiver_account_number: req.body.receiver_account_number} }
+      //   },
+      //   {
+      //     $set: {remind_name : req.body.remind_name}
+      //   }
+      // );
+
+     res.status(200).send({message: "ok"});
+
   }catch(err){
    res.status(500).send(err.message);
   }
 })
 
+/* 
+   trong body gửi lên có account_number, receiver_account_number và remind_name
+*/
 router.post("/delete", async function(req, res){
-   
+   try{
+
+    //  const ret = await Account.findOneAndDelete({
+    //   account_number: req.body.account_number,
+    //   list: { $elemMatch: { receiver_account_number: req.body.receiver_account_number}} 
+    // });
+
+      const _account = await Account.findOne({account_number: req.body.account_number});
+      const index = _account.list.findIndex(item => item.receiver_account_number == req.body.receiver_account_number);
+      
+      delete _account.list[index];
+
+      const ret = await Account.findOneAndUpdate({
+         account_number: req.body.account_number
+      }, {
+        list : _account.list
+     });
+
+     res.status(200).send("Xóa thành công");
+   }catch(err){
+    res.status(500).send(err.message);
+   }
 })
 
 module.exports = router;
