@@ -55,6 +55,7 @@ app.use('/account',  verify, require('./routes/account.route'));
 app.use('/user', require('./routes/user.route'));  
 // Dành cho Customer ??? (chưa biết à nha)
 app.use('/customer', verify, require('./routes/userCustomer.route'));
+app.use('/list-receiver', verify, require('./routes/listReceiver.route'));
 // APIs cho Partners
 app.use('/partner', require('./routes/_partner/partner.route'));
 

@@ -6,7 +6,7 @@ const Account = require("../models/account.model");
 
 const router = express.Router();
 
-// Body gửi lên gồm có account_number, receiver_account_number và remind_name (remind_name có thể rỗng)
+// Body gửi lên gồm có receiver_account_number và remind_name (remind_name có thể rỗng)
 router.post("/", async function(req, res){
     // var objFriends = { fname:"fname",lname:"lname",surname:"surname" };
     //     Friend.findOneAndUpdate(
@@ -20,6 +20,9 @@ router.post("/", async function(req, res){
     //             }
     //         });
     //  )
+    // user_id phía trên này là lấy ra từ Payload qua middleware Verify
+    const {user_id} = req.tokenPayload;
+
     try {
         const _account = await Account.findOne({account_number: req.body.receiver_account_number});
         if(_account){
@@ -31,7 +34,7 @@ router.post("/", async function(req, res){
                }
 
                const ret = await Account.findOneAndUpdate({
-                   account_number: req.body.account_number
+                   user_id: user_id
                  }, {
                   $push: {list: newReceiver}
                 });
@@ -45,7 +48,7 @@ router.post("/", async function(req, res){
               }
 
               const ret1 = await Account.findOneAndUpdate({
-                 account_number: req.body.account_number
+                 user_id: user_id
                }, {
                  $push: {list: newReceiver1}
               });
@@ -64,8 +67,10 @@ router.post("/", async function(req, res){
 })
 
 router.get("/", async function(req, res){
+  const {user_id} = req.tokenPayload;
+
    try{
-     const _account = await Account.findOne({account_number: req.body.account_number});
+     const _account = await Account.findOne({user_id: user_id});
      const ret = _account.list;
      res.status(200).send(ret);
    }catch(err){
@@ -73,12 +78,13 @@ router.get("/", async function(req, res){
    }
 })
 
-/* trong body gửi lên có account_number, receiver_account_number và remind_name
+/* trong body gửi lên có  receiver_account_number và remind_name
    chỉ edit được trường remind_name 
 */
 router.post("/edit", async function(req, res){
+  const {user_id} = req.tokenPayload;
   try{
-    const _account = await Account.findOne({account_number: req.body.account_number});
+    const _account = await Account.findOne({user_id: user_id});
     //const index = _account.list.findIndex(item => item.receiver_account_number == req.body.receiver_account_number);
     
     for (var i in _account.list) {
@@ -89,7 +95,7 @@ router.post("/edit", async function(req, res){
     }
 
     await Account.findOneAndUpdate(
-        {account_number: req.body.account_number}, 
+        {user_id: user_id}, 
         {
           list: _account.list
         });
@@ -112,9 +118,11 @@ router.post("/edit", async function(req, res){
 })
 
 /* 
-   trong body gửi lên có account_number, receiver_account_number và remind_name
+   trong body gửi lên có receiver_account_number và remind_name
 */
 router.post("/delete", async function(req, res){
+  const {user_id} = req.tokenPayload;
+
    try{
 
     //  const ret = await Account.findOneAndDelete({
@@ -122,13 +130,13 @@ router.post("/delete", async function(req, res){
     //   list: { $elemMatch: { receiver_account_number: req.body.receiver_account_number}} 
     // });
 
-      const _account = await Account.findOne({account_number: req.body.account_number});
+      const _account = await Account.findOne({user_id: user_id});
       const index = _account.list.findIndex(item => item.receiver_account_number == req.body.receiver_account_number);
       
       delete _account.list[index];
 
       const ret = await Account.findOneAndUpdate({
-         account_number: req.body.account_number
+         user_id: user_id
       }, {
         list : _account.list
      });
