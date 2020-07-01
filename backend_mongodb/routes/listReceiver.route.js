@@ -27,7 +27,7 @@ router.post("/", async function(req, res){
         const _account = await Account.findOne({account_number: req.body.receiver_account_number});
         if(_account){
            if(req.body.remind_name == ""){
-               const _user = await User.findOneAndUpdate({user_id: _account.user_id});
+               const _user = await User.findOne({user_id: _account.user_id});
                const newReceiver = {
                  receiver_account_number : req.body.receiver_account_number,
                  remind_name: _user.username
