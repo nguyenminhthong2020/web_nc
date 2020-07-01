@@ -57,6 +57,7 @@ app.use('/user', require('./routes/user.route'));
 app.use('/customer', verify, require('./routes/userCustomer.route'));
 
 app.use('/list-receiver', verify, require('./routes/listReceiver.route'));
+app.use('/list-receiver1', verify, require('./routes/listReceiver1.route'));
 //app.use('/otp', verify, require('./routes/otp.route'));
 app.use('/transfer', vefiry, require('./routes/transactionTransfer.route'));
 // APIs cho Partners
