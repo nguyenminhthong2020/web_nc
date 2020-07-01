@@ -34,40 +34,109 @@ export default class TransferForm extends React.Component {
       password: '',
       isOpen: true,
       activeTab: 0,
-      selectAccount: DB.listAccounts()[0].balance,
+      numberAccount: DB.listAccounts()[0].number,
+      balanceAccount: DB.listAccounts()[0].balance,
+      numberReceiver: DB.listReceivers()[0].number,
+      nameReceiver: DB.listReceivers()[0].name,
+      money: null,
+      message: '',
+      method: DB.listMethods()[0].type,
+      otp : '',
       LoggedIn,
     }
     this.onChange = this.onChange.bind(this);
-    this.selectChange = this.selectChange.bind(this);
+    this.selectAccountChange = this.selectAccountChange.bind(this);
+    this.selectReceiverChange = this.selectReceiverChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
+    this.confirmForm = this.confirmForm.bind(this);
   } 
 
   onChange(e) {
     this.setState({
       [e.target.name]: e.target.value
     })
-  } 
+    // Nếu sự kiện ở thẻ Input Account Receiver thì thay đổi giá trị Name Receiver
+    if(e.target.name == "numberReceiver") {
+      let nameReceiver = '';
+      DB.listReceivers().forEach(element => {
+        if(element.number == e.target.value) {
+          nameReceiver = element.name;
+        }
+      });
+      this.setState({
+        // Cập nhật Name Receiver
+        nameReceiver : nameReceiver
+      })
+    }
+  }
 
-  selectChange(e) {
+  selectAccountChange(e) {
     const accountSelected = e.target.value;
-    let balanceOfAccount = '';
+    let Account = '';
     DB.listAccounts().forEach(element => {
       if(`${element.number} - ${element.type}` == accountSelected) {
-        balanceOfAccount = element.balance;
+        Account = {
+          balance: element.balance,
+          number: element.number
+        };
       }
     });
     this.setState({
-      [e.target.name] : balanceOfAccount
+      balanceAccount : Account.balance
+    })
+    this.setState({
+      numberAccount : Account.number
     })
   }
 
+  selectReceiverChange(e) {
+    const receiverSelected = e.target.value;
+    let res = '';
+    DB.listReceivers().forEach(element => {
+      if(`${element.name} - ${element.number}` == receiverSelected) {
+        res = {
+          name: element.name,
+          number: element.number
+        }
+      }
+    });
+    this.setState({
+      nameReceiver : res.name
+    })
+    this.setState({
+      numberReceiver : res.number
+    })
+  } 
+
+  // Nhập thông tin giao dịch
   submitForm(e) {
     e.preventDefault()
-    const {username, password} = this.state
-    //login magic!
+    // Kiểm tra các thông tin có hợp lệ?
+      /* Code here */
+
+    // Mở form xác nhận
     this.setState({activeTab: 1});
     window.scrollTo(0, 0);
   }
+
+  // Xác nhận OTP
+  confirmForm(e) {
+    e.preventDefault()
+    // Tạo mã OTP
+      /* Code here */
+
+    // Kiểm tra mã OTP có hợp lệ
+      /* Code here */
+
+    // Thực hiện chuyển tiền
+      /* Code here */
+
+    // Thông báo xử lí thành công/ thất bại và chuyển trang
+      /* Code here */
+    this.setState({activeTab: 2});
+    window.scrollTo(0, 0);
+  }
+
   render() {
       // Tài khoản nguồn
       const listAccounts = DB.listAccounts()  
@@ -111,139 +180,242 @@ export default class TransferForm extends React.Component {
                   </Card>          
               <br/>
               <Form onSubmit = {this.submitForm} >
+                  <Card>
+                    <CardHeader>
+                      <strong>Tài khoản nguồn</strong>
+                    </CardHeader>
+                    <CardBody>
+                      <FormGroup row>
+                        <Col md="3" className="d-flex p-3">
+                          <Label htmlFor="select-account">Số tài khoản</Label>
+                        </Col>
+                        <Col xs="12" md="6">
+                          <Input
+                            type="select"
+                            name="select-account"
+                            onChange = {this.selectAccountChange}
+                          >{listAccounts}
+                          </Input>
+                        </Col>
+                      </FormGroup>
+                      <FormGroup row>
+                        <Col md="3">
+                          <Label htmlFor="text-input">Số dư khả dụng</Label>
+                        </Col>
+                        <Col xs="12" md="3">
+                          <Label>{this.state.balanceAccount} VNĐ</Label>
+                        </Col>
+                      </FormGroup>
+                    </CardBody>
+                    <CardHeader>
+                      <strong>Thông tin người nhận</strong>
+                    </CardHeader>
+                      <CardBody>                          
+                          <FormGroup row>
+                            <Col md="3" className="d-flex p-3">
+                              <Label htmlFor="select-account">Tài khoản gợi ý</Label>
+                            </Col>
+                            <Col xs="12" md="6">
+                              <Input
+                                type="select"
+                                name="selectReceiver"
+                                onChange = {this.selectReceiverChange}
+                              >{listReceivers}
+                              </Input>
+                            </Col>
+                          </FormGroup>
+                          <FormGroup row>
+                            <Col md="3" className="d-flex p-3">
+                              <Label htmlFor="select-account">Số tài khoản</Label>
+                            </Col>
+                            <Col xs="12" md="6">
+                              <Input
+                                type="text"
+                                name="numberReceiver"
+                                onChange = {this.onChange}
+                                value = {this.state.numberReceiver}
+                              >{listReceivers}
+                              </Input>
+                            </Col>
+                          </FormGroup>
+                          <FormGroup row>
+                            <Col md="3">
+                              <Label htmlFor="text-input">Chủ tài khoản:</Label>
+                            </Col>
+                            <Col xs="12" md="3">
+                              <Label>{this.state.nameReceiver}</Label>
+                            </Col>
+                          </FormGroup>
+                      </CardBody>
+                      <CardHeader>
+                        <strong>THÔNG TIN CHUYỂN TIỀN</strong>
+                      </CardHeader>                                  
+                      <CardBody>
+                        <FormGroup row>
+                          <Col md="3" className="d-flex p-3">
+                            <Label htmlFor="select-account">Số tiền chuyển</Label>
+                          </Col>
+                          <Col xs="12" md="6">
+                            <Input
+                              type="number"
+                              name="money"
+                              onChange = {this.onChange}
+                              value = {this.state.money}
+                            >
+                            </Input>
+                          </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                          <Col md="3" className="d-flex p-3">
+                            <Label htmlFor="select-account">Nội dung chuyển</Label>
+                          </Col>
+                          <Col xs="12" md="6">
+                            <Input
+                              type="text"
+                              name="message"
+                              onChange = {this.onChange}
+                              value = {this.state.message}
+                            >
+                            </Input>
+                          </Col>
+                        </FormGroup>                          
+                      </CardBody>
+                      <CardHeader>
+                          <strong>PHÍ THANH TOÁN</strong>
+                      </CardHeader>
+                      <CardBody>
+                        <FormGroup row>
+                          <Col md="3" className="d-flex p-3">
+                            <Label htmlFor="select-account">Hình thức thanh toán phí</Label>
+                          </Col>
+                          <Col xs="12" md="6">
+                            <Input
+                              type="select"
+                              name="method"
+                              onChange = {this.onChange}
+                              value = {this.state.method}
+                            >{listTypes}
+                            </Input>
+                          </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                          <Col md="3">
+                            <Label htmlFor="text-input">Phí thanh toán</Label>
+                          </Col>
+                          <Col xs="12" md="3">
+                            <Label>3,000 VND</Label>
+                          </Col>
+                        </FormGroup>                          
+                      </CardBody>
+                    </Card>                
+                {/* {Chuyển tiền}*/}
+                <br/>
+                <div style = {{textAlign: 'center'}}>
+                  <Button>XÁC NHẬN</Button>
+                </div>
+              </Form>
+            </TabPane>
+            <TabPane tabId={1}>
+              <Card>
+                  <CardHeader  style={{backgroundColor: 'coral', textAlign: 'center'}}>
+                      <strong>Xác nhận</strong>
+                  </CardHeader>
+                  </Card>          
+              <br/>
+              <Form onSubmit = {this.confirmForm} >
                 <FormGroup>
                     <Card>
                         <CardBody>
-                            <Label for="exampleSelect"><b style = {{color: 'green'}}>TÀI KHOẢN NGUỒN</b></Label>
-                            <Input onChange = {this.selectChange} type="select" name="selectAccount" id="exampleSelect" style = {{marginBottom: '5px'}}>
-                            {listAccounts}
-                            </Input>
-                            <Label for="exampleSelect">* Số dư khả dụng: {this.state.selectAccount}</Label>
+                            <Label><b style = {{color: 'green'}}>TÀI KHOẢN NGUỒN</b></Label>
+                            <br/>                        
+                            <Label>• Tài khoản nguồn: {this.state.numberAccount}</Label>
+                            <br/>
+                            <Label>• Số dư khả dụng: {this.state.balanceAccount}</Label>
                         </CardBody>
                     </Card>
                 </FormGroup>                
                 <FormGroup>
                     <Card>
                         <CardBody>
-                            <Label for="exampleSelect"><b style = {{color: 'green'}}>THÔNG TIN NGƯỜI NHẬN</b></Label>
-                            <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
-                            {listReceivers}
-                            </Input>
-                            <InputGroup>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>Số tài khoản</InputGroupText>
-                                </InputGroupAddon>
-                                <Input value = "660255001"/>
-                            </InputGroup>
-                            <Label for="exampleSelect">* Chủ tài khoản: Nguyễn Minh Thông</Label>
+                            <Label><b style = {{color: 'green'}}>THÔNG TIN NGƯỜI NHẬN</b></Label>       
+                            <br/>                       
+                            <Label>• Số tài khoản: {this.state.numberReceiver}</Label>
+                            <br/>
+                            <Label>• Chủ tài khoản: {this.state.nameReceiver}</Label>
                         </CardBody>
                     </Card>                  
                 </FormGroup>                
                 <FormGroup>
                     <Card>
                         <CardBody>
-                            <Label for="exampleSelect"><b style = {{color: 'green'}}>THÔNG TIN CHUYỂN TIỀN</b></Label>
-                            <InputGroup style = {{marginBottom: '5px'}}>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>Số tiền chuyển</InputGroupText>
-                                </InputGroupAddon>
-                                <Input />
-                            </InputGroup> 
-                            <InputGroup>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>Nội dung chuyển</InputGroupText>
-                                </InputGroupAddon>
-                                <Input />
-                            </InputGroup>                            
+                            <Label><b style = {{color: 'green'}}>THÔNG TIN CHUYỂN TIỀN</b></Label>
+                            <br/>                       
+                            <Label>• Số tiền chuyển: {this.state.money}</Label>
+                            <br/>
+                            <Label>• Nội dung chuyển: {this.state.message}</Label>                            
                         </CardBody>
                     </Card>                  
                 </FormGroup>
                 <FormGroup>
                     <Card>
                         <CardBody>
-                            <Label for="exampleSelect"><b style = {{color: 'green'}}>HÌNH THỨC THANH TOÁN PHÍ</b></Label>
-                            <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
-                            {listTypes}
-                            </Input>
-                            <Label for="exampleSelect">* Phí thanh toán: 3,300</Label>
+                            <Label><b style = {{color: 'green'}}>HÌNH THỨC THANH TOÁN PHÍ</b></Label>
+                            <br/>                                           
+                            <Label>• {this.state.method}</Label>
+                            <br/>
+                            <Label>• Phí thanh toán: 3,000 VND</Label>
                         </CardBody>
                     </Card>                    
-                </FormGroup>    
+                </FormGroup>
+                <FormGroup>
+                    <Card>
+                    <CardHeader>
+                        <strong>XÁC THỰC OTP</strong>
+                    </CardHeader>
+                    <CardBody>
+                      <FormGroup row>
+                        <Col md="3" className="d-flex p-3">
+                          <Label htmlFor="select-account">Mã OTP</Label>
+                        </Col>
+                        <Col xs="12" md="6">
+                          <Input
+                            type="text"
+                            name="otp"
+                            onChange = {this.onChange}
+                            value = {this.state.otp}
+                          >
+                          </Input>
+                        </Col>
+                      </FormGroup>                                                                           
+                    </CardBody>
+                    </Card>                  
+                </FormGroup>
                 {/* {Chuyển tiền}*/}
-                <Button>XÁC NHẬN</Button>
+                <div style = {{textAlign: 'center'}}>
+                  <Button>XÁC NHẬN</Button>
+                </div>
               </Form>
             </TabPane>
-            <TabPane tabId={1}>
+            <TabPane tabId={2}>
               <Card>
-                <CardHeader  style={{backgroundColor: 'coral', textAlign: 'center'}}>
-                    <strong>Xác nhận thanh toán</strong>
-                </CardHeader>
-              </Card>          
+                  <CardHeader  style={{backgroundColor: 'coral', textAlign: 'center'}}>
+                      <strong>Thông tin giao dịch</strong>
+                  </CardHeader>
+                  </Card>          
               <br/>
-              <Form onSubmit = {this.submitForm} >
+              <Form onSubmit = {this.confirmForm} >
                 <FormGroup>
                     <Card>
                         <CardBody>
-                            <Label for="exampleSelect"><b style = {{color: 'green'}}>NEW TÀI KHOẢN NGUỒN</b></Label>
-                            <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
-                            {listAccounts}
-                            </Input>
-                            <Label for="exampleSelect">* Số dư khả dụng: 500,000</Label>
+                            <Label><b style = {{color: 'green'}}>Giao dịch thành công</b></Label>
+                            <br/>                        
+                            <Label>• Mã giao dịch: <a href = {'/transaction?id=' + this.state.numberAccount}>{this.state.numberAccount}</a></Label>
                         </CardBody>
-                    </Card>                    
+                    </Card>
                 </FormGroup>                
-                <FormGroup>
-                    <Card>
-                        <CardBody>
-                            <Label for="exampleSelect"><b style = {{color: 'green'}}>THÔNG TIN NGƯỜI NHẬN</b></Label>
-                            <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
-                            {listReceivers}
-                            </Input>
-                            <InputGroup>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>Số tài khoản</InputGroupText>
-                                </InputGroupAddon>
-                                <Input value = "660255001"/>
-                            </InputGroup>
-                        </CardBody>
-                    </Card>                  
-                </FormGroup>
-                
-                <FormGroup>
-                    <Card>
-                        <CardBody>
-                            <Label for="exampleSelect"><b style = {{color: 'green'}}>THÔNG TIN CHUYỂN TIỀN</b></Label>
-                            <InputGroup style = {{marginBottom: '5px'}}>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>Số tiền chuyển</InputGroupText>
-                                </InputGroupAddon>
-                                <Input />
-                            </InputGroup> 
-                            <InputGroup>
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>Nội dung chuyển</InputGroupText>
-                                </InputGroupAddon>
-                                <Input />
-                            </InputGroup>                            
-                        </CardBody>
-                    </Card>                  
-                </FormGroup>
-                <FormGroup>
-                    <Card>
-                        <CardBody>
-                            <Label for="exampleSelect"><b style = {{color: 'green'}}>HÌNH THỨC THANH TOÁN PHÍ</b></Label>
-                            <Input type="select" name="select" id="exampleSelect" style = {{marginBottom: '5px'}}>
-                            {listTypes}
-                            </Input>
-                            <Label for="exampleSelect">* Phí thanh toán: 3,300</Label>
-                        </CardBody>
-                    </Card>                    
-                </FormGroup>    
-                {/* {Chuyển tiền}*/}
-                <Button>XÁC NHẬN</Button>
-            </Form>
-          </TabPane>
-        </TabContent>
+              </Form>
+            </TabPane>            
+            </TabContent>
           </div>      
       );
     }

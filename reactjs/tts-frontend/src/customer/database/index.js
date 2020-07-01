@@ -52,12 +52,12 @@ const listAccounts = () => [
   {
     number: "660255001",
     balance: "1,500,500",
-    type: "Tài khoản thanh toán nè"
+    type: "Tài khoản thanh toán"
   },
   {
     number: "660255002",
     balance: "700,000",
-    type: "Tài khoản tiết kiệm nà"
+    type: "Tài khoản tiết kiệm"
   },
   {
     number: "660255003",
@@ -66,7 +66,17 @@ const listAccounts = () => [
   }
 ];
 
+const listMethods = () => [
+  {
+      type: "Người chuyển trả"
+  },
+  {
+      type: "Người nhận trả"
+  }
+]  
+
 export default {
   listReceivers,
-  listAccounts
+  listAccounts,
+  listMethods
 }
