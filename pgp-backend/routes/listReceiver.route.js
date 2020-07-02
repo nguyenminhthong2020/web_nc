@@ -2,11 +2,11 @@ const express = require("express");
 const moment = require("moment");
 const User = require("../models/user.model");
 const Account = require("../models/account.model");
-const { catch } = require("../utils/db");
+// const { catch } = require("../utils/db");
 
 const router = express.Router();
 
-// Body gửi lên gồm có account_number, receiver_account_number và remind_name (remind_name có thể rỗng)
+// Body gửi lên gồm có receiver_account_number và remind_name (remind_name có thể rỗng)
 router.post("/", async function(req, res){
     // var objFriends = { fname:"fname",lname:"lname",surname:"surname" };
     //     Friend.findOneAndUpdate(
@@ -20,23 +20,26 @@ router.post("/", async function(req, res){
     //             }
     //         });
     //  )
+    // user_id phía trên này là lấy ra từ Payload qua middleware Verify
+    const {user_id} = req.tokenPayload;
+
     try {
         const _account = await Account.findOne({account_number: req.body.receiver_account_number});
         if(_account){
            if(req.body.remind_name == ""){
-               const _user = await User.findOneAndUpdate({user_id: _account.user_id});
+               const _user = await User.findOne({user_id: _account.user_id});
                const newReceiver = {
                  receiver_account_number : req.body.receiver_account_number,
                  remind_name: _user.username
                }
 
                const ret = await Account.findOneAndUpdate({
-                   account_number: req.body.account_number
+                   user_id: user_id
                  }, {
                   $push: {list: newReceiver}
                 });
 
-                res.status(201).send({"message" : "thêm thành công"});
+                res.status(201).send({message : "thêm thành công"});
 
            }else{
              const newReceiver1 = {
@@ -45,12 +48,12 @@ router.post("/", async function(req, res){
               }
 
               const ret1 = await Account.findOneAndUpdate({
-                 account_number: req.body.account_number
+                 user_id: user_id
                }, {
                  $push: {list: newReceiver1}
               });
 
-              res.status(201).send({"message" : "thêm thành công"});
+              res.status(201).send({message : "thêm thành công"});
 
            }
 
@@ -64,8 +67,10 @@ router.post("/", async function(req, res){
 })
 
 router.get("/", async function(req, res){
+  const {user_id} = req.tokenPayload;
+
    try{
-     const _account = await Account.findOne({account_number: req.body.account_number});
+     const _account = await Account.findOne({user_id: user_id});
      const ret = _account.list;
      res.status(200).send(ret);
    }catch(err){
@@ -73,19 +78,73 @@ router.get("/", async function(req, res){
    }
 })
 
-/* chưa xong*/
+/* trong body gửi lên có  receiver_account_number và remind_name
+   chỉ edit được trường remind_name 
+*/
 router.post("/edit", async function(req, res){
+  const {user_id} = req.tokenPayload;
   try{
-    const _account = await Account.findOne({account_number: req.body.account_number});
-    const ret = _account.list;
-    res.status(200).send(ret);
+    const _account = await Account.findOne({user_id: user_id});
+    //const index = _account.list.findIndex(item => item.receiver_account_number == req.body.receiver_account_number);
+    
+    for (var i in _account.list) {
+      if (_account.list[i].receiver_account_number == req.body.receiver_account_number) {
+        _account.list[i].remind_name = req.body.remind_name;
+         break; 
+      }
+    }
+
+    await Account.findOneAndUpdate(
+        {user_id: user_id}, 
+        {
+          list: _account.list
+        });
+    
+      // await Account.updateOne(
+      //   {
+      //      account_number: req.body.account_number,
+      //      list: { $elemMatch: { receiver_account_number: req.body.receiver_account_number} }
+      //   },
+      //   {
+      //     $set: {remind_name : req.body.remind_name}
+      //   }
+      // );
+
+     res.status(200).send({message: "ok"});
+
   }catch(err){
    res.status(500).send(err.message);
   }
 })
 
+/* 
+   trong body gửi lên có receiver_account_number và remind_name
+*/
 router.post("/delete", async function(req, res){
-   
+  const {user_id} = req.tokenPayload;
+
+   try{
+
+    //  const ret = await Account.findOneAndDelete({
+    //   account_number: req.body.account_number,
+    //   list: { $elemMatch: { receiver_account_number: req.body.receiver_account_number}} 
+    // });
+
+      const _account = await Account.findOne({user_id: user_id});
+      const index = _account.list.findIndex(item => item.receiver_account_number == req.body.receiver_account_number);
+      
+      delete _account.list[index];
+
+      const ret = await Account.findOneAndUpdate({
+         user_id: user_id
+      }, {
+        list : _account.list
+     });
+
+     res.status(200).send("Xóa thành công");
+   }catch(err){
+    res.status(500).send(err.message);
+   }
 })
 
 module.exports = router;
