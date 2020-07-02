@@ -229,7 +229,7 @@ router.post('/change-password', async (req, res) => {
         const _user = await User.findOne({user_id: user_id});
 		let isTrueOldPass = await bcrypt.compareSync(password, _user.password);
 		if (isTrueOldPass) {
-			newPasswordHash = bcrypt.hash(newPassword, 8);
+			const newPasswordHash = bcrypt.hash(newPassword, 8);
 			const result = await User.findOneAndUpdate(
 				{ user_id: user_id },
 				{

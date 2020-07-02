@@ -73,7 +73,7 @@ router.post("/internal", async function (req, res) {
         money: req.body.money,
         transaction_fee: 0,
         type_fee: req.body.type_fee, //*Chú ý là String. 1: người gửi trả, 0: người nhận trả. Thực ra phí là 0
-        message: req.body.message,
+        message: req.body.message
       };
       // let newOtp = Otp( _body);
       // const ret = await newOtp.save();
@@ -86,7 +86,7 @@ router.post("/internal", async function (req, res) {
             .status(200)
             .send({
               status: "OK",
-              data: { otp_id: result.otp_id, time: result.time },
+              data: { otp_id: result.otp_id, email: result.email, time: result.time},
             });
         }
       });
@@ -94,12 +94,14 @@ router.post("/internal", async function (req, res) {
   });
 });
 
-// Trong header có một trường là otp_id (chính là kết quả từ API phía trên)
+// Trong header có 2 trường là otp_id, email (chính là kết quả từ API phía trên)
 // Trong body có trường là otp (req.body.otp)
 router.post("/internal/confirm", async function (req, res) {
   const time1 = moment().valueOf();
   const { user_id } = req.tokenPayload;
   const _otp_id = req.get("otp_id");
+  const _email = req.get("email");
+  const str = _email + "";
 
   if (!_otp_id) {
     return res
@@ -118,6 +120,21 @@ router.post("/internal/confirm", async function (req, res) {
           .status(400)
           .send({ status_code: "TIME_EXPIRE", message: "Otp hết hạn." });
       } else {
+         
+        if(str == "undefined")
+            {
+              return res
+              .status(400)
+              .send({ status_code: "INVALID_EMAIL", message: "Thiếu trường email" });
+            }
+
+        if(_email != _otp.email)
+        {
+          return res
+          .status(400)
+          .send({ status_code: "INVALID_EMAIL", message: "Email không hợp lệ" });
+        }
+
         const accountSend = await Account.findOne({
           account_number: _otp.sender_account_number,
         });
@@ -163,7 +180,7 @@ router.post("/internal/confirm", async function (req, res) {
             transaction_fee: _otp.transaction_fee,
             type_fee: _otp.type_fee, //*Chú ý là String. 1: người gửi trả, 0: người nhận trả. Thực ra phí là 0
             message: _otp.message, // Nội dung cần chuyển, Ví dụ: "gửi trả nợ cho ông A"
-            created_at: moment().format("YYYY-MM-DD HH:mm:ss").toString(),
+            created_at: moment().format("YYYY-MM-DD HH:mm:ss").toString()
           };
 
           let newTransaction = Transaction(_body1);
@@ -234,7 +251,7 @@ router.post("/external", async function (req, res) {
         money: req.body.money,
         transaction_fee: 0,
         type_fee: req.body.type_fee, //*Chú ý là String. 1: người gửi trả, 0: người nhận trả. Thực ra phí là 0
-        message: req.body.message,
+        message: req.body.message
       };
       // let newOtp = Otp( _body);
       // const ret = await newOtp.save();
@@ -247,7 +264,7 @@ router.post("/external", async function (req, res) {
             .status(200)
             .send({
               status: "OK",
-              data: { otp_id: result.otp_id, time: result.time },
+              data: { otp_id: result.otp_id, email: result.email, time: result.time },
             });
         }
       });
@@ -261,6 +278,8 @@ router.post("/external/confirm", async function (req, res) {
   const time1 = moment().valueOf();
   const { user_id } = req.tokenPayload;
   const _otp_id = req.get("otp_id");
+  const _email = req.get("email");
+  const str = _email + "";
 
   if (!_otp_id) {
     return res
@@ -279,6 +298,21 @@ router.post("/external/confirm", async function (req, res) {
           .status(400)
           .send({ status_code: "TIME_EXPIRE", message: "Otp hết hạn." });
       } else {
+        if(str == "undefined")
+            {
+              return res
+              .status(400)
+              .send({ status_code: "INVALID_EMAIL", message: "Thiếu trường email" });
+            }
+            
+        if(_email != _otp.email)
+        {
+          return res
+          .status(400)
+          .send({ status_code: "INVALID_EMAIL", message: "Email không hợp lệ" });
+        }
+
+
         const accountSend = await Account.findOne({
           account_number: _otp.sender_account_number,
         });
@@ -340,7 +374,7 @@ router.post("/external/confirm", async function (req, res) {
                 transaction_fee: _otp.transaction_fee,
                 type_fee: _otp.type_fee, //*Chú ý là String. 1: người gửi trả, 0: người nhận trả. Thực ra phí là 0
                 message: _otp.message, // Nội dung cần chuyển, Ví dụ: "gửi trả nợ cho ông A"
-                created_at: moment().format("YYYY-MM-DD HH:mm:ss").toString(),
+                created_at: moment().format("YYYY-MM-DD HH:mm:ss").toString()
               };
 
               let newTransaction = Transaction(_body1);
