@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-// const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const randToken = require('rand-token');
 // const jwt_decode = require('jwt-decode');
 const createError = require('http-errors');
@@ -47,7 +47,7 @@ router.post('/login', async (req, res) => {
   const user_id = ret.user_id;
 
   const accessToken = generateAccessToken(user_id);
-  const refreshToken = randToken.generate(config.auth.refreshTokenSz);
+  const refreshToken = generateRefreshToken(user_id);
 
   await updateRefreshToken(user_id, refreshToken);
  
@@ -59,10 +59,12 @@ router.post('/login', async (req, res) => {
   })
 })
 
+
 /**
  * refresh token
  */
 
+// if (error.name === 'TokenExpiredError')
 router.post('/refresh', async (req, res) => {
   // req.body = {
   //   accessToken,
@@ -87,6 +89,15 @@ const generateAccessToken = user_id => {
   const payload = { user_id };
   const accessToken = jwt.sign(payload, config.auth.secret, {
     expiresIn: config.auth.expiresIn
+  });
+
+  return accessToken;
+}
+
+const generateRefreshToken = user_id => {
+  const payload = { user_id };
+  const accessToken = jwt.sign(payload, config.auth.secret, {
+    expiresIn: config.auth.expiresIn2
   });
 
   return accessToken;

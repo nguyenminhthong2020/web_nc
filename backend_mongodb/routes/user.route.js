@@ -1,5 +1,5 @@
 const User = require("../models/user.model");
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const moment = require('moment');
 const jwt = require("jsonwebtoken");
 const express = require("express");
@@ -194,4 +194,60 @@ router.post("/employee/create-customer", async function (req, res) {
      }
 });
 
+// Lấy Info - Profile cho user
+router.post("/profile", async function(req, res){
+    const {user_id} = req.tokenPayload;
+    const _user = await User.findOne({user_id: user_id});
+
+    res.status(200).send(_user);
+})
+
+// Đổi mật khẩu 
+// Trong body gửi lên có password và newPassword
+ // req.body = {
+//   "password": "admin",
+//   "newPassword": "admin1"
+// }
+router.post('/change-password', async (req, res) => {
+    // user_id phía trên này là lấy ra từ Payload qua middleware Verify
+
+    /*str = user_id + "";
+    if(str == "undefined")
+    {
+        console.log("lỗi rồi");
+    }*/
+    const {user_id} = req.tokenPayload;
+    const str = user_id + "";
+
+    const { password, newPassword } = req.body;
+
+	if (str == "undefined" ) {
+        return res.status(400).json({ message: "Không tìm thấy khách hàng này." });
+        
+	} else {
+        
+        const _user = await User.findOne({user_id: user_id});
+		let isTrueOldPass = await bcrypt.compareSync(password, _user.password);
+		if (isTrueOldPass) {
+			newPasswordHash = bcrypt.hash(newPassword, 8);
+			const result = await User.findOneAndUpdate(
+				{ user_id: user_id },
+				{
+					password : newPasswordHash
+				}
+			);
+			if (result) {
+				const data = await User.findOne({
+					user_id: user_id
+				});
+				if (data) {
+					return res.status(200).json({ message: "Cập nhật thành công." });
+				}
+			}
+		} else {
+			return res.status(400).json({ message: "Password cũ sai" });
+		}
+    }
+    
+  })
 module.exports = router;
