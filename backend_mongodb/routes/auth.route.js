@@ -224,7 +224,7 @@ router.post("/forgot-password/confirm", async function(req, res){
                 return res.status(500).send({ status: "ERROR", message: "Cập nhật thất bại." });
               }
 
-            }
+            
 
           }
         }
