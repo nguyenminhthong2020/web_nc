@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 //const randToken = require('rand-token');
 const moment = require("moment");
-//const axios = require("axios");
+// const axios = require("axios");
 //const md5 = require("md5");
 const User = require("../models/user.model");
 //const Account = require("../models/account.model");
@@ -212,7 +212,7 @@ router.post("/forgot-password/confirm", async function(req, res){
               .send({ status_code: "INVALID_EMAIL", message: "Email không hợp lệ" });
             }
             
-            const newPasswordHash = bcrypt.hash(newPassword, 8);
+            const newPasswordHash = bcryptjs.hashSync(newPassword, 8);
             const ret2 = await User.findOneAndUpdate({user_id: _otp.user_id}, {password: newPasswordHash});
             
             

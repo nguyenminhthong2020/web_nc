@@ -14,12 +14,11 @@
 
 */
 
-
 const express = require("express")
 const cors = require('cors');
-const moment = require("moment");
-const md5 = require('md5');
-const NodeRSA = require('node-rsa');
+// const moment = require("moment");
+// const md5 = require('md5');
+// const NodeRSA = require('node-rsa');
 const rateLimit = require("express-rate-limit"); 
 const morgan = require('morgan');
 require('express-async-errors');
@@ -53,8 +52,6 @@ app.get('/', (req, res) => {
 // // // Dành cho Admin hoặc Employee
 app.use('/account',  verify, require('./routes/account.route'));
 app.use('/user', require('./routes/user.route'));  
-// // // Dành cho Customer ??? (chưa biết à nha)
-// // app.use('/customer', verify, require('./routes/userCustomer.route'));
 
 app.use('/list-receiver', verify, require('./routes/listReceiver.route'));
 app.use('/list-receiver1', verify, require('./routes/listReceiver1.route'));

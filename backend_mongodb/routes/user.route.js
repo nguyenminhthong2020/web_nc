@@ -1,7 +1,7 @@
 const User = require("../models/user.model");
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
-const jwt = require("jsonwebtoken");
+//const jwt = require("jsonwebtoken");
 const express = require("express");
 const Account = require("../models/account.model");
 
@@ -11,7 +11,7 @@ const router = express.Router();
 /* Tạo 3 admin đầu */
 router.post("/create", async function (req, res) {
     try{
-        const passHash = await bcrypt.hash(req.body.password, 8);
+        const passHash = await bcryptjs.hashSync(req.body.password, 8);
         const _body = {
             username: req.body.username,
             password : passHash,
@@ -57,7 +57,7 @@ router.post("/admin/create-employee", async function (req, res) {
     }
     
     try{
-        const passHash = await bcrypt.hash(req.body.password, 8);
+        const passHash = await bcrypt.hashSync(req.body.password, 8);
         const _body = {
             username: req.body.username,
             password : passHash,
@@ -159,7 +159,7 @@ router.post("/employee/create-customer", async function (req, res) {
     }
     
     try{
-        const passHash = await bcrypt.hash(req.body.password, 8);
+        const passHash = await bcrypt.hashSync(req.body.password, 8);
         const _body = {
             username: req.body.username,
             password : passHash,
@@ -229,7 +229,7 @@ router.post('/change-password', async (req, res) => {
         const _user = await User.findOne({user_id: user_id});
 		let isTrueOldPass = await bcrypt.compareSync(password, _user.password);
 		if (isTrueOldPass) {
-			const newPasswordHash = bcrypt.hash(newPassword, 8);
+			const newPasswordHash = bcrypt.hashSync(newPassword, 8);
 			const result = await User.findOneAndUpdate(
 				{ user_id: user_id },
 				{

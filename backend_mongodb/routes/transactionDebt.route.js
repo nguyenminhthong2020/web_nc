@@ -1,16 +1,16 @@
 const express = require("express");
 const moment = require("moment");
-const axios = require("axios");
-const md5 = require("md5");
-const NodeRSA = require("node-rsa");
+// const axios = require("axios");
+// const md5 = require("md5");
+// const NodeRSA = require("node-rsa");
 const User = require("../models/user.model");
 const Account = require("../models/account.model");
 const ListDebt = require('../models/listDebt.model');
 const Otp = require("../models/otp.model");
 const TransactionDebt = require("../models/transactionDebtHistory.model");
 var nodemailer = require("nodemailer");
-const config = require("../config/default.json");
-const process1 = require("../config/process.config");
+// const config = require("../config/default.json");
+// const process1 = require("../config/process.config");
 
 const router = express.Router();
 
