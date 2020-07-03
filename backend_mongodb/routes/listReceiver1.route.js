@@ -25,7 +25,7 @@ router.post("/", async function(req, res){
                let newList = ListReceiver(newReceiver);
                const ret = await newList.save();
 
-                res.status(201).send({message : "thêm thành công"});
+               return res.status(201).send({message : "thêm thành công"});
 
            }else{
              const newReceiver1 = {
@@ -37,7 +37,7 @@ router.post("/", async function(req, res){
               let newList1 = ListReceiver(newReceiver);
               const ret1 = await newList1.save();
 
-              res.status(201).send({message : "thêm thành công"});
+              return res.status(201).send({message : "thêm thành công"});
 
            }
 
@@ -46,7 +46,7 @@ router.post("/", async function(req, res){
         }
 
     }catch(err){
-        res.status(500).send(err.message);
+        return res.status(500).send(err.message);
     }
 })
 
@@ -55,9 +55,9 @@ router.get("/", async function(req, res){
 
    try{
      const list = ListReceiver.find({user_id: user_id});
-     res.status(200).send(list);
+     return res.status(200).send(list);
    }catch(err){
-    res.status(500).send(err.message);
+      return res.status(500).send(err.message);
    }
 })
 
@@ -75,10 +75,10 @@ router.post("/edit", async function(req, res){
         remind_name: req.body.remind_name
     });
 
-     res.status(200).send({message: "ok"});
+    return res.status(200).send({message: "ok"});
 
   }catch(err){
-   res.status(500).send(err.message);
+   return res.status(500).send(err.message);
   }
 })
 
@@ -95,7 +95,7 @@ router.post("/delete", async function(req, res){
    });
       
    }catch(err){
-    res.status(500).send(err.message);
+      return res.status(500).send(err.message);
    }
 })
 

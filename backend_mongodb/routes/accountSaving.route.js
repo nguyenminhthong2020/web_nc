@@ -33,7 +33,7 @@ router.post("/", async function (req, res) {
   const { user_id } = req.tokenPayload;
   const checkUser = await User.findOne({ user_id: user_id });
   if (checkUser.role == 0) {
-    res.status(400).send("Bạn không đủ thẩm quyền.");
+    return res.status(400).send("Bạn không đủ thẩm quyền.");
   }
 
   const rows = await User.findOne({ user_id: req.body.user_id });
@@ -75,7 +75,7 @@ router.post("/edit", async function (req, res) {
   const { user_id } = req.tokenPayload;
   const checkUser = await User.findOne({ user_id: user_id });
   if (checkUser.role == 0) {
-    res.status(400).send("Bạn không đủ thẩm quyền.");
+    return res.status(400).send("Bạn không đủ thẩm quyền.");
   }
 
   const rows = await Account.findOne({
@@ -107,7 +107,7 @@ router.post("/delete", async function (req, res) {
     const { user_id } = req.tokenPayload;
     const checkUser = await User.findOne({ user_id: user_id });
     if (checkUser.role == 0) {
-      res.status(400).send("Bạn không đủ thẩm quyền.");
+      return res.status(400).send("Bạn không đủ thẩm quyền.");
     }
     
     try{

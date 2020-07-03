@@ -374,11 +374,11 @@ router.post("/external/confirm", async function (req, res) {
               let newTransaction = Transaction(_body1);
               const ret5 = await newTransaction.save();
 
-              res.status(200).send({message: reply});
+              return res.status(200).send({message: reply});
               
             }).catch((error) => {
               const str_response = JSON.stringify(error.response.data);
-              res.status(500).send({message: str_response});
+              return res.status(500).send({message: str_response});
             });
 
 

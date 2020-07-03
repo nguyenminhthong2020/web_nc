@@ -104,7 +104,7 @@ route.get('/view1', async function(req, res){
     // const account = await Account.findOne({user_id: user_id});
     // const list = await ListDebt.find({creditor_account_number : account.account_number});
 
-    res.status(200).send(list);
+    return res.status(200).send(list);
 })
 
 //  Danh sách nợ do người khác gửi
@@ -114,7 +114,7 @@ route.get('/view2', async function(req, res){
     
     const list = await ListDebt.find({debtor_account_number : account.account_number, isActive : 1});
 
-    res.status(200).send(list);
+    return res.status(200).send(list);
 })
 
 // Danh sách nợ chưa thanh toán
@@ -124,7 +124,7 @@ route.get('/view2', async function(req, res){
   
   const list = await ListDebt.find({debtor_account_number : account.account_number, isActive : 1});
 
-  res.status(200).send(list);
+  return res.status(200).send(list);
 })
 
 // Hủy nhắc nợ (do người khác gửi)

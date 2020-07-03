@@ -39,7 +39,7 @@ router.post("/", async function(req, res){
                   $push: {list: newReceiver}
                 });
 
-                res.status(201).send({message : "thêm thành công"});
+                return res.status(201).send({message : "thêm thành công"});
 
            }else{
              const newReceiver1 = {
@@ -53,7 +53,7 @@ router.post("/", async function(req, res){
                  $push: {list: newReceiver1}
               });
 
-              res.status(201).send({message : "thêm thành công"});
+              return res.status(201).send({message : "thêm thành công"});
 
            }
 
@@ -62,7 +62,7 @@ router.post("/", async function(req, res){
         }
 
     }catch(err){
-        res.status(500).send(err.message);
+      return res.status(500).send(err.message);
     }
 })
 
@@ -72,9 +72,9 @@ router.get("/", async function(req, res){
    try{
      const _account = await Account.findOne({user_id: user_id});
      const ret = _account.list;
-     res.status(200).send(ret);
+     return res.status(200).send(ret);
    }catch(err){
-    res.status(500).send(err.message);
+    return res.status(500).send(err.message);
    }
 })
 
@@ -110,10 +110,10 @@ router.post("/edit", async function(req, res){
       //   }
       // );
 
-     res.status(200).send({message: "ok"});
+      return res.status(200).send({message: "ok"});
 
   }catch(err){
-   res.status(500).send(err.message);
+    return res.status(500).send(err.message);
   }
 })
 
@@ -141,9 +141,9 @@ router.post("/delete", async function(req, res){
         list : _account.list
      });
 
-     res.status(200).send("Xóa thành công");
+     return res.status(200).send("Xóa thành công");
    }catch(err){
-    res.status(500).send(err.message);
+    return res.status(500).send(err.message);
    }
 })
 

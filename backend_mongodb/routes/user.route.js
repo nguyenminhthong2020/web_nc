@@ -36,14 +36,14 @@ router.post("/create", async function (req, res) {
         let newAccount = Account( _body1);
         const ret1 = await newAccount.save();
 
-        res.status(201).send({
+        return res.status(201).send({
             message: "Tạo thành công",
             username: ret.username,
             account_number: ret1.account_number
         });         
 
      }catch(err){
-        res.status(500).send(err.message);
+        return res.status(500).send(err.message);
      }
 });
 
@@ -53,7 +53,7 @@ router.post("/admin/create-employee", async function (req, res) {
     const {user_id} = req.tokenPayload;
     const checkUser = await User.findOne({user_id: user_id});
     if(checkUser.role < 2){
-        res.status(400).send("Bạn không đủ thẩm quyền.");
+        return res.status(400).send("Bạn không đủ thẩm quyền.");
     }
     
     try{
@@ -82,14 +82,14 @@ router.post("/admin/create-employee", async function (req, res) {
         let newAccount = Account( _body1);
         const ret1 = await newAccount.save();
 
-        res.status(201).send({
+        return res.status(201).send({
             message: "Tạo thành công",
             username: ret.username,
             account_number: ret1.account_number
         }); 
 
      }catch(err){
-        res.status(500).send(err.message);
+        return res.status(500).send(err.message);
      }
 });
 
@@ -99,14 +99,14 @@ router.get("/admin/list-employee", async function (req, res) {
     const {user_id} = req.tokenPayload;
     const checkUser = await User.findOne({user_id: user_id});
     if(checkUser.role < 2){
-        res.status(400).send("Bạn không đủ thẩm quyền.");
+        return res.status(400).send("Bạn không đủ thẩm quyền.");
     }
     
     try{
         const list = await User.find({role : 1});
-        res.status(200).send(list);
+        return res.status(200).send(list);
      }catch(err){
-        res.status(500).send(err.message);
+        return res.status(500).send(err.message);
      }
 });
 
@@ -116,7 +116,7 @@ router.post("/admin/edit-employee", async function (req, res) {
     const {user_id} = req.tokenPayload;
     const checkUser = await User.findOne({user_id: user_id});
     if(checkUser.role < 2){
-        res.status(400).send("Bạn không đủ thẩm quyền.");
+        return res.status(400).send("Bạn không đủ thẩm quyền.");
     }
     
     try{
@@ -124,10 +124,10 @@ router.post("/admin/edit-employee", async function (req, res) {
             {user_id : req.body.user_id, role: 1}, 
             {phone: req.body.phone, email: req.body.email});
 
-        res.status(200).send({message: "update thành công", _employee});    
+            return res.status(200).send({message: "update thành công", _employee});    
 
      }catch(err){
-        res.status(500).send(err.message);
+        return res.status(500).send(err.message);
      }
 });
 
@@ -137,15 +137,15 @@ router.post("/admin/edit-employee", async function (req, res) {
     const {user_id} = req.tokenPayload;
     const checkUser = await User.findOne({user_id: user_id});
     if(checkUser.role < 2){
-        res.status(400).send("Bạn không đủ thẩm quyền.");
+        return res.status(400).send("Bạn không đủ thẩm quyền.");
     }
     
     try{
         await User.findOneAndDelete({user_id : req.body.user_id, role: 1});
-        res.status(200).send({message: "xóa thành công"});    
+        return res.status(200).send({message: "xóa thành công"});    
 
      }catch(err){
-        res.status(500).send(err.message);
+        return res.status(500).send(err.message);
      }
 });
 
@@ -155,7 +155,7 @@ router.post("/employee/create-customer", async function (req, res) {
     const {user_id} = req.tokenPayload;
     const checkUser = await User.findOne({user_id: user_id});
     if(checkUser.role == 0){
-        res.status(400).send("Bạn không đủ thẩm quyền.");
+        return res.status(400).send("Bạn không đủ thẩm quyền.");
     }
     
     try{
@@ -184,13 +184,13 @@ router.post("/employee/create-customer", async function (req, res) {
         let newAccount = Account( _body1);
         const ret1 = await newAccount.save();
 
-        res.status(201).send({
+        return res.status(201).send({
             message: "Tạo thành công",
             username: ret.username,
             account_number: ret1.account_number
         }); 
      }catch(err){
-        res.status(500).send(err.message);
+        return res.status(500).send(err.message);
      }
 });
 
@@ -199,7 +199,7 @@ router.post("/profile", async function(req, res){
     const {user_id} = req.tokenPayload;
     const _user = await User.findOne({user_id: user_id});
 
-    res.status(200).send(_user);
+    return res.status(200).send(_user);
 })
 
 // Đổi mật khẩu 

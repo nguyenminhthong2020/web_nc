@@ -193,7 +193,7 @@ router.post("/", async function (req, res) {
                 {isActive: 0}
                 );
             
-            res.status(200).send({status: "DONE", message: "Đã thanh toán"});
+                return res.status(200).send({status: "DONE", message: "Đã thanh toán"});
           }
         }
       }
