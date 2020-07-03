@@ -52,7 +52,8 @@ router.get("/get-account", async function (req, res) {
   }
 });
 
-// body gửi lên gồm có debtor_account_number
+// Tạo nhắc nợ
+// Trường hợp 1 :  body gửi lên gồm có debtor_account_number
 // money, message
 router.post('/create', async function(req, res){
     const { user_id } = req.tokenPayload;
@@ -64,13 +65,16 @@ router.post('/create', async function(req, res){
     }else{
          
         // creditor_account_number là chủ nợ, debtor_account_number là con nợ
-        const accountNum1 = await Account.findOne({account_number: req.body.creditor_account_number});
-
+        const x = await Account.findOne({user_id: user_id});
+        
+        const _userDebtor = await User.findOne({user_id: accountNum.user_id});
         
         const _body = {
             user_id: user_id,
-            creditor_account_number: accountNum.account_number,   // chủ nợ
-            debtor_account_number: accountNum1.account_number,     // người nợ     
+            creditor_account_number: x.account_number,   // chủ nợ
+            debtor_account_number: accountNum.account_number,     // người nợ   
+            debtor_username: _userDebtor.username,  
+            debtor_fullname: _userDebtor.fullname,
             money: req.body.money,
             message: req.body.message,     
             created_at: moment().format("YYYY-MM-DD HH:mm:ss").toString(),
@@ -95,6 +99,56 @@ router.post('/create', async function(req, res){
     }
     
 })
+
+
+// Tạo nhắc nợ
+// Trường hợp 2 :  body gửi lên gồm có debtor_username
+// money, message
+// (đã có người nợ trong danh sách)
+router.post('/create', async function(req, res){
+  const { user_id } = req.tokenPayload;
+  
+  // tìm tài khoản người nợ
+  const accountNum = await ListDebt.findOne({debtor_username: req.body.debtor_username});
+  if(!accountNum){
+      return res.status(400).send({status: "NO_ACCOUNT", message: "Không tồn tại người nợ có số tài khoản gửi đi"});
+
+  }else{
+       
+      const _creditor = Account.findOne({user_id : user_id});
+      
+      const _body = {
+          user_id: user_id,
+          creditor_account_number: _creditor.account_number,   // chủ nợ
+          debtor_account_number: accountNum.account_number,     // người nợ
+          debtor_username: accountNum.debtor_username,  
+          debtor_fullname:  accountNum.debtor_fullname,      
+          money: req.body.money,
+          message: req.body.message,     
+          created_at: moment().format("YYYY-MM-DD HH:mm:ss").toString(),
+          isTrue: 0, // Phải chờ xác nhận bên kia. 1: đúng (có nợ thật), 0: sai (ví dụ : gửi nhắc nợ nhầm người chẳng hạn)
+          isActive: 1
+      };
+
+        ListDebt.create(_body, async (err, result) => {
+          if (err) {
+            return res.status(500).send({ status: "ERROR", message: err });
+          } else {
+            return res
+              .status(201)
+              .send({
+                status: "OK",
+                message: "Đã gửi nhắc nợ",
+                debt_id: result.debt_id
+              });
+          }
+        });
+
+  }
+  
+})
+
+
 
 // Xem danh sách nợ do bản thân tạo ra
 router.get('/view1', async function(req, res){
