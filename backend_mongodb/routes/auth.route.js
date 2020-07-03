@@ -1,16 +1,16 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const randToken = require('rand-token');
+//const randToken = require('rand-token');
 const moment = require("moment");
-const axios = require("axios");
-const md5 = require("md5");
+//const axios = require("axios");
+//const md5 = require("md5");
 const User = require("../models/user.model");
-const Account = require("../models/account.model");
+//const Account = require("../models/account.model");
 const Otp = require("../models/otp.model");
 var nodemailer = require("nodemailer");
 const config = require("../config/default.json");
-const process1 = require("../config/process.config");
+//const process1 = require("../config/process.config");
 // const jwt_decode = require('jwt-decode');
 const createError = require('http-errors');
 
@@ -19,7 +19,6 @@ const authModel = require('../models/auth.model');
 // const userModel = require('../models/user.model');
 // const User = require('../models/user.model');
 const UserFreshToken = require('../models/userRefreshToken.model');
-const config = require('../config/default.json');
 
 const router = express.Router();
 

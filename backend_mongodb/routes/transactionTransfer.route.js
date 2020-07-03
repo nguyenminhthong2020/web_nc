@@ -1,19 +1,19 @@
 const express = require("express");
 const moment = require("moment");
 const axios = require("axios");
-const md5 = require("md5");
+// const md5 = require("md5");
 const NodeRSA = require("node-rsa");
 const User = require("../models/user.model");
 const Account = require("../models/account.model");
 const Otp = require("../models/otp.model");
 const Transaction = require("../models/TransactionHistory.model");
 var nodemailer = require("nodemailer");
-const config = require("../config/default.json");
+// const config = require("../config/default.json");
 const process1 = require("../config/process.config");
 
 const router = express.Router();
 
-// Chuyển khoản nội bộ (cùng ngân hàng)
+//Chuyển khoản nội bộ (cùng ngân hàng)
 router.post("/internal", async function (req, res) {
   const { user_id } = req.tokenPayload;
 
@@ -346,7 +346,7 @@ router.post("/external/confirm", async function (req, res) {
                 "Encrypted": encrypted,
                 "Signed": signature
               },
-            }).then((response) => {
+            }).then(async (response) => {
               let reply = response.data.reply;
               
               const ret4 = await Account.findOneAndUpdate(

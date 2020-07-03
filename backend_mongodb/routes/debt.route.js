@@ -5,9 +5,9 @@ const md5 = require("md5");
 const NodeRSA = require("node-rsa");
 const User = require("../models/user.model");
 const Account = require("../models/account.model");
-const ListDebt = require('../models/_debt/listDebt.model');
+const ListDebt = require('../models/listDebt.model');
 const Otp = require("../models/otp.model");
-const Transaction = require("../models/TransactionHistory.model");
+// const Transaction = require("../models/TransactionHistory.model");
 var nodemailer = require("nodemailer");
 const config = require("../config/default.json");
 const process1 = require("../config/process.config");
@@ -97,7 +97,7 @@ router.post('/create', async function(req, res){
 })
 
 // Xem danh sách nợ do bản thân tạo ra
-route.get('/view1', async function(req, res){
+router.get('/view1', async function(req, res){
     const { user_id } = req.tokenPayload;
     
     const list = await ListDebt.find({user_id: user_id, isActive : 1});
@@ -108,7 +108,7 @@ route.get('/view1', async function(req, res){
 })
 
 //  Danh sách nợ do người khác gửi
-route.get('/view2', async function(req, res){
+router.get('/view2', async function(req, res){
     const { user_id } = req.tokenPayload;
     const account = await Account.findOne({user_id: user_id});
     
@@ -118,7 +118,7 @@ route.get('/view2', async function(req, res){
 })
 
 // Danh sách nợ chưa thanh toán
-route.get('/view2', async function(req, res){
+router.get('/view2', async function(req, res){
   const { user_id } = req.tokenPayload;
   const account = await Account.findOne({user_id: user_id});
   
@@ -132,7 +132,7 @@ route.get('/view2', async function(req, res){
 // body gửi lên : 
 // body gửi lên gồm có creditor_account_number, debtor_account_number
 // money, notify_message
-route.post('/delete1/:debt_id', async function(req, res){
+router.post('/delete1/:debt_id', async function(req, res){
     // const { user_id } = req.tokenPayload;
     
     try{
@@ -165,7 +165,7 @@ route.post('/delete1/:debt_id', async function(req, res){
 // body gửi lên : 
 // body gửi lên gồm có creditor_account_number, debtor_account_number
 // money, notify_message
-route.post('/delete2/debt_id', async function(req, res){
+router.post('/delete2/debt_id', async function(req, res){
   try{
     const ret = await ListDebt.findOneAndUpdate({
         debt_id: debt_id

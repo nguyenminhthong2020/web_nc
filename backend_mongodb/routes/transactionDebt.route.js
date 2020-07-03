@@ -5,9 +5,9 @@ const md5 = require("md5");
 const NodeRSA = require("node-rsa");
 const User = require("../models/user.model");
 const Account = require("../models/account.model");
-const ListDebt = require('../models/_debt/listDebt.model');
+const ListDebt = require('../models/listDebt.model');
 const Otp = require("../models/otp.model");
-const TransactionDebt = require("../models/_debt/transactionDebtHistory.model");
+const TransactionDebt = require("../models/transactionDebtHistory.model");
 var nodemailer = require("nodemailer");
 const config = require("../config/default.json");
 const process1 = require("../config/process.config");
@@ -51,7 +51,7 @@ router.post("/", async function (req, res) {
                 </div>`,
     };
   
-    transporter.sendMail(mainOptions, function (error, info) {
+    transporter.sendMail(mainOptions, async function (error, info) {
       if (error) {
         res
           .status(500)

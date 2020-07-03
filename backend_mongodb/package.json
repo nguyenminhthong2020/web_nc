@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.2",
     "bcrypt": "^4.0.1",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -27,8 +28,8 @@
     "jwt-decode": "^2.2.0",
     "md5": "^2.2.1",
     "moment": "^2.26.0",
-    "mongodb": "^3.5.8",
-    "mongoose": "^5.9.17",
+    "mongodb": "^3.5.9",
+    "mongoose": "^5.9.21",
     "mongoose-sequence": "^5.2.2",
     "morgan": "^1.10.0",
     "node-rsa": "^1.0.8",
