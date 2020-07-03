@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 const SavingsAccountSchema = new Schema(
   {
     saving_id: Number,
-    saving_account_number: String,   // 15620 + saving_id + user_id
+    saving_account_number: String,   
     user_id: Number,
     balance: Number,
     status: Number,       // 1: đang hoạt động, 0 : bị chặn hoặc hủy
