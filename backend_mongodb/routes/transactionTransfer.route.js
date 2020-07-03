@@ -49,17 +49,14 @@ router.post("/internal", async function (req, res) {
               </div>`,
   };
 
-  transporter.sendMail(mainOptions, function (err, info) {
+  transporter.sendMail(mainOptions, function (error, info) {
     if (error) {
       res
         .status(500)
         .send({ status: "ERROR", message: "Không thể gửi message. " + error });
     } else {
-      let receiver_account_number =
-        receiver_account_number1 == ""
-          ? req.body.receiver_account_number2
-          : req.body.receiver_account_number1;
-      time = moment().valueOf();
+      let receiver_account_number = (receiver_account_number1 == "") ? req.body.receiver_account_number2 : req.body.receiver_account_number1;
+      const time = moment().valueOf();
       // Lưu OTP vào CSDL
       const _body = {
         user_id: user_id,
@@ -80,7 +77,7 @@ router.post("/internal", async function (req, res) {
 
       Otp.create(_body, async (err, result) => {
         if (err) {
-          return res.status(500).json({ status: "ERROR", message: err });
+          return res.status(500).send({ status: "ERROR", message: err });
         } else {
           return res
             .status(200)
@@ -97,7 +94,7 @@ router.post("/internal", async function (req, res) {
 // Trong header có 2 trường là otp_id, email (chính là kết quả từ API phía trên)
 // Trong body có trường là otp (req.body.otp)
 router.post("/internal/confirm", async function (req, res) {
-  const time1 = moment().valueOf();
+  const time = moment().valueOf();
   const { user_id } = req.tokenPayload;
   const _otp_id = req.get("otp_id");
   const _email = req.get("email");
@@ -227,17 +224,14 @@ router.post("/external", async function (req, res) {
               </div>`,
   };
 
-  transporter.sendMail(mainOptions, function (err, info) {
+  transporter.sendMail(mainOptions, function (error, info) {
     if (error) {
       res
         .status(500)
         .send({ status: "ERROR", message: "Không thể gửi message. " + error });
     } else {
-      let receiver_account_number =
-        receiver_account_number1 == ""
-          ? req.body.receiver_account_number2
-          : req.body.receiver_account_number1;
-      time = moment().valueOf();
+      let receiver_account_number = (receiver_account_number1 == "") ? req.body.receiver_account_number2 : req.body.receiver_account_number1;
+      const time = moment().valueOf();
       // Lưu OTP vào CSDL
       const _body = {
         user_id: user_id,
@@ -258,7 +252,7 @@ router.post("/external", async function (req, res) {
 
       Otp.create(_body, async (err, result) => {
         if (err) {
-          return res.status(500).json({ status: "ERROR", message: err });
+          return res.status(500).send({ status: "ERROR", message: err });
         } else {
           return res
             .status(200)
@@ -275,7 +269,7 @@ router.post("/external", async function (req, res) {
 // Trong header có một trường là otp_id (chính là kết quả từ API phía trên)
 // Trong body có trường là otp (req.body.otp)
 router.post("/external/confirm", async function (req, res) {
-  const time1 = moment().valueOf();
+  const time = moment().valueOf();
   const { user_id } = req.tokenPayload;
   const _otp_id = req.get("otp_id");
   const _email = req.get("email");

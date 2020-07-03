@@ -236,7 +236,7 @@ router.post("/recharge", async function (req, res) {
         const keyPrivate = new NodeRSA(process.ourkey.RSA_PRIVATEKEY);
         const keysigned = keyPrivate.sign(responseForClient, "base64", "base64");
 
-        res.status(203).json({
+        res.status(203).send({
           status: "RSA success",
           responseSignature: keysigned,
         });
@@ -253,7 +253,7 @@ router.post("/recharge", async function (req, res) {
           privateKeys: [privateKey],
         });
 
-        res.status(203).json({
+        res.status(203).send({
           status: "PGP success",
           responseSignature: cleartext,
         });

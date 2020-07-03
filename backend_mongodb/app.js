@@ -59,7 +59,10 @@ app.use('/customer', verify, require('./routes/userCustomer.route'));
 app.use('/list-receiver', verify, require('./routes/listReceiver.route'));
 app.use('/list-receiver1', verify, require('./routes/listReceiver1.route'));
 //app.use('/otp', verify, require('./routes/otp.route'));
+app.use('/transfer-debt', verify, require('./routes/transactionDebt.route'));
 app.use('/transfer', vefiry, require('./routes/transactionTransfer.route'));
+app.use('/transaction', verify, require('./routes/viewTransaction.route'));
+app.use('/debt', verify, require('./routes/debt.route'));
 // APIs cho Partners
 app.use('/partner', require('./routes/_partner/partner.route'));
 

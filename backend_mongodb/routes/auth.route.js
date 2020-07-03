@@ -139,13 +139,13 @@ router.post('/forgot-password', async function(req, res){
                   </div>`,
       };
 
-      transporter.sendMail(mainOptions, function (err, info) {
+      transporter.sendMail(mainOptions, function (error, info) {
         if (error) {
           res
             .status(500)
             .send({ status: "ERROR", message: "Không thể gửi message. " + error });
         } else {
-          time = moment().valueOf();
+          const time = moment().valueOf();
           // Lưu OTP vào CSDL
           const _body = {
             user_id: id,
@@ -159,7 +159,7 @@ router.post('/forgot-password', async function(req, res){
 
           Otp.create(_body, async (err, result) => {
             if (err) {
-              return res.status(500).json({ status: "ERROR", message: err });
+              return res.status(500).send({ status: "ERROR", message: err });
             } else {
               return res
                 .status(200)
@@ -177,7 +177,7 @@ router.post('/forgot-password', async function(req, res){
 // header có otp_id và email (kết quả trả về của API trên)
 router.post("/forgot-password/confirm", async function(req, res){
         
-      const time1 = moment().valueOf();
+      const time = moment().valueOf();
       const _otp_id = req.get("otp_id");
       const _email = req.get("email");
       const str = _email + "";
