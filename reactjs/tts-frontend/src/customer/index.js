@@ -11,6 +11,10 @@ import Home from './home/index';
 import AccountInfo from './account_info/index';
 import ReceiverInfo from './receiver_info/index';
 import Transfer from './transfer/index';
+import InterTransfer from './inter_transfer/index';
+import Debt from './debt/index';
+
+
 
 import fakeAuth from './../auth';
 
@@ -35,8 +39,9 @@ export default class Admin extends React.Component {
       <PrivateRoute path = "/error-404" component = {Navbar} />
       <PrivateRoute path = "/account_info" component = {Navbar} />
       <PrivateRoute path = "/receiver_info" component = {Navbar} />
-      <PrivateRoute path = "/transfer" component = {Navbar} />      
-
+      <PrivateRoute path = "/transfer" component = {Navbar} />
+      <PrivateRoute path = "/inter_transfer" component = {Navbar} />
+      <PrivateRoute path = "/debt" component = {Navbar} />
       <Route path = "/login"/>
       <Redirect to="/error-404" />
     </Switch>
@@ -47,7 +52,9 @@ export default class Admin extends React.Component {
       <PrivateRoute path = "/error-404" component = {NotFound} />
       <PrivateRoute path = "/account_info" component = {AccountInfo} />
       <PrivateRoute path = "/receiver_info" component = {ReceiverInfo} />
-      <PrivateRoute path = "/transfer" component = {Transfer} />  
+      <PrivateRoute path = "/transfer" component = {Transfer} />
+      <PrivateRoute path = "/inter_transfer" component = {InterTransfer} />
+      <PrivateRoute path = "/debt" component = {Debt} />
       <Route path = "/login" component = {Login} />
       <Route path = "/logout" component = {Logout} />
       <Redirect to="/error-404" />

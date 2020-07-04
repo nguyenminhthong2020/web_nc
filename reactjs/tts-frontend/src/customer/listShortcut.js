@@ -46,27 +46,27 @@ const listShortcut = () => {
     });
   return (
     <div className="animated fadeIn">
-      <Card>
+      <Card style={{borderStyle: 'none'}}>
         <CardHeader style={{backgroundColor: 'coral'}}>
           <strong>Truy cập nhanh</strong>
         </CardHeader>
-        <CardBody>
+        <CardBody style={{border: '1px solid', borderColor: 'coral'}}>
             <ListGroup style={{fontSize: '14px'}}>
               <ListGroupItem><Badge pill>{'>'} </Badge> <a href="/account_info" style={{color:'#6c757d'}}>Danh sách tài khoản</a></ListGroupItem>
               <ListGroupItem><Badge pill>{'>'} </Badge> <a href="/receiver_info" style={{color:'#6c757d'}}>Người nhận</a></ListGroupItem>
               <ListGroupItem><Badge pill>{'>'} </Badge> <a href="/transfer" style={{color:'#6c757d'}}>Chuyển tiền</a></ListGroupItem>
-              <ListGroupItem><Badge pill>{'>'} </Badge> Chuyển tiền liên ngân hàng *</ListGroupItem>
-              <ListGroupItem><Badge pill>{'>'} </Badge> Mở tài khoản</ListGroupItem>
+              <ListGroupItem><Badge pill>{'>'} </Badge> <a href="/inter_transfer" style={{color:'#6c757d'}}>Chuyển tiền liên ngân hàng *</a></ListGroupItem>
+              <ListGroupItem><Badge pill>{'>'} </Badge> <a href="/debt" style={{color:'#6c757d'}}>Nhắc nợ</a></ListGroupItem>
             </ListGroup>   
         </CardBody>
       </Card>
       <br/>
       <br/>
-      <Card>
-        <CardHeader style={{backgroundColor: 'coral'}}>
+      <Card style={{borderStyle: 'none'}}>
+      <CardHeader style={{backgroundColor: 'coral'}}>
           <strong>TTS iB@anking của tôi</strong>
         </CardHeader>
-        <CardBody>
+        <CardBody style={{border: '1px solid', borderColor: 'coral'}}>
             <ListGroup style={{fontSize: '14px'}}>
               <ListGroupItem><Badge pill>{'>'} </Badge> Thông tin cá nhân</ListGroupItem>
               <ListGroupItem><Badge pill>{'>'} </Badge> Cài đặt người dùng</ListGroupItem>
