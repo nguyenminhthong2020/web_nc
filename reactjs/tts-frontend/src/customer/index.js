@@ -14,7 +14,7 @@ import Transfer from './transfer/index';
 import InterTransfer from './inter_transfer/index';
 import Debt from './debt/index';
 import Transaction from './transaction/index';
-
+import ChangePassword from './change_password/index';
 
 
 import fakeAuth from './../auth';
@@ -45,6 +45,7 @@ export default class Admin extends React.Component {
       <PrivateRoute path = "/debt" component = {Navbar} />
       <PrivateRoute path = "/transaction/detail" component = {Navbar} />
       <PrivateRoute path = "/transaction" component = {Navbar} />
+      <PrivateRoute path = "/change_password" component = {Navbar} />
       <Route path = "/login"/>
       <Redirect to="/error-404" />
     </Switch>
@@ -60,6 +61,7 @@ export default class Admin extends React.Component {
       <PrivateRoute path = "/debt" component = {Debt} />
       <PrivateRoute path = "/transaction/detail" component = {Debt} />
       <PrivateRoute path = "/transaction" component = {Transaction} />
+      <PrivateRoute path = "/change_password" component = {ChangePassword} />
       <Route path = "/login" component = {Login} />
       <Route path = "/logout" component = {Logout} />
       <Redirect to="/error-404" />
