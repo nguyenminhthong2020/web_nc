@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 // Đây chỉ là transaction cho thanh toán & chuyển khoản
 // không có giao dịch hay gì liên quan đến nợ nần
-const otpSchema = mongoose.Schema(
+const otpSchema = new Schema(
 	{
         otp_id: Number,
         user_id: Number,
@@ -25,7 +25,7 @@ const otpSchema = mongoose.Schema(
     }
 );
 
-TransactionSchema.plugin(AutoIncrement, { inc_field: 'otp_id' });
+otpSchema.plugin(AutoIncrement, { inc_field: 'otp_id' });
 
 module.exports = mongoose.model("Otp", otpSchema);
 

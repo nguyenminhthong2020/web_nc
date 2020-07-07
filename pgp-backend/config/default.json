@@ -9,6 +9,7 @@
       "partnerForTestRSA": "VCB",
       "secretPartnerForTestRSA": "Vietcombank",
       "expiresIn": "10m",
+      "expiresIn2": "10800000",
       "expireTime": 600000,
       "refreshTokenSz": 80
     }

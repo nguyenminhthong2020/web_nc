@@ -97,7 +97,6 @@ router.post('/refresh', async (req, res) => {
 // Quên mật khẩu 
 // body gửi lên có username và email
 router.post('/forgot-password', async function(req, res){
-
       //const _account = await Account.findOne({user_id: user_id});
       const _user = await User.findOne({ username: req.body.username, email: req.body.email });
       if(!_user)
@@ -172,7 +171,7 @@ router.post('/forgot-password', async function(req, res){
     });
 });
 
-// body gửi lên có newPassword
+// body gửi lên có code, newPassword
 // header có otp_id và email (kết quả trả về của API trên)
 router.post("/forgot-password/confirm", async function(req, res){
         
@@ -186,14 +185,14 @@ router.post("/forgot-password/confirm", async function(req, res){
           .status(400)
           .send({ status_code: "NO_OTPID", message: "Thiếu otp_id" });
       } else {
-        const _otp = await Otp.findOne({ otp_id: otp_id });
+        const _otp = await Otp.findOne({ otp_id: _otp_id,  code: req.body.code});
 
         if (!_otp) {
           return res
             .status(404)
             .send({ status_code: "NO_OTP", message: "Không tìm thấy otp" });
         } else {
-          if (time - _otp.time > process.env.OTP_EXPIRE) {
+          if (time - _otp.time > config.auth.expireTime) {
             return res
               .status(400)
               .send({ status_code: "TIME_EXPIRE", message: "Otp hết hạn." });
@@ -212,7 +211,7 @@ router.post("/forgot-password/confirm", async function(req, res){
               .send({ status_code: "INVALID_EMAIL", message: "Email không hợp lệ" });
             }
             
-            const newPasswordHash = bcrypt.hashSync(newPassword, 8);
+            const newPasswordHash = bcrypt.hashSync(req.body.newPassword, 8);
             const ret2 = await User.findOneAndUpdate({user_id: _otp.user_id}, {password: newPasswordHash});
             
             

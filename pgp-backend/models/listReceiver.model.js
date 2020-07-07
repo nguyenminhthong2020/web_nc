@@ -12,7 +12,7 @@ const ListReceiverSchema = new Schema(
   }
 );
 
-UserSchema.plugin(AutoIncrement, { inc_field: 'id' });
+ListReceiverSchema.plugin(AutoIncrement, { inc_field: 'id' });
 
 //Export model
-module.exports = mongoose.model('ListReceiver', UserSchema);
+module.exports = mongoose.model('ListReceiver', ListReceiverSchema);

@@ -1,5 +1,5 @@
 const express = require("express");
-const moment = require("moment");
+// const moment = require("moment");
 const User = require("../models/user.model");
 const Account = require("../models/account.model");
 
@@ -70,37 +70,69 @@ router.get("/", async function (req, res) {
 
 // Chỉ edit được số tiền trong tài khoản (nạp thêm)
 // Employee thực hiện chức năng này. Admin cũng thực hiện được.
-// Gửi lên body : account_number, money,
+// Gửi lên body : account_number, money, username, type  // 1 : cung cấp account_number, 2 : cung cấp username
+// type kiểu chuỗi
 router.post("/edit", async function (req, res) {
-  // user_id phía trên này là lấy ra từ Payload qua middleware Verify
-  const { user_id } = req.tokenPayload;
-  const checkUser = await User.findOne({ user_id: user_id });
-  if (checkUser.role == 0) {
-    res.status(400).send("Bạn không đủ thẩm quyền.");
-  }
+    // user_id phía trên này là lấy ra từ Payload qua middleware Verify
+    const { user_id } = req.tokenPayload;
+    const checkUser = await User.findOne({ user_id: user_id });
+    if (checkUser.role == 0) {
+      return res.status(400).send({message:"Bạn không đủ thẩm quyền."});
+    }
+    
+    if(req.body.type == "1"){
+        const rows = await Account.findOne({
+          account_number: req.body.account_number,
+        });
+      
+        if (!rows) {
+          return res
+            .status(403)
+            .send({ message: `Không tìm ra account ${req.body.account_number}` });
+        }
+      
+        let _balance = +req.body.money || 0;
+        _balance = _balance + rows.balance;
+        const ret = await Account.findOneAndUpdate(
+          { account_number: req.body.account_number },
+          { balance: _balance}
+        );
+      
+        if (ret) {
+          return res.status(500).send({ message: `Thành công.` });
+        } else {
+          return res.status(500).send({ message: `Thất bại.` });
+        }
+    }
 
-  const rows = await Account.findOne({
-    account_number: req.body.account_number,
-  });
+    if(req.body.type == "2"){
+      const _user = await User.findOne({username: req.body.username});
 
-  if (!rows) {
-    return res
-      .status(403)
-      .send({ message: `Không tìm ra account ${req.body.account_number}` });
-  }
+      if (!_user) {
+        return res
+          .status(403)
+          .send({ message: `Không tìm ra tài khoản có username ${req.body.username}` });
+      }
+      
+      const rows = await Account.findOne({
+        user_id: _user.user_id
+      });
+    
+      let _balance = +req.body.money || 0;
+      _balance = _balance + rows.balance;
+      const ret = await Account.findOneAndUpdate(
+        { user_id: _user.user_id },
+        { balance: _balance}
+      );
+    
+      if (ret) {
+        return res.status(500).send({ message: `Thành công.` });
+      } else {
+        return res.status(500).send({ message: `Thất bại.` });
+      }
 
-  let _balance = +req.body.money || 0;
-  _balance = _balance + rows.balance;
-  const ret = await Account.findOneAndUpdate(
-    { user_id: req.body.user_id },
-    { balance: _balance, status : req.body.status}
-  );
-
-  if (ret) {
-    return res.status(500).send({ message: `Thành công.` });
-  } else {
-    return res.status(500).send({ message: `Thất bại.` });
-  }
+    }
+  
 });
 
 router.post("/delete", async function (req, res) {
@@ -108,7 +140,7 @@ router.post("/delete", async function (req, res) {
     const { user_id } = req.tokenPayload;
     const checkUser = await User.findOne({ user_id: user_id });
     if (checkUser.role == 0) {
-      res.status(400).send("Bạn không đủ thẩm quyền.");
+      return res.status(400).send({message:"Bạn không đủ thẩm quyền."});
     }
     
     try{

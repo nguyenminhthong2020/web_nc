@@ -1,12 +1,14 @@
 const express = require("express");
 const moment = require("moment");
 const axios = require("axios");
-const md5 = require("md5");
+// const md5 = require("md5");
 const NodeRSA = require("node-rsa");
 const User = require("../models/user.model");
 const Account = require("../models/account.model");
 const Otp = require("../models/otp.model");
 const Transaction = require("../models/TransactionHistory.model");
+const ListReceiver = require('../models/listReceiver.model');
+
 var nodemailer = require("nodemailer");
 const config = require("../config/default.json");
 const process1 = require("../config/process.config");
@@ -14,6 +16,7 @@ const process1 = require("../config/process.config");
 const router = express.Router();
 
 // Chuyển khoản nội bộ (cùng ngân hàng)
+// Người gửi nhập receiver_account_number
 router.post("/internal", async function (req, res) {
   const { user_id } = req.tokenPayload;
 
@@ -49,17 +52,14 @@ router.post("/internal", async function (req, res) {
               </div>`,
   };
 
-  transporter.sendMail(mainOptions, function (err, info) {
+  transporter.sendMail(mainOptions, function (error, info) {
     if (error) {
       res
         .status(500)
         .send({ status: "ERROR", message: "Không thể gửi message. " + error });
     } else {
-      let receiver_account_number =
-        receiver_account_number1 == ""
-          ? req.body.receiver_account_number2
-          : req.body.receiver_account_number1;
-      time = moment().valueOf();
+      
+      const time = moment().valueOf();
       // Lưu OTP vào CSDL
       const _body = {
         user_id: user_id,
@@ -67,26 +67,26 @@ router.post("/internal", async function (req, res) {
         code: code,
         time: time,
         sender_account_number: req.body.sender_account_number,
-        receiver_account_number: receiver_account_number,
+        receiver_account_number: req.body.receiver_account_number,
         sender_bank_code: "GO",
         receive_bank_code: "GO",
         money: req.body.money,
         transaction_fee: 0,
         type_fee: req.body.type_fee, //*Chú ý là String. 1: người gửi trả, 0: người nhận trả. Thực ra phí là 0
-        message: req.body.message,
+        message: req.body.message
       };
       // let newOtp = Otp( _body);
       // const ret = await newOtp.save();
 
       Otp.create(_body, async (err, result) => {
         if (err) {
-          return res.status(500).json({ status: "ERROR", message: err });
+          return res.status(500).send({ status: "ERROR", message: err });
         } else {
           return res
             .status(200)
             .send({
               status: "OK",
-              data: { otp_id: result.otp_id, time: result.time },
+              data: { otp_id: result.otp_id, email: result.email, time: result.time},
             });
         }
       });
@@ -94,12 +94,97 @@ router.post("/internal", async function (req, res) {
   });
 });
 
-// Trong header có một trường là otp_id (chính là kết quả từ API phía trên)
+
+// Chuyển khoản nội bộ (cùng ngân hàng)
+// Người gửi gửi lên remind_name
+router.post("/internal", async function (req, res) {
+  const { user_id } = req.tokenPayload;
+  
+  //const _account = await Account.findOne({user_id: user_id});
+  const _user = await User.findOne({ user_id: user_id });
+  const code = Math.floor(Math.random() * 999999) + 100000;
+  let email = _user.email;
+  let fullname = _user.fullname;
+
+  var transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "secondwebnc2020@gmail.com",
+      pass: "infymt6620",
+    },
+  });
+
+  var mainOptions = {
+    // thiết lập đối tượng, nội dung gửi mail
+    from: "secondwebnc2020@gmail.com",
+    to: email,
+    subject: "[Xác nhận OTP]",
+    text: "Tin nhắn từ ngân hàng Go ",
+    html: `<div>
+                  Xin chào ${fullname},
+                  <br><br>
+                  Vừa có một yêu cầu giao dịch từ bạn ở ngân hàng chúng tôi. <br>
+                  Dưới đây là mã OTP có thời hạn 10 phút : <br>
+                  <h2>${code}</h2><br>
+                  Nếu người yêu cầu không phải bạn, xin bỏ qua email này.
+                  <br><br>
+                  Trân trọng
+              </div>`,
+  };
+
+  transporter.sendMail(mainOptions, function (error, info) {
+    if (error) {
+      res
+        .status(500)
+        .send({ status: "ERROR", message: "Không thể gửi message. " + error });
+    } else {
+      
+      const _receive = ListReceiver.findOne({user_id: user_id, remind_name: req.body.remind_name});
+
+      const time = moment().valueOf();
+      // Lưu OTP vào CSDL
+      const _body = {
+        user_id: user_id,
+        email: email,
+        code: code,
+        time: time,
+        sender_account_number: req.body.sender_account_number,
+        receiver_account_number: _receive.receiver_account_number,
+        sender_bank_code: "GO",
+        receive_bank_code: "GO",
+        money: req.body.money,
+        transaction_fee: 0,
+        type_fee: req.body.type_fee, //*Chú ý là String. 1: người gửi trả, 0: người nhận trả. Thực ra phí là 0
+        message: req.body.message
+      };
+      // let newOtp = Otp( _body);
+      // const ret = await newOtp.save();
+
+      Otp.create(_body, async (err, result) => {
+        if (err) {
+          return res.status(500).send({ status: "ERROR", message: err });
+        } else {
+          return res
+            .status(200)
+            .send({
+              status: "OK",
+              data: { otp_id: result.otp_id, email: result.email, time: result.time},
+            });
+        }
+      });
+    }
+  });
+});
+
+
+// Trong header có 2 trường là otp_id, email (chính là kết quả từ API phía trên)
 // Trong body có trường là otp (req.body.otp)
 router.post("/internal/confirm", async function (req, res) {
-  const time1 = moment().valueOf();
+  const time = moment().valueOf();
   const { user_id } = req.tokenPayload;
   const _otp_id = req.get("otp_id");
+  const _email = req.get("email");
+  const str = _email + "";
 
   if (!_otp_id) {
     return res
@@ -113,11 +198,26 @@ router.post("/internal/confirm", async function (req, res) {
         .status(404)
         .send({ status_code: "NO_OTP", message: "Không tìm thấy otp" });
     } else {
-      if (time - _otp.time > process.env.OTP_EXPIRE) {
+      if (time - _otp.time > config.auth.expireTime) {
         return res
           .status(400)
           .send({ status_code: "TIME_EXPIRE", message: "Otp hết hạn." });
       } else {
+         
+        if(str == "undefined")
+            {
+              return res
+              .status(400)
+              .send({ status_code: "INVALID_EMAIL", message: "Thiếu trường email" });
+            }
+
+        if(_email != _otp.email)
+        {
+          return res
+          .status(400)
+          .send({ status_code: "INVALID_EMAIL", message: "Email không hợp lệ" });
+        }
+
         const accountSend = await Account.findOne({
           account_number: _otp.sender_account_number,
         });
@@ -163,7 +263,7 @@ router.post("/internal/confirm", async function (req, res) {
             transaction_fee: _otp.transaction_fee,
             type_fee: _otp.type_fee, //*Chú ý là String. 1: người gửi trả, 0: người nhận trả. Thực ra phí là 0
             message: _otp.message, // Nội dung cần chuyển, Ví dụ: "gửi trả nợ cho ông A"
-            created_at: moment().format("YYYY-MM-DD HH:mm:ss").toString(),
+            created_at: moment().format("YYYY-MM-DD HH:mm:ss").toString()
           };
 
           let newTransaction = Transaction(_body1);
@@ -175,6 +275,7 @@ router.post("/internal/confirm", async function (req, res) {
 });
 
 // Chuyển khoản liên ngân hàng
+// Người gửi nhập receiver_account_number
 router.post("/external", async function (req, res) {
   const { user_id } = req.tokenPayload;
 
@@ -210,17 +311,15 @@ router.post("/external", async function (req, res) {
               </div>`,
   };
 
-  transporter.sendMail(mainOptions, function (err, info) {
+  transporter.sendMail(mainOptions, function (error, info) {
     if (error) {
       res
         .status(500)
         .send({ status: "ERROR", message: "Không thể gửi message. " + error });
     } else {
-      let receiver_account_number =
-        receiver_account_number1 == ""
-          ? req.body.receiver_account_number2
-          : req.body.receiver_account_number1;
-      time = moment().valueOf();
+      //let receiver_account_number = (receiver_account_number1 == "") ? req.body.receiver_account_number2 : req.body.receiver_account_number1;
+      
+      const time = moment().valueOf();
       // Lưu OTP vào CSDL
       const _body = {
         user_id: user_id,
@@ -228,26 +327,26 @@ router.post("/external", async function (req, res) {
         code: code,
         time: time,
         sender_account_number: req.body.sender_account_number,
-        receiver_account_number: receiver_account_number,
+        receiver_account_number: req.body.receiver_account_number,
         sender_bank_code: "GO",
         receive_bank_code: req.body.receive_bank_code,
         money: req.body.money,
         transaction_fee: 0,
         type_fee: req.body.type_fee, //*Chú ý là String. 1: người gửi trả, 0: người nhận trả. Thực ra phí là 0
-        message: req.body.message,
+        message: req.body.message
       };
       // let newOtp = Otp( _body);
       // const ret = await newOtp.save();
 
       Otp.create(_body, async (err, result) => {
         if (err) {
-          return res.status(500).json({ status: "ERROR", message: err });
+          return res.status(500).send({ status: "ERROR", message: err });
         } else {
           return res
             .status(200)
             .send({
               status: "OK",
-              data: { otp_id: result.otp_id, time: result.time },
+              data: { otp_id: result.otp_id, email: result.email, time: result.time },
             });
         }
       });
@@ -255,12 +354,97 @@ router.post("/external", async function (req, res) {
   });
 });
 
+// Chuyển khoản liên ngân hàng
+// Người gửi gửi lên remind_name
+router.post("/external", async function (req, res) {
+  const { user_id } = req.tokenPayload;
+
+  //const _account = await Account.findOne({user_id: user_id});
+  const _user = await User.findOne({ user_id: user_id });
+  const code = Math.floor(Math.random() * 999999) + 100000;
+  let email = _user.email;
+  let fullname = _user.fullname;
+
+  var transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "secondwebnc2020@gmail.com",
+      pass: "infymt6620",
+    },
+  });
+
+  var mainOptions = {
+    // thiết lập đối tượng, nội dung gửi mail
+    from: "secondwebnc2020@gmail.com",
+    to: email,
+    subject: "[Xác nhận OTP]",
+    text: "Tin nhắn từ ngân hàng Go ",
+    html: `<div>
+                  Xin chào ${fullname},
+                  <br><br>
+                  Vừa có một yêu cầu giao dịch từ bạn ở ngân hàng chúng tôi. <br>
+                  Dưới đây là mã OTP có thời hạn 10 phút : <br>
+                  <h2>${code}</h2><br>
+                  Nếu người yêu cầu không phải bạn, xin bỏ qua email này.
+                  <br><br>
+                  Trân trọng
+              </div>`,
+  };
+
+  transporter.sendMail(mainOptions, function (error, info) {
+    if (error) {
+      res
+        .status(500)
+        .send({ status: "ERROR", message: "Không thể gửi message. " + error });
+    } else {
+      //let receiver_account_number = (receiver_account_number1 == "") ? req.body.receiver_account_number2 : req.body.receiver_account_number1;
+      
+      const _receive = ListReceiver.findOne({user_id: user_id, remind_name: req.body.remind_name});
+
+      const time = moment().valueOf();
+      // Lưu OTP vào CSDL
+      const _body = {
+        user_id: user_id,
+        email: email,
+        code: code,
+        time: time,
+        sender_account_number: req.body.sender_account_number,
+        receiver_account_number: _receive.receiver_account_number,
+        sender_bank_code: "GO",
+        receive_bank_code: req.body.receive_bank_code,
+        money: req.body.money,
+        transaction_fee: 0,
+        type_fee: req.body.type_fee, //*Chú ý là String. 1: người gửi trả, 0: người nhận trả. Thực ra phí là 0
+        message: req.body.message
+      };
+      // let newOtp = Otp( _body);
+      // const ret = await newOtp.save();
+
+      Otp.create(_body, async (err, result) => {
+        if (err) {
+          return res.status(500).send({ status: "ERROR", message: err });
+        } else {
+          return res
+            .status(200)
+            .send({
+              status: "OK",
+              data: { otp_id: result.otp_id, email: result.email, time: result.time },
+            });
+        }
+      });
+    }
+  });
+});
+
+
 // Trong header có một trường là otp_id (chính là kết quả từ API phía trên)
 // Trong body có trường là otp (req.body.otp)
 router.post("/external/confirm", async function (req, res) {
-  const time1 = moment().valueOf();
+  const time = moment().valueOf();
   const { user_id } = req.tokenPayload;
   const _otp_id = req.get("otp_id");
+  const _email = req.get("email");
+  const str = _email + "";
 
   if (!_otp_id) {
     return res
@@ -274,11 +458,26 @@ router.post("/external/confirm", async function (req, res) {
         .status(404)
         .send({ status_code: "NO_OTP", message: "Không tìm thấy otp" });
     } else {
-      if (time - _otp.time > process.env.OTP_EXPIRE) {
+      if (time - _otp.time > config.auth.expireTime) {
         return res
           .status(400)
           .send({ status_code: "TIME_EXPIRE", message: "Otp hết hạn." });
       } else {
+        if(str == "undefined")
+            {
+              return res
+              .status(400)
+              .send({ status_code: "INVALID_EMAIL", message: "Thiếu trường email" });
+            }
+            
+        if(_email != _otp.email)
+        {
+          return res
+          .status(400)
+          .send({ status_code: "INVALID_EMAIL", message: "Email không hợp lệ" });
+        }
+
+
         const accountSend = await Account.findOne({
           account_number: _otp.sender_account_number,
         });
@@ -318,7 +517,7 @@ router.post("/external/confirm", async function (req, res) {
                 "Encrypted": encrypted,
                 "Signed": signature
               },
-            }).then((response) => {
+            }).then(async (response) => {
               let reply = response.data.reply;
               
               const ret4 = await Account.findOneAndUpdate(
@@ -340,17 +539,17 @@ router.post("/external/confirm", async function (req, res) {
                 transaction_fee: _otp.transaction_fee,
                 type_fee: _otp.type_fee, //*Chú ý là String. 1: người gửi trả, 0: người nhận trả. Thực ra phí là 0
                 message: _otp.message, // Nội dung cần chuyển, Ví dụ: "gửi trả nợ cho ông A"
-                created_at: moment().format("YYYY-MM-DD HH:mm:ss").toString(),
+                created_at: moment().format("YYYY-MM-DD HH:mm:ss").toString()
               };
 
               let newTransaction = Transaction(_body1);
               const ret5 = await newTransaction.save();
 
-              res.status(200).send({message: reply});
+              return res.status(200).send({message: reply});
               
             }).catch((error) => {
               const str_response = JSON.stringify(error.response.data);
-              res.status(500).send({message: str_response});
+              return res.status(500).send({message: str_response});
             });
 
 

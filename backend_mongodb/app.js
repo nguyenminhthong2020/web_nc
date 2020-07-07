@@ -24,9 +24,9 @@ const morgan = require('morgan');
 require('express-async-errors');
 const dotenv = require('dotenv');
 dotenv.config();
-require('./utils/db');
+const db = require('./utils/db');
 
-const PORT = process.env.PORT || 5000;
+const port = process.env.PORT || 5000;
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes 
     max: 100 // limit each IP to 100 requests per windowMs
@@ -42,6 +42,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(limiter);
 
+//console.log("\nThis is URI: \n"+process.env.MONGODB_URI+"\n");
+
+(async () => {
+  try {
+    const dbInfo = await db.connectDB(process.env.MONGODB_URI);
+    if (dbInfo) {
+      console.log(`\nConnected to MongoDB successfully ${dbInfo.connection.host}`)
+    }
+  } catch (error) {
+    console.log(`\nConnected to DB failed ${error}`)
+  }
+})();
+
 // Index - Home
 app.get('/', (req, res) => {              
     res.json('Welcome to our Internet Banking.');
@@ -51,7 +64,7 @@ app.get('/', (req, res) => {
   app.use('/auth', require('./routes/auth.route'));
 // // // Dành cho Admin hoặc Employee
 app.use('/account',  verify, require('./routes/account.route'));
-app.use('/user', require('./routes/user.route'));  
+app.use('/user', verify, require('./routes/user.route'));  
 
 app.use('/list-receiver', verify, require('./routes/listReceiver.route'));
 app.use('/list-receiver1', verify, require('./routes/listReceiver1.route'));
@@ -80,8 +93,8 @@ app.use(function (err, req, res, next) {        // default error-handler
       }
 })
 
-app.listen(PORT,()=>{
-    console.log(`API is running at http://localhost:${PORT}`)
+app.listen(port,()=>{
+    console.log(`API is running at http://localhost:${port}`)
 })
 
 

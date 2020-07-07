@@ -34,7 +34,7 @@ router.post("/", async function(req, res){
                 remind_name: req.body.remind_name
               }
 
-              let newList1 = ListReceiver(newReceiver);
+              let newList1 = ListReceiver(newReceiver1);
               const ret1 = await newList1.save();
 
               return res.status(201).send({message : "thêm thành công"});
@@ -54,7 +54,7 @@ router.get("/", async function(req, res){
   const {user_id} = req.tokenPayload;
 
    try{
-     const list = ListReceiver.find({user_id: user_id});
+     const list = await ListReceiver.find({user_id: user_id});
      return res.status(200).send(list);
    }catch(err){
       return res.status(500).send(err.message);
@@ -93,7 +93,7 @@ router.post("/delete", async function(req, res){
       user_id: user_id,
       receiver_account_number: req.body.receiver_account_number
    });
-      
+      return res.status(200).send({message:"đã xóa"});
    }catch(err){
       return res.status(500).send(err.message);
    }
