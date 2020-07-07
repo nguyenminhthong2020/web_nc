@@ -28,23 +28,18 @@ import {
 export default class TransferForm extends React.Component {
   constructor(props){
     super(props)
-    let LoggedIn = false;
     this.state = {
-      username: '',
-      password: '',
-      isOpen: true,
       activeTab: 0,
       numberAccount: DB.listAccounts()[0].number,
       balanceAccount: DB.listAccounts()[0].balance,
       bankReceiver: DB.listBanks()[0].name,
       bankCodeReceiver: DB.listBanks()[0].bankCode,
-      numberReceiver: '',
-      nameReceiver: null,
+      numberReceiver: null,
+      nameReceiver: '',
       money: null,
       message: '',
       method: DB.listMethods()[0].type,
       otp : '',
-      LoggedIn,
     }
     this.onChange = this.onChange.bind(this);
     this.selectAccountChange = this.selectAccountChange.bind(this);
@@ -389,7 +384,7 @@ export default class TransferForm extends React.Component {
                 {/* {Chuyển tiền}*/}
                 <br/>
                 <div style = {{textAlign: 'center'}}>
-                  <Button>XÁC NHẬN</Button>
+                <Button disabled={this.state.nameReceiver =='' || this.state.money == null || this.state.money == ''}>XÁC NHẬN</Button>
                 </div>
               </Form>
             </TabPane>
@@ -489,7 +484,7 @@ export default class TransferForm extends React.Component {
                         <CardBody>
                             <Label><b style = {{color: 'green'}}>Giao dịch thành công</b></Label>
                             <br/>                        
-                            <Label>• Mã giao dịch: <a href = {'/transaction?id=' + this.state.numberAccount}>{this.state.numberAccount}</a></Label>
+                            <Label>• Mã giao dịch: <a href = {'/transaction/detail?id=' + this.state.numberAccount}>{this.state.numberAccount}</a></Label>
                         </CardBody>
                     </Card>
                 </FormGroup>                

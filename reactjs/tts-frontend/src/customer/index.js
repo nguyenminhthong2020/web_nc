@@ -13,6 +13,7 @@ import ReceiverInfo from './receiver_info/index';
 import Transfer from './transfer/index';
 import InterTransfer from './inter_transfer/index';
 import Debt from './debt/index';
+import Transaction from './transaction/index';
 
 
 
@@ -42,6 +43,8 @@ export default class Admin extends React.Component {
       <PrivateRoute path = "/transfer" component = {Navbar} />
       <PrivateRoute path = "/inter_transfer" component = {Navbar} />
       <PrivateRoute path = "/debt" component = {Navbar} />
+      <PrivateRoute path = "/transaction/detail" component = {Navbar} />
+      <PrivateRoute path = "/transaction" component = {Navbar} />
       <Route path = "/login"/>
       <Redirect to="/error-404" />
     </Switch>
@@ -55,6 +58,8 @@ export default class Admin extends React.Component {
       <PrivateRoute path = "/transfer" component = {Transfer} />
       <PrivateRoute path = "/inter_transfer" component = {InterTransfer} />
       <PrivateRoute path = "/debt" component = {Debt} />
+      <PrivateRoute path = "/transaction/detail" component = {Debt} />
+      <PrivateRoute path = "/transaction" component = {Transaction} />
       <Route path = "/login" component = {Login} />
       <Route path = "/logout" component = {Logout} />
       <Redirect to="/error-404" />

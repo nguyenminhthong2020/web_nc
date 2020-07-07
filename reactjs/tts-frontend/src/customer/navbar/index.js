@@ -55,7 +55,7 @@ export default class Nav extends Component {
                 <li className="nav-item"><a href="/transfer" className="nav-link">Chuyển tiền</a></li>
                 <li className="nav-item"><a href="/debt" className="nav-link">Nhắc nợ</a></li>
                 <li className="nav-item"><a href="" className="nav-link">Tiết kiệm</a></li>
-                <li className="nav-item"><a href="" className="nav-link">Tiện ích</a></li>
+                <li className="nav-item"><a href="/transaction" className="nav-link">Lịch sử giao dịch</a></li>
                 <li className="nav-item"><a href="" className="nav-link">Hỗ trợ</a></li>
               </ul>
             </div>

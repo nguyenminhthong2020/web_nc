@@ -191,11 +191,49 @@ const listReceivedDebts = () => [
   }
 ] 
 
+const listTransactions = () => [  
+  {
+    code: "111255001",
+    number: "660255001",
+    type: "Nhận tiền",
+    partnerAcconut: "660255002",
+    money: 3500000,
+    time: "08/25/2015",
+    message: "",
+  },
+  {
+    code: "222255006",
+    number: "660255001",
+    type: "Chuyển khoản",
+    partnerAcconut: "660255003",
+    money: 1200000,
+    time: "01/15/2015",
+    message: "",
+  },{
+    code: "333255001",
+    number: "660255001",
+    type: "Nhận tiền",
+    partnerAcconut: "660255001",
+    money: 3600000,
+    time: "08/25/2015",
+    message: "",
+  },{
+    code: "1221553",
+    number: "660255003",
+    type: "Nhận tiền",
+    partnerAcconut: "660255001",
+    money: 3600000,
+    time: "08/25/2015",
+    message: "",
+  }
+] 
+
 export default {
   listBanks,
   listReceivers,
   listAccounts,
   listMethods,
   listCreatedDebts,
-  listReceivedDebts
+  listReceivedDebts,
+  listTransactions
 }

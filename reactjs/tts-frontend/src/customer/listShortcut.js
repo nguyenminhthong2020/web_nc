@@ -68,8 +68,8 @@ const listShortcut = () => {
         </CardHeader>
         <CardBody style={{border: '1px solid', borderColor: 'coral'}}>
             <ListGroup style={{fontSize: '14px'}}>
-              <ListGroupItem><Badge pill>{'>'} </Badge> Thông tin cá nhân</ListGroupItem>
-              <ListGroupItem><Badge pill>{'>'} </Badge> Cài đặt người dùng</ListGroupItem>
+              <ListGroupItem><Badge pill>{'>'} </Badge> <a href="/" style={{color:'#6c757d'}}>Thông tin cá nhân</a></ListGroupItem>
+              <ListGroupItem><Badge pill>{'>'} </Badge> <a href="/transaction" style={{color:'#6c757d'}}>Lịch sử giao dịch</a></ListGroupItem>
               <ListGroupItem><Badge pill>{'>'} </Badge> Cài đặt hạn mức</ListGroupItem>
               <ListGroupItem><Badge pill>{'>'} </Badge> Hỗ trợ</ListGroupItem>
               <ListGroupItem><Badge pill>{'>'} </Badge> Khác</ListGroupItem>
