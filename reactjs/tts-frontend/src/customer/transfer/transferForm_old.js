@@ -45,7 +45,7 @@ export default class TransferForm extends React.Component {
     return (
       <div className="animated fadeIn">
         <Card>
-          <CardHeader  style={{backgroundColor: 'coral', textAlign: 'center'}}>
+          <CardHeader style={{backgroundColor: '#435d7d', textAlign: 'center', color: 'white', fontSize: '18px'}}>
             <strong>Chuyển tiền</strong>
           </CardHeader>
           <CardBody>

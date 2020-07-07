@@ -26,11 +26,11 @@ const receiversComponent = () => {
     });
   return (
     <div className="animated fadeIn">
-      <Card>
-        <CardHeader  style={{backgroundColor: 'coral', textAlign: 'center'}}>
+      <Card style={{borderStyle: 'none'}}>
+        <CardHeader style={{backgroundColor: '#435d7d', textAlign: 'center', color: 'white', fontSize: '18px'}}>
           <strong>Danh sách tài khoản người nhận</strong>
         </CardHeader>
-        <CardBody>
+        <CardBody style={{borderStyle: 'ridge', borderColor: '#435d7d'}}>
           <Row>
             <Col>
               <Table responsive bordered>

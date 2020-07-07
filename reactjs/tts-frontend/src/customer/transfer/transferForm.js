@@ -36,8 +36,8 @@ export default class TransferForm extends React.Component {
       activeTab: 0,
       numberAccount: DB.listAccounts()[0].number,
       balanceAccount: DB.listAccounts()[0].balance,
-      numberReceiver: DB.listReceivers()[0].number,
-      nameReceiver: DB.listReceivers()[0].name,
+      numberReceiver: null,
+      nameReceiver: null,
       money: null,
       message: '',
       method: DB.listMethods()[0].type,
@@ -55,11 +55,11 @@ export default class TransferForm extends React.Component {
     this.setState({
       [e.target.name]: e.target.value
     })
-    // Nếu sự kiện ở thẻ Input Account Receiver thì thay đổi giá trị Name Receiver
+    // Nếu sự kiện ở thẻ Input Account Receiver thì thay đổi giá trị Name Receiver và làm rỗng thẻ gợi ý
     if(e.target.name == "numberReceiver") {
       let nameReceiver = '';
       DB.listReceivers().forEach(element => {
-        if(element.number == e.target.value) {
+        if(element.number == e.target.value && element.bankCode == "GO") {
           nameReceiver = element.name;
         }
       });
@@ -67,6 +67,8 @@ export default class TransferForm extends React.Component {
         // Cập nhật Name Receiver
         nameReceiver : nameReceiver
       })
+      // value = 0 ứng với option gợi ý (dòng 155)
+      document.getElementById('selectReceiver').value = '0';
     }
   }
 
@@ -91,9 +93,12 @@ export default class TransferForm extends React.Component {
 
   selectReceiverChange(e) {
     const receiverSelected = e.target.value;
-    let res = '';
+    let res = {
+      name: "",
+      number: ""
+    };
     DB.listReceivers().forEach(element => {
-      if(`${element.name} - ${element.number}` == receiverSelected) {
+      if(element.number == receiverSelected) {
         res = {
           name: element.name,
           number: element.number
@@ -146,35 +151,47 @@ export default class TransferForm extends React.Component {
           );
         });
         
-      // Người nhận      
-        const listReceivers = DB.listReceivers()    
-          .map((item, index) => {
-            return (
-              <option>{item.name} - {item.number}</option>
-            );
-          });
-      // Thanh toán phí
-        const listType = [
-            {
-                type: "Người chuyển trả"
-            },
-            {
-                type: "Người nhận trả"
+      // Người nhận
+      var DB_listReceivers = [
+        {
+          number: "0",
+          name: "Chọn tài khoản gợi nhớ",
+          bankCode: "0"
+        }];
+      Array.prototype.push.apply(DB_listReceivers, DB.listReceivers());
+      const listReceivers = DB_listReceivers
+        .map((item, index) => {
+          if (item.bankCode == "GO" || item.name == "Chọn tài khoản gợi nhớ")
+          return (index==0)
+          ?(
+            <option value = {item.number}>{item.name}</option>
+          )
+          :(
+            <option value = {item.number}>{item.name} - {item.number}</option>
+          );
+        });
+    // Thanh toán phí
+      const listType = [
+          {
+              type: "Người chuyển trả"
+          },
+          {
+              type: "Người nhận trả"
 
-            }
-          ]      
-        const listTypes = listType    
-          .map((item, index) => {
-            return (
-              <option>{item.type}</option>
-            );
-          });
+          }
+        ]      
+      const listTypes = listType    
+        .map((item, index) => {
+          return (
+            <option>{item.type}</option>
+          );
+        });
       return (
       <div>
         <TabContent activeTab={this.state.activeTab}>
             <TabPane tabId={0}>
-              <Card>
-                  <CardHeader  style={{backgroundColor: 'coral', textAlign: 'center'}}>
+              <Card style={{borderStyle: 'none'}}>
+                  <CardHeader style={{backgroundColor: '#435d7d', textAlign: 'center', color: 'white', fontSize: '18px'}}>
                       <strong>Chuyển tiền</strong>
                   </CardHeader>
                   </Card>          
@@ -213,12 +230,13 @@ export default class TransferForm extends React.Component {
                       <CardBody>                          
                           <FormGroup row>
                             <Col md="3" className="d-flex p-3">
-                              <Label htmlFor="select-account">Tài khoản gợi ý</Label>
+                              <Label htmlFor="selectReceiver">Tài khoản gợi ý</Label>
                             </Col>
                             <Col xs="12" md="6">
                               <Input
                                 type="select"
                                 name="selectReceiver"
+                                id="selectReceiver"
                                 onChange = {this.selectReceiverChange}
                               >{listReceivers}
                               </Input>
@@ -226,7 +244,7 @@ export default class TransferForm extends React.Component {
                           </FormGroup>
                           <FormGroup row>
                             <Col md="3" className="d-flex p-3">
-                              <Label htmlFor="select-account">Số tài khoản</Label>
+                              <Label htmlFor="numberReceiver">Số tài khoản</Label>
                             </Col>
                             <Col xs="12" md="6">
                               <Input
@@ -234,7 +252,7 @@ export default class TransferForm extends React.Component {
                                 name="numberReceiver"
                                 onChange = {this.onChange}
                                 value = {this.state.numberReceiver}
-                              >{listReceivers}
+                              >
                               </Input>
                             </Col>
                           </FormGroup>
@@ -253,7 +271,7 @@ export default class TransferForm extends React.Component {
                       <CardBody>
                         <FormGroup row>
                           <Col md="3" className="d-flex p-3">
-                            <Label htmlFor="select-account">Số tiền chuyển</Label>
+                            <Label htmlFor="money">Số tiền chuyển</Label>
                           </Col>
                           <Col xs="12" md="6">
                             <Input
@@ -267,7 +285,7 @@ export default class TransferForm extends React.Component {
                         </FormGroup>
                         <FormGroup row>
                           <Col md="3" className="d-flex p-3">
-                            <Label htmlFor="select-account">Nội dung chuyển</Label>
+                            <Label htmlFor="message">Nội dung chuyển</Label>
                           </Col>
                           <Col xs="12" md="6">
                             <Input
@@ -286,7 +304,7 @@ export default class TransferForm extends React.Component {
                       <CardBody>
                         <FormGroup row>
                           <Col md="3" className="d-flex p-3">
-                            <Label htmlFor="select-account">Hình thức thanh toán phí</Label>
+                            <Label htmlFor="method">Hình thức thanh toán phí</Label>
                           </Col>
                           <Col xs="12" md="6">
                             <Input
@@ -303,7 +321,7 @@ export default class TransferForm extends React.Component {
                             <Label htmlFor="text-input">Phí thanh toán</Label>
                           </Col>
                           <Col xs="12" md="3">
-                            <Label>3,000 VND</Label>
+                            <Label>3000 VNĐ</Label>
                           </Col>
                         </FormGroup>                          
                       </CardBody>
@@ -316,8 +334,8 @@ export default class TransferForm extends React.Component {
               </Form>
             </TabPane>
             <TabPane tabId={1}>
-              <Card>
-                  <CardHeader  style={{backgroundColor: 'coral', textAlign: 'center'}}>
+              <Card style={{borderStyle: 'none'}}>
+                  <CardHeader style={{backgroundColor: '#435d7d', textAlign: 'center', color: 'white', fontSize: '18px'}}>
                       <strong>Xác nhận</strong>
                   </CardHeader>
                   </Card>          
@@ -330,7 +348,7 @@ export default class TransferForm extends React.Component {
                             <br/>                        
                             <Label>• Tài khoản nguồn: {this.state.numberAccount}</Label>
                             <br/>
-                            <Label>• Số dư khả dụng: {this.state.balanceAccount}</Label>
+                            <Label>• Số dư khả dụng: {this.state.balanceAccount} VNĐ</Label>
                         </CardBody>
                     </Card>
                 </FormGroup>                
@@ -350,7 +368,7 @@ export default class TransferForm extends React.Component {
                         <CardBody>
                             <Label><b style = {{color: 'green'}}>THÔNG TIN CHUYỂN TIỀN</b></Label>
                             <br/>                       
-                            <Label>• Số tiền chuyển: {this.state.money}</Label>
+                            <Label>• Số tiền chuyển: {this.state.money} VNĐ</Label>
                             <br/>
                             <Label>• Nội dung chuyển: {this.state.message}</Label>                            
                         </CardBody>
@@ -363,7 +381,7 @@ export default class TransferForm extends React.Component {
                             <br/>                                           
                             <Label>• {this.state.method}</Label>
                             <br/>
-                            <Label>• Phí thanh toán: 3,000 VND</Label>
+                            <Label>• Phí thanh toán: 3000 VNĐ</Label>
                         </CardBody>
                     </Card>                    
                 </FormGroup>
@@ -375,7 +393,7 @@ export default class TransferForm extends React.Component {
                     <CardBody>
                       <FormGroup row>
                         <Col md="3" className="d-flex p-3">
-                          <Label htmlFor="select-account">Mã OTP</Label>
+                          <Label htmlFor="otp">Mã OTP</Label>
                         </Col>
                         <Col xs="12" md="6">
                           <Input
@@ -397,8 +415,8 @@ export default class TransferForm extends React.Component {
               </Form>
             </TabPane>
             <TabPane tabId={2}>
-              <Card>
-                  <CardHeader  style={{backgroundColor: 'coral', textAlign: 'center'}}>
+              <Card style={{borderStyle: 'none'}}>
+                  <CardHeader style={{backgroundColor: '#435d7d', textAlign: 'center', color: 'white', fontSize: '18px'}}>
                       <strong>Thông tin giao dịch</strong>
                   </CardHeader>
                   </Card>          
