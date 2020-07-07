@@ -28,7 +28,7 @@ export default class Admin extends React.Component {
     {/* Xác định các trang có thể thêm Navbar */}
     <Switch>
       <PrivateRoute exact path = "/" component = {Navbar} />
-      <PrivateRoute path = "/error-404" component = {Navbar} />
+      <PrivateRoute exact path = "/error-404" component = {Navbar} />
       <Route path = "/login"/>
       <Redirect to="/error-404" />
     </Switch>
@@ -36,7 +36,7 @@ export default class Admin extends React.Component {
     {/* Phần body */}
     <Switch>
       <PrivateRoute exact path = "/" component = {Home} />
-      <PrivateRoute path = "/error-404" component = {NotFound} />
+      <PrivateRoute exact path = "/error-404" component = {NotFound} />
       <Route path = "/login" component = {Login} />
       <Route path = "/logout" component = {Logout} />
       <Redirect to="/error-404" />

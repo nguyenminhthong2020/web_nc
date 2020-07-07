@@ -107,7 +107,7 @@ export default class Login extends Component {
                     </label>
                   </div>
                   <div>
-                    <a href="#" className="txt3">
+                    <a href="/recovery" className="txt3">
                       Quên mật khẩu?
                     </a>
                   </div>

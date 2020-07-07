@@ -37,15 +37,15 @@ export default class Admin extends React.Component {
     {/* Phần Navbar */}
     <Switch>
       <PrivateRoute exact path = "/" component = {Navbar} />
-      <PrivateRoute path = "/error-404" component = {Navbar} />
-      <PrivateRoute path = "/account_info" component = {Navbar} />
-      <PrivateRoute path = "/receiver_info" component = {Navbar} />
-      <PrivateRoute path = "/transfer" component = {Navbar} />
-      <PrivateRoute path = "/inter_transfer" component = {Navbar} />
-      <PrivateRoute path = "/debt" component = {Navbar} />
-      <PrivateRoute path = "/transaction/detail" component = {Navbar} />
-      <PrivateRoute path = "/transaction" component = {Navbar} />
-      <PrivateRoute path = "/change_password" component = {Navbar} />
+      <PrivateRoute exact path = "/error-404" component = {Navbar} />
+      <PrivateRoute exact path = "/account_info" component = {Navbar} />
+      <PrivateRoute exact path = "/receiver_info" component = {Navbar} />
+      <PrivateRoute exact path = "/transfer" component = {Navbar} />
+      <PrivateRoute exact path = "/inter_transfer" component = {Navbar} />
+      <PrivateRoute exact path = "/debt" component = {Navbar} />
+      <PrivateRoute exact path = "/transaction/detail" component = {Navbar} />
+      <PrivateRoute exact path = "/transaction" component = {Navbar} />
+      <PrivateRoute exact path = "/change_password" component = {Navbar} />
       <Route path = "/login"/>
       <Redirect to="/error-404" />
     </Switch>
@@ -53,15 +53,15 @@ export default class Admin extends React.Component {
     {/* Phần body */}
     <Switch>
     <PrivateRoute exact path = "/" component = {AccountInfo} />
-      <PrivateRoute path = "/error-404" component = {NotFound} />
-      <PrivateRoute path = "/account_info" component = {AccountInfo} />
-      <PrivateRoute path = "/receiver_info" component = {ReceiverInfo} />
-      <PrivateRoute path = "/transfer" component = {Transfer} />
-      <PrivateRoute path = "/inter_transfer" component = {InterTransfer} />
-      <PrivateRoute path = "/debt" component = {Debt} />
-      <PrivateRoute path = "/transaction/detail" component = {Debt} />
-      <PrivateRoute path = "/transaction" component = {Transaction} />
-      <PrivateRoute path = "/change_password" component = {ChangePassword} />
+      <PrivateRoute exact path = "/error-404" component = {NotFound} />
+      <PrivateRoute exact path = "/account_info" component = {AccountInfo} />
+      <PrivateRoute exact path = "/receiver_info" component = {ReceiverInfo} />
+      <PrivateRoute exact path = "/transfer" component = {Transfer} />
+      <PrivateRoute exact path = "/inter_transfer" component = {InterTransfer} />
+      <PrivateRoute exact path = "/debt" component = {Debt} />
+      <PrivateRoute exact path = "/transaction/detail" component = {Debt} />
+      <PrivateRoute exact path = "/transaction" component = {Transaction} />
+      <PrivateRoute exact path = "/change_password" component = {ChangePassword} />
       <Route path = "/login" component = {Login} />
       <Route path = "/logout" component = {Logout} />
       <Redirect to="/error-404" />

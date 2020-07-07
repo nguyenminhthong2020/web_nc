@@ -490,7 +490,7 @@ export default class TransferForm extends React.Component {
                 </FormGroup>                
               </Form>
             </TabPane>            
-            </TabContent>
+        </TabContent>
           </div>      
       );
     }

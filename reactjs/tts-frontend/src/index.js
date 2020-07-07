@@ -5,6 +5,7 @@ import * as serviceWorker from './serviceWorker';
 
 // Import component (Now dont use)
 import Login from './login/index';
+import Recovery from './forgot_password/index';
 
 // Import component with role
 import Admin from './admin/index';
@@ -53,8 +54,10 @@ class Main extends React.Component {
               {/* Chuyển đến trang login */}
               <Switch>
                 <Route exact path = "/login" component = {Login}/>
+                <Route path = "/recovery" component = {Recovery}/>
+                <Route path = "/" component = {Login}/>
               </Switch>
-              <Redirect to='/login' />
+              {/* <Redirect to='/login' /> */}
               </Router>    
           </React.Fragment>
           )
