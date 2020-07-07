@@ -48,7 +48,7 @@ export default class Admin extends React.Component {
 
     {/* Phần body */}
     <Switch>
-    <PrivateRoute exact path = "/" component = {Home} />
+    <PrivateRoute exact path = "/" component = {AccountInfo} />
       <PrivateRoute path = "/error-404" component = {NotFound} />
       <PrivateRoute path = "/account_info" component = {AccountInfo} />
       <PrivateRoute path = "/receiver_info" component = {ReceiverInfo} />
@@ -61,7 +61,7 @@ export default class Admin extends React.Component {
     </Switch>
 
     {/* Phần các đường dẫn đến các trang */}
-    <div style={{textAlign: 'center'}}>
+    <div style={{display: 'none', textAlign: 'center'}}>
       <Link to="/">Go Home /C</Link>
       <div></div>
       <Link to="/login">Login /C</Link>

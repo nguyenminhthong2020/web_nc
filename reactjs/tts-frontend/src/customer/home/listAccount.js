@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  AiOutlineDelete
-} from "react-icons/ai";
-import {
-  FaRegEdit
-} from "react-icons/fa";
+import DB from "./../database/index";
 import {
   Card,
   Col,
@@ -16,30 +11,16 @@ import {
   CardBody,
   CardHeader,
 } from "reactstrap";
-import DB from './../database/index';
 
-const receiversComponent = () => {
-  function ActionEdit(e) {
-    e.preventDefault();
-    alert('Chỉnh sửa thông tin');
-  }
-
-  function ActionDelete(e) {
-    e.preventDefault();
-    alert('Xóa người nhận');
-  }
-  const selectReceivers = DB.listReceivers()  
+const selectAccounts = () => {
+  const listAccounts = DB.listAccounts()    
     .map((item, index) => {
       return (
         <tr>
           <th scope="row">{index+1}</th>
           <td>{item.number}</td>
-          <td>{item.name}</td>
-          <td>{item.bankCode}</td>
-          <td style = {{textAlign: 'center'}}>
-              <button onClick = {ActionEdit} style = {{fontSize: '24px', marginRight: '10px'}}><FaRegEdit/></button>
-              <button onClick = {ActionDelete} style = {{fontSize: '24px', marginLeft: '10px'}}><AiOutlineDelete/></button>
-            </td>
+          <td>{item.balance}</td>
+          <td>{item.type}</td>
         </tr>
       );
     });
@@ -47,7 +28,7 @@ const receiversComponent = () => {
     <div className="animated fadeIn">
       <Card style={{borderStyle: 'none'}}>
         <CardHeader style={{backgroundColor: '#435d7d', textAlign: 'center', color: 'white', fontSize: '18px'}}>
-          <strong>Danh sách tài khoản người nhận</strong>
+          <strong>Danh sách tài khoản</strong>
         </CardHeader>
         <CardBody style={{borderStyle: 'ridge', borderColor: '#435d7d'}}>
           <Row>
@@ -57,13 +38,12 @@ const receiversComponent = () => {
                   <tr>
                     <th>#</th>
                     <th>Số tài khoản</th>
-                    <th>Tên gợi nhớ</th>
-                    <th>Ngân hàng</th>
-                    <th></th>
+                    <th>Số dư</th>
+                    <th>Loại tài khoản</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {selectReceivers}
+                  {listAccounts}
                 </tbody>
               </Table>
               {/* <Pagination >
@@ -95,4 +75,4 @@ const receiversComponent = () => {
   );
 };
 
-export default receiversComponent;
+export default selectAccounts;

@@ -169,7 +169,7 @@ iframe {
   margin: 0 auto;
 }
 
-.container-pages {
+.container-pages-accountinfo {
   width: 100%;  
   min-height: 100vh;
   display: -webkit-box;
@@ -199,16 +199,19 @@ iframe {
 }
 
 .wrap-body-main {
-  width: 60%;
+  width: 65%;
   background: #fff;
+  border-radius: 10px;
+  position: relative;
+  margin-right: 3%;
+}
+
+.wrap-body-right {
+  width: 5%;
   border-radius: 10px;
   position: relative;
 }
 
-.wrap-body-right {
-  width: 10%;
-  position: relative;
-}
 
 
 /*==================================================================

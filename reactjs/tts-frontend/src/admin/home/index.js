@@ -1,6 +1,10 @@
 import React from 'react';
 
 export default class Home extends React.Component {
+    logOut(e) {
+      window.location.replace('/logout');
+    }
+
     render() {
         return (
           <div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from 'reactstrap';
+import { RiLogoutCircleRLine } from "react-icons/ri";
 import './vendor/bootstrap/css/bootstrap.min.css';
 import './fonts/font-awesome-4.7.0/css/font-awesome.min.css';
 import './fonts/Linearicons-Free-v1.0.0/icon-font.min.css';
@@ -15,6 +16,10 @@ import ListShortcut from './../listShortcut';
 import ListReceiver from './listReceiver';
 
 export default class AccountInfo extends React.Component {
+    logOut(e) {
+      window.location.replace('/logout');
+    }
+
     render() {
         return (
           <div>
@@ -35,7 +40,7 @@ export default class AccountInfo extends React.Component {
             </div>
             <div className="wrap-body-right">
             <div>
-            <Button color="secondary">Đăng xuất</Button>{' '}
+            <button onClick = {this.logOut} style = {{position: 'absolute', right: '0px', fontSize: '40px', color: '#435d7d'}}><RiLogoutCircleRLine/></button>
             </div>
             </div>
           </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from 'reactstrap';
+import { RiLogoutCircleRLine } from "react-icons/ri";
 import './vendor/bootstrap/css/bootstrap.min.css';
 import './fonts/font-awesome-4.7.0/css/font-awesome.min.css';
 import './fonts/Linearicons-Free-v1.0.0/icon-font.min.css';
