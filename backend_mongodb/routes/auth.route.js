@@ -212,7 +212,7 @@ router.post("/forgot-password/confirm", async function(req, res){
               .send({ status_code: "INVALID_EMAIL", message: "Email không hợp lệ" });
             }
             
-            const newPasswordHash = bcryptjs.hashSync(newPassword, 8);
+            const newPasswordHash = bcrypt.hashSync(newPassword, 8);
             const ret2 = await User.findOneAndUpdate({user_id: _otp.user_id}, {password: newPasswordHash});
             
             

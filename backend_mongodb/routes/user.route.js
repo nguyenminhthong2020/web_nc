@@ -11,7 +11,7 @@ const router = express.Router();
 /* Tạo 3 admin đầu */
 router.post("/create", async function (req, res) {
     try{
-        const passHash = await bcryptjs.hashSync(req.body.password, 8);
+        const passHash = await bcrypt.hashSync(req.body.password, 8);
         const _body = {
             username: req.body.username,
             password : passHash,
