@@ -42,7 +42,7 @@ const confirm = (req, type) => {
       hashSecretKey = md5(config.auth.secretPartnerForTestRSA);
     }
     const comparingSign = md5(ts + JSON.stringify(req.body) + hashSecretKey);
-
+    console.log("\n" + ts + "\n" + partnerCode + "\n" + sig + "\n" + comparingSign);
     if (sig != comparingSign) {
       return 3;
     }
@@ -66,6 +66,7 @@ const confirm = (req, type) => {
 
 // Partner truy vấn thông tin tài khoản
 router.post("/check", async (req, res) => {
+   const partnerCode1 = req.get("partnerCode");
     var con = confirm(req, 1);
     if (con == 1) {
       return res.status(400).send({
@@ -90,10 +91,10 @@ router.post("/check", async (req, res) => {
         message: "Thiếu account_number.",
       });
     }
-
+    
     try {
       const userAccount = await Account.findOne({account_number: req.body.account_number});
-
+    
       if (!userAccount) {
         return res.status(404).send({
             message: `Không tìm thấy user có account number ${req.body.account_number}`,
@@ -103,15 +104,16 @@ router.post("/check", async (req, res) => {
       const userInformation = 
         await User.findOne({user_id: userAccount.user_id})
                   .select('fullname status');
-      
+    
         //add PartnerViewLog
       var entityUpdateLog1 = {
-          bank_code: req.get("partnerCode"),
+          partner_code: partnerCode1,
           account_number: req.body.account_number,
           created_at: moment().format("YYYY-MM-DD HH:mm:ss").toString(),
         };
-
-      await PartnerViewLog.create(entityUpdateLog1);
+    
+      let newU = PartnerViewLog( entityUpdateLog1);
+        const ret = await newU.save();
 
       return res.status(200).send(userInformation);
 
@@ -128,6 +130,7 @@ router.post("/check", async (req, res) => {
 router.post("/recharge", async function (req, res) {
     const partnerCode = req.get("partnerCode");
     const signature = req.get("signature"); 
+    const paCode = req.get("partnerCode");
 
     // Kiểm tra ngân hàng liên kết là RSA/ PGP hay ForTest để lấy keyPulic
     let partner;
@@ -209,15 +212,16 @@ router.post("/recharge", async function (req, res) {
       //add transactionHistory
 
       let money1 = +req.body.money || 0;
+      
       const entityUpdateLog = {
           sender_account_number: req.body.sender_account_number,
           receiver_account_number: req.body.receive_account_number,
-          sender_bank_code: req.get("partnerCode"),
+          sender_bank_code: paCode,
           receive_bank_code: config.auth.bankcode,  // "GO"    
           money: money1,
           transaction_fee: 0, 
           type_fee: req.body.type_fee,    // 1: người gửi trả, 0: người nhận trả. Thực ra phí là 0
-          message: String,                // Ví dụ: "gửi trả nợ cho ông A"
+          message: req.body.message,                // Ví dụ: "gửi trả nợ cho ông A"
           created_at: moment().format("YYYY-MM-DD HH:mm:ss").toString()
       };
       await Transaction.create(entityUpdateLog);
