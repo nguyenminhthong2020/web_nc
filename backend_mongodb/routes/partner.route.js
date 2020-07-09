@@ -101,9 +101,7 @@ router.post("/check", async (req, res) => {
           });
       }
       
-      const userInformation = 
-        await User.findOne({user_id: userAccount.user_id})
-                  .select('fullname status');
+      const userInformation = await User.findOne({user_id: userAccount.user_id});
     
         //add PartnerViewLog
       var entityUpdateLog1 = {
@@ -115,7 +113,7 @@ router.post("/check", async (req, res) => {
       let newU = PartnerViewLog( entityUpdateLog1);
         const ret = await newU.save();
 
-      return res.status(200).send(userInformation);
+      return res.status(200).send({fullname: userInformation.fullname});
 
     } catch (err) {
       console.log("error: ", err.message);

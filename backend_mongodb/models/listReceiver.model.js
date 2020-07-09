@@ -8,7 +8,8 @@ const ListReceiverSchema = new Schema(
     id: Number,
     user_id: Number,
     receiver_account_number : String,
-    remind_name: String
+    remind_name: String,
+    bank_code: String
   }
 );
 

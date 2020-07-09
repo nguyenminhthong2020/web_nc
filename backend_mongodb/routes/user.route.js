@@ -237,8 +237,10 @@ router.post("/employee/create-customer", async function (req, res) {
 
         return res.status(201).send({
             message: "Tạo thành công",
-            username: ret.username,
-            account_number: ret1.account_number
+            ret,
+            ret1
+            // username: ret.username,
+            // account_number: ret1.account_number
         }); 
      }catch(err){
         return res.status(500).send(err.message);
@@ -246,7 +248,7 @@ router.post("/employee/create-customer", async function (req, res) {
 });
 
 // Lấy Info - Profile cho user
-router.post("/profile", async function(req, res){
+router.get("/profile", async function(req, res){
     const {user_id} = req.tokenPayload;
     const _user = await User.findOne({user_id: user_id});
 

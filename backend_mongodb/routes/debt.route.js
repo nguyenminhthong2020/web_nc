@@ -25,8 +25,8 @@ router.get('/debtors', async function(req, res){
 })
 
 // Lấy thông tin người nợ
-// body gửi lên có debtor_account_number (tài khoản người nợ)
-router.get("/get-account", async function (req, res) {
+// params có debtor_account_number (tài khoản người nợ)
+router.get("/get-account/:debtor_account_number", async function (req, res) {
   const { user_id } = req.tokenPayload;
   //const checkUser = await User.findOne({user_id: user_id});
 
@@ -34,7 +34,7 @@ router.get("/get-account", async function (req, res) {
   //     res.status(400).send("Bạn không đủ thẩm quyền.");
   // }
   try {
-    const rows = await Account.findOne({ account_number : debtor_account_number });
+    const rows = await Account.findOne({ account_number : req.params.debtor_account_number });
     if(!rows){
         return res.status(400).send({
           status:"NO_ACCOUNT",

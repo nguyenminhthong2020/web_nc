@@ -15,6 +15,14 @@ const process1 = require("../config/process.config");
 
 const router = express.Router();
 
+// router.get('/internal/info-receiver/:receiver_account_number', async function(req, res){
+    
+// })
+
+// router.get('/external/info-receiver/:receiver_account_number', async function(req, res){
+  
+// })
+
 // Chuyển khoản nội bộ (cùng ngân hàng)
 // Body gửi lên có receiver_account_number, money, message, type_fee
 router.post("/internal/receiver_account_number", async function (req, res) {

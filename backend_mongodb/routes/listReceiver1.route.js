@@ -6,7 +6,7 @@ const ListReceiver = require('../models/listReceiver.model');
 
 const router = express.Router();
 
-// Body gửi lên gồm có receiver_account_number và remind_name (remind_name có thể rỗng)
+// Body gửi lên gồm có receiver_account_number, bank_code và remind_name (remind_name có thể rỗng)
 router.post("/", async function(req, res){
 
     const {user_id} = req.tokenPayload;
