@@ -139,63 +139,79 @@ router.post("/", async function (req, res) {
             .status(400)
             .send({ status_code: "INVALID_EMAIL", message: "Email không hợp lệ" });
           }
-  
+          
           const accountSend = await Account.findOne({
             account_number: _otp.sender_account_number,
           });
           let balance1 = accountSend.balance;
-          if (accountSend.balance < _otp.money) {
-            return res
-              .status(400)
-              .send({
-                status_code: "INVALID_MONEY",
-                message: "Số tiền gửi vượt quá số dư tài khoản đang có",
-              });
-          } else {
-            const accountReceive = await Account.findOne({
-              account_number: _otp.receiver_account_number,
-            });
-            let balance2 = accountReceive.balance;
-  
-            const ret1 = await Account.findOneAndUpdate(
-              {
-                account_number: _otp.sender_account_number,
-              },
-              {
-                balance: balance1 - _otp.money,
-              }
-            );
-  
-            const ret2 = await Account.findOneAndUpdate(
-              {
-                account_number: _otp.receive_bank_code,
-              },
-              {
-                balance: balance2 + _otp.money,
-              }
-            );
-  
-            // Update Transaction Debt Model
-            const _body1 = {
-                creditor_account_number: _otp.receiver_account_number,   // chủ nợ
-                debtor_account_number: _otp.sender_account_number,     // người nợ
-                money: _otp.money,
-                transaction_debt_fee: 0,
-               created_at: moment().format("YYYY-MM-DD HH:mm:ss").toString()
-            };
-  
-            let newTransaction = TransactionDebt(_body1);
-            const ret3 = await newTransaction.save();
 
-            // Update List Debt Model
-            const updateListDebt = await ListDebt.findOneAndUpdate(
-                {debt_id: debt_id},
-                {isActive: 0}
-                );
-            
-                return res.status(200).send({status: "DONE", message: "Đã thanh toán"});
+          let _m = _otp.money + 3000;
+          
+          if(accountSend.balance < _m)
+            {
+             return res
+             .status(400)
+             .send({
+               status_code: "INVALID_MONEY",
+               message: "Không thể gửi vì số dư không đủ."
+             });
+           }
+
+          
+          try {
+                
+  
+              const accountReceive = await Account.findOne({
+                account_number: _otp.receiver_account_number,
+              });
+              let balance2 = accountReceive.balance;
+    
+              const ret1 = await Account.findOneAndUpdate(
+                {
+                  account_number: _otp.sender_account_number,
+                },
+                {
+                  balance: balance1 - _otp.money - 3000,
+                }
+              );
+    
+              const ret2 = await Account.findOneAndUpdate(
+                {
+                  account_number: _otp.receive_bank_code,
+                },
+                {
+                  balance: balance2 + _otp.money,
+                }
+              );
+    
+              // Update Transaction Debt Model
+              const _body1 = {
+                  creditor_account_number: _otp.receiver_account_number,   // chủ nợ
+                  debtor_account_number: _otp.sender_account_number,     // người nợ
+                  money: _otp.money,
+                  transaction_debt_fee: 0,
+                 created_at: moment().format("YYYY-MM-DD HH:mm:ss").toString()
+              };
+    
+              let newTransaction = TransactionDebt(_body1);
+              const ret3 = await newTransaction.save();
+  
+              // Update List Debt Model
+              const updateListDebt = await ListDebt.findOneAndUpdate(
+                  {debt_id: debt_id},
+                  {isActive: 0}
+                  );
+              
+                  return res.status(200).send({status: "DONE", message: "Đã thanh toán"});
+          }catch(err){
+               
+            return res.status(500).send({ status: "ERROR", message: "Thất bại." + err});
           }
-        }
+  
+          
+
+          }
+
       }
     }
   });

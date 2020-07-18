@@ -105,7 +105,7 @@ router.post('/create', async function(req, res){
 // Trường hợp 2 :  body gửi lên gồm có debtor_username
 // money, message
 // (đã có người nợ trong danh sách)
-router.post('/create', async function(req, res){
+router.post('/create2', async function(req, res){
   const { user_id } = req.tokenPayload;
   
   // tìm tài khoản người nợ
@@ -172,14 +172,14 @@ router.get('/view2', async function(req, res){
 })
 
 // Danh sách nợ chưa thanh toán
-router.get('/view2', async function(req, res){
-  const { user_id } = req.tokenPayload;
-  const account = await Account.findOne({user_id: user_id});
+// router.get('/view2', async function(req, res){
+//   const { user_id } = req.tokenPayload;
+//   const account = await Account.findOne({user_id: user_id});
   
-  const list = await ListDebt.find({debtor_account_number : account.account_number, isActive : 1});
+//   const list = await ListDebt.find({debtor_account_number : account.account_number, isActive : 1});
 
-  return res.status(200).send(list);
-})
+//   return res.status(200).send(list);
+// })
 
 // Hủy nhắc nợ (do người khác gửi)
 // Các nguyên nhân : đã trả xong, chưa muốn trả, không hề nợ (bên kia gửi nhầm),...
