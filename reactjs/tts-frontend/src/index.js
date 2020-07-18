@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
 
+// Import style
+import "./style.scss";
+
 // Import component (Now dont use)
 import Login from './login/index';
 import Recovery from './forgot_password/index';
@@ -55,7 +58,7 @@ class Main extends React.Component {
               <Switch>
                 <Route exact path = "/login" component = {Login}/>
                 <Route path = "/recovery" component = {Recovery}/>
-                <Route path = "/" component = {Login}/>
+                <Route path = "*" render = { _ => <Redirect to="/login" /> }/>
               </Switch>
               {/* <Redirect to='/login' /> */}
               </Router>    

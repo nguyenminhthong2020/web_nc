@@ -55,7 +55,7 @@ export default class TransferForm extends React.Component {
     this.onChange = this.onChange.bind(this);
     this.selectReceiverChange = this.selectReceiverChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
-    
+    this.ActionAdd = this.ActionAdd.bind(this);
   }
   onChange(e) {
     this.setState({
@@ -118,8 +118,10 @@ export default class TransferForm extends React.Component {
 
   ActionAdd(e) {
     e.preventDefault();
+    this.setState({activeTab: 0});
+    const { formID } = document.forms;
+    formID.reset();
     document.getElementById('formAdd').style.display = "block";
-    // document.getElementById('main').style.display = "none";
     document.getElementById('formAdd').focus();
 
   }
@@ -310,7 +312,7 @@ export default class TransferForm extends React.Component {
                   <strong style={{fontSize: '22px'}}>GỬI NHẮC NỢ</strong>
                 </Card>          
                 <br/>              
-                <Form onSubmit = {this.submitForm}>
+                <Form id = {'formID'} onSubmit = {this.submitForm}>
                   <Card>
                     <CardHeader>
                       <strong>Thông tin người nhận</strong>

@@ -1,33 +1,51 @@
-import React from 'react';
+import React from "react";
+import { Redirect, Route, Switch } from "react-router-dom";
+import * as router from "react-router-dom";
+import { Container } from "reactstrap";
+import { AppHeader, AppBreadcrumb, AppSidebar, AppSidebarNav2, AppSidebarMinimizer } from "@coreui/react";
+
+const navConfigs = {
+  items: [
+    {
+      name: "Trang chủ",
+      url: "/",
+      icon: "icon-home",
+    },
+    {
+      title: true,
+      name: "chức năng",
+    },
+    {
+      name: "Quản lý nhân viên",
+      url: "/",
+      icon: "icon-people",
+    },
+    {
+      name: "Danh sách giao dịch",
+      url: "/",
+      icon: "icon-calendar",
+    },
+  ],
+};
 
 export default class Home extends React.Component {
-    logOut(e) {
-      window.location.replace('/logout');
-    }
-
     render() {
         return (
-          <div>
-      <title>Account Info</title>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/*===============================================================================================*/}	
-        <link rel="icon" type="image/png" href="images/icons/favicon.ico" />        
-        {/*===============================================================================================*/}
-        <div className="limiter">
-          <div className="container-page">
-            <div className="wrap-body p-l-85 p-r-85 p-t-55 p-b-55" style={{textAlign: 'center'}}>
-              Admin Dashboard</div>
-          </div>
-        </div>
-        {/*===============================================================================================*/}
-        {/*===============================================================================================*/}
-        {/*===============================================================================================*/}
-        {/*===============================================================================================*/}
-        {/*===============================================================================================*/}
-        {/*===============================================================================================*/}
-        {/*===============================================================================================*/}      
-    </div>
+          <div style={{fontFamily: '"Segoe UI" !important'}}>          
+            <div className="app">
+              <div className="app-body">
+                {/* Sidebar */}
+                <AppSidebar fixed display="lg">
+                  <AppSidebarNav2 navConfig={navConfigs} style={{fontFamily: 'Segoe UI'}}/>
+                  <AppSidebarMinimizer style={{fontFamily: 'Segoe UI'}}/>
+                </AppSidebar>
+                {/* Content */}
+                <main className="main">
+                  
+                </main>        
+              </div>
+            </div>
+          </div> 
         )
     }
 }

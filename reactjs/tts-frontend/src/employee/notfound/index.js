@@ -9,6 +9,11 @@ export default class Home extends React.Component {
           <b>Page Not Found</b>
           <div></div>
           <b>----------------------</b>
+          <b>-------------</b>
+          <div></div>
+          <b>Page Not Found</b>
+          <div></div>
+          <b>----------------------</b>
         </div> 
         )
     }

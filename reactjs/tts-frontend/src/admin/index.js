@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from 'react-router-dom';
 
 // Các component con
-import Navbar from './navbar/index';
+import Header from './header/index';
 import Footer from './footer/index';
 import NotFound from './notfound/index';
 import Login from './../login/index';
@@ -27,8 +27,8 @@ export default class Admin extends React.Component {
     <Router>
     {/* Phần Navbar */}
     <Switch>
-      <PrivateRoute exact path = "/" component = {Navbar} />
-      <PrivateRoute exact path = "/error-404" component = {Navbar} />
+      <PrivateRoute exact path = "/" component = {Header} />
+      <PrivateRoute exact path = "/error-404" component = {Header} />
       <Route path = "/login"/>
       <Redirect to="/error-404" />
     </Switch>
@@ -42,18 +42,7 @@ export default class Admin extends React.Component {
       <Redirect to="/error-404" />
     </Switch>
 
-    {/* Phần các đường dẫn đến các trang */}
-    <div style={{textAlign: 'center'}}>
-      <Link to="/">Go Home /A</Link>
-      <div></div>
-      <Link to="/login">Login /A</Link>
-      <div></div>    
-      <Link to="/logout">Sign out /A</Link>
-      <div></div>
-    </div>
-
-    {/* Phần footer */}
-    <Footer/>
+   
     </Router>    
   </React.Fragment>
     )

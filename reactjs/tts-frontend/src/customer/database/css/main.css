@@ -41,7 +41,7 @@ body, html {
 
 /*---------------------------------------------*/
 a {
-	font-family: Raleway-Regular;
+	font-family: Segoe UI;
 	font-size: 14px;
 	line-height: 1.7;
 	color: #666666;
@@ -204,6 +204,12 @@ iframe {
   border-radius: 10px;
   position: relative;
   margin-right: 3%;
+}
+
+.wrap-body-unique {
+  width: 95%;
+  border-radius: 10px;
+  position: relative;
 }
 
 .wrap-body-right {
