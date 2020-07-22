@@ -1,7 +1,5 @@
-import React from 'react';
 import axios from 'axios';
-import {Button} from 'reactstrap';
-import {RiLogoutCircleRLine} from "react-icons/ri";
+import {connector} from "./../../callAxios";
 import './vendor/bootstrap/css/bootstrap.min.css';
 import './fonts/font-awesome-4.7.0/css/font-awesome.min.css';
 import './fonts/Linearicons-Free-v1.0.0/icon-font.min.css';
@@ -13,24 +11,18 @@ import './vendor/daterangepicker/daterangepicker.css';
 import './css/util.css';
 import './css/main.css';
 
-// const listReceivers =
-// [
-// {
-//     number: "660255001",
-//     name: "Nguyễn Minh Thông",
-//     bankCode: "VCB"
-// },
-// {
-//     number: "660255002",
-//     name: "Phan Văn Anh Tuấn",
-//     bankCode: "ACB"
-// },
-// {
-//     number: "660255003",
-//     name: "Phạm Đình Sỹ",
-//     bankCode: "TTS"
-// }
-// ];
+/* Hàm dùng để refresh token */
+const refreshToken = () => {
+    const reqBody = {
+        accessToken: localStorage.getItem('accessToken'),
+        refreshToken: localStorage.getItem('refreshToken')
+    }
+    axios({method: 'post', url: 'https://tts-bank.herokuapp.com/auth/refresh', data: reqBody}).then(function (response) {
+        localStorage.setItem('accessToken', response.data.accessToken);
+    }).catch(function (error) {
+        // Handle error
+    })
+}
 
 const listBanks = () => [
     {
@@ -90,7 +82,6 @@ const listReceivers = () => [
     }
 ];
 
-
 const listAccounts = () => [
   {
     number: "660255001",
@@ -110,39 +101,87 @@ const listAccounts = () => [
 ];
 
 
+
 /* listAccounts from real DB */
-// const listAccounts = () => {
-//     let db = [
-//     ];
-//     axios({method: 'get', url: 'https://tts-bank.herokuapp.com/account'}).then(function (response) {
-//         // db.push({
-//         //         number: response.data.rows.account_number,
-//         //         balance: response.data.rows.balance,
-//         //         type: "Tài khoản thanh toán"
-//         //     });
-//         alert(response.data.rows.account_number)
+const listAccountss = async () => {
+    const db = [{
+            number: "660255001",
+            balance: 1500500,
+            type: "Tài khoản thanh toán"
+        }];
+    let db2 = [
+        {
+            number: "660255001",
+            balance: 1500500,
+            type: "Tài khoản thanh toán"
+        }, {
+            number: "660255002",
+            balance: 700000,
+            type: "Tài khoản tiết kiệm"
+        }
+    ];
+    const response = await connector.get("/account", {}).then((response) => {
+        console.log("response", response);
+        const result = JSON.stringify(response.data.rows.account_number);
+        // alert(result);
+        db2 = [
+            {
+                number: "66025500sy",
+                balance: 1500500,
+                type: "Tài khoản thanh toán"
+            }, {
+                number: "66025500sy",
+                balance: 700000,
+                type: "Tài khoản tiết kiệm"
+            }
+        ];
+        // alert(JSON.stringify(db2));
+        alert('load db2 successfully');
 
-//     }).catch(function (error) { //
-//         if (error.name == 'TokenExpiredError') { // Axios
-//             const reqBody = {
-//                 accessToken: localStorage.getItem('accessToken'),
-//                 refreshToken: localStorage.getItem('refreshToken')
-//             }
-//             axios({method: 'post', url: 'https://tts-bank.herokuapp.com/auth/refresh', data: reqBody}).then(function (response) {
-//                 localStorage.setItem('accessToken', response.data.accessToken);
-//                 // Redirect
-//                 window.location.href = '/';
-//             }).catch(function (error) {
-//                 //
-//                 //
-//             })
+    }, (error) => {
+        console.log("err123", error.response);
+        alert('error occur!');
+    });
+    // axios.defaults.headers = {
+    //     'x-access-token': localStorage.getItem('accessToken')
+    // }
+    // axios({method: 'get', url: 'https://tts-bank.herokuapp.com/account'}).then(function (response) {
+    //     str = '12345';
+    //     alert(str);
+    //     const db2 = [
+    //         {
+    //             number: "660255009",
+    //             balance: 1500500,
+    //             type: "Tài khoản thanh toán"
+    //         }, {
+    //             number: "660255003",
+    //             balance: 2500000,
+    //             type: "Tài khoản tiết kiệm"
+    //         }
+    //     ];
+    //     return db2;
 
-//         }
-//     })
+    // }).catch(function (error) { //
+    //     alert('error');
+    //     if (error.name == 'TokenExpiredError') { // Axios
+    //         const reqBody = {
+    //             accessToken: localStorage.getItem('accessToken'),
+    //             refreshToken: localStorage.getItem('refreshToken')
+    //         }
+    //         axios({method: 'post', url: 'https://tts-bank.herokuapp.com/auth/refresh', data: reqBody}).then(function (response) {
+    //             localStorage.setItem('accessToken', response.data.accessToken);
+    //             // Redirect
+    //             window.location.href = '/';
+    //         }).catch(function (error) {
+    //             //
+    //             //
+    //         })
 
-//     return db;
+    //     }
+    // })
 
-// }
+    return db2;
+}
 
 
 const listMethods = () => [
@@ -254,6 +293,7 @@ const listTransactions = () => [
 ]
 
 export default {
+    refreshToken,
     listBanks,
     listReceivers,
     listAccounts,

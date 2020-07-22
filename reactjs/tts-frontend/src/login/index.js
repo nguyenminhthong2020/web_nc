@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-// import { connector } from "./../callAxios";
 import axios from "axios";
 import './vendor/bootstrap/css/bootstrap.min.css';
 import './fonts/font-awesome-4.7.0/css/font-awesome.min.css';
@@ -42,7 +41,7 @@ export default class Login extends Component {
             'password': password
         }
 
-        axios({method: 'post', url: 'https://tts-bank.herokuapp.com/auth/login', data: reqBody}).then(function (response) { // const str2 = JSON.stringify(response.data);
+        axios({method: 'post', url: 'https://tts-bank.herokuapp.com/auth/login', data: reqBody}).then(function (response) {
             if (response.data.authenticated == false) {
                 alert('Sai thong tin dang nhap');
             } else { // Store token
@@ -54,39 +53,12 @@ export default class Login extends Component {
                 }
                 // Redirect page
                 window.location.href = '/';
-
             }
         }).catch(function (error) { //
             console.log("err123", error.response);
             alert(345);
         })
-
-
-        // const response = connector
-        // .post("/auth/login", {
-        // })
-        // .then(
-        //     (response) => {
-        //       console.log("response", response);
-        //       const result = response.data;
-        //       alert(result);
-        //     },
-        //     (error) => {
-        //       console.log("err123", error.response);
-        //       alert(345);
-        //     }
-        // );
-
-
-        // if((username=='admin'&&password=='admin') || (username=='employee'&&password=='employee') || (username=='customer'&&password=='customer')) {
-        // fakeAuth.authenticate(username);
-        // // Redirect to Dashboard
-        // window.location.href = '/';
-        // // this.props.history.push('/')
-        // }
-        // else{
-        // alert('Wrong login information!');
-        // }
+        // connector.interceptors.request.use.apply.apply
     }
 
     render() {

@@ -3,11 +3,11 @@ import axios from "axios";
 export const API_URL = "http://tts-bank.herokuapp.com";
 export const connector = axios.create({ baseURL: API_URL });
 // const token = localStorage.getItem("token");
-const token = localStorage.getItem("token");
+const accessToken = localStorage.getItem("accessToken");
 connector.interceptors.request.use(
   function (config) {
-    if (token) {
-      config.headers["authorization"] = `Bearer ${token}`;
+    if (accessToken) {
+      config.headers["x-access-token"] = accessToken;
     }
     console.log(config);
     return config;
