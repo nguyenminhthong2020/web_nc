@@ -10,6 +10,7 @@ const ListDebtSchema = new Schema(
     debt_id: Number,
     user_id: Number,                   // id của chủ nợ
     creditor_account_number: String,   // chủ nợ
+    creditor_fullname : String,
     debtor_account_number: String,     // người nợ  
     debtor_username: String,     // username người nợ
     debtor_fullname : String,       // tên người nợ  

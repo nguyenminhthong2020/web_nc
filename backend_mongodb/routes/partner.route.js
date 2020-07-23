@@ -26,7 +26,8 @@ const confirm = (req, type) => {
     if (
       partnerCode != config.auth.partnerRSA &&
       partnerCode != config.auth.partnerPGP &&
-      partnerCode != config.auth.partnerForTestRSA
+      partnerCode != config.auth.partnerForTestRSA &&
+      partnerCode != "partner34"
     ) {
       //điền Code của bank - partner
       return 2;
@@ -41,6 +42,10 @@ const confirm = (req, type) => {
     if (partnerCode == config.auth.partnerForTestRSA) {
       hashSecretKey = md5(config.auth.secretPartnerForTestRSA);
     }
+    if(partnerCode == "partner34"){
+      hashSecretKey = md5("Infymt");
+    }
+
     const comparingSign = md5(ts + JSON.stringify(req.body) + hashSecretKey);
     console.log("\n" + ts + "\n" + partnerCode + "\n" + sig + "\n" + comparingSign);
     if (sig != comparingSign) {
@@ -140,6 +145,9 @@ router.post("/recharge", async function (req, res) {
     }
     if (partnerCode == config.auth.partnerForTestRSA) {
       partner = process.partnerForTestRSA;
+    }
+    if(partnerCode == "partner34"){
+      partner = process.partnerPGP2;
     }
     const keyPublic = new NodeRSA(partner.RSA_PUBLICKEY);
     const veri = keyPublic.verify(
@@ -243,7 +251,26 @@ router.post("/recharge", async function (req, res) {
           status: "RSA success",
           responseSignature: keysigned,
         });
-      } else {
+      } else if(partnerCode == "partner34"){
+
+        // partner PGP
+        const privateKeyArmored = process.ourkey.PGP_PRIVATEKEY;
+        const {
+          keys: [privateKey],
+        } = await openpgp.key.readArmored(privateKeyArmored);
+        await privateKey.decrypt(process.ourkey.passpharse);
+        // Sign => save into cleartext
+        const { data: cleartext } = await openpgp.sign({
+          message: openpgp.cleartext.fromText(JSON.stringify(responseForClient)),
+          privateKeys: [privateKey],
+        });
+
+        return res.status(203).send({
+          status: "PGP success",
+          responseSignature: cleartext,
+        });
+          
+      }else{
         // partner PGP
         const privateKeyArmored = process.ourkey.PGP_PRIVATEKEY;
         const {

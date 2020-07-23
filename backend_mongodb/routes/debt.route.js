@@ -66,12 +66,14 @@ router.post('/create', async function(req, res){
          
         // creditor_account_number là chủ nợ, debtor_account_number là con nợ
         const x = await Account.findOne({user_id: user_id});
+        const _x = await User.findOne({user_id: user_id});
         
         const _userDebtor = await User.findOne({user_id: accountNum.user_id});
         
         const _body = {
             user_id: user_id,
             creditor_account_number: x.account_number,   // chủ nợ
+            creditor_fullname: _x.fullname,              // tên chủ nợ
             debtor_account_number: accountNum.account_number,     // người nợ   
             debtor_username: _userDebtor.username,  
             debtor_fullname: _userDebtor.fullname,
@@ -197,11 +199,49 @@ router.post('/delete1/:debt_id', async function(req, res){
     });
     
     if(ret){
-        return res.status(200).send({
-          status: "OK",
-          debt_id: debt_id,
-          notify_message: req.body.notify_message        // Ví dụ : Tôi không có nợ ông nhé. Ông gửi nhầm rồi.
-      });
+         
+      
+        var transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: "secondwebnc2020@gmail.com",
+            pass: "infymt6620",
+          },
+        });
+
+        var mainOptions = {
+          // thiết lập đối tượng, nội dung gửi mail
+          from: "secondwebnc2020@gmail.com",
+          to: email,
+          subject: "[Xác nhận OTP]",
+          text: "Tin nhắn từ ngân hàng Go ",
+          html: `<div>
+                        Xin chào ${fullname},
+                        <br><br>
+                        Vừa có một yêu cầu hủy nhắc nợ từ ${} với nội dung là :<br>
+                        ${req.body.notify_message}
+                        <br><br>
+                        Trân trọng
+                    </div>`,
+        };
+
+        
+  transporter.sendMail(mainOptions, function (error, info) {
+    if (error) {
+      res
+        .status(500)
+        .send({ status: "ERROR", message: "Không thể gửi message. " + error });
+    } else {
+      
+
+    } 
+  });
+
+      //   return res.status(200).send({
+      //     status: "OK",
+      //     debt_id: debt_id,
+      //     notify_message: req.body.notify_message        // Ví dụ : Tôi không có nợ ông nhé. Ông gửi nhầm rồi.
+      // });
     }
 
     }catch(err){

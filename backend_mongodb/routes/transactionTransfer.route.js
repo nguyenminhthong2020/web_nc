@@ -548,6 +548,10 @@ router.post("/external/confirm", async function (req, res) {
             });
         } else {
 
+          if(_otp.receive_bank_code == "partner34"){
+            
+          }
+
           if(_otp.receive_bank_code == "25Bank"){
             const str = process1.partnerRSA.RSA_PUBLICKEY;
             const strPri = process1.ourkey.RSA_PRIVATEKEY;

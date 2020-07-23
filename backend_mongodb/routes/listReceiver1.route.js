@@ -77,6 +77,15 @@ router.post('/partner/find', async function(req, res){
       })
 })
 
+
+// Route đi tìm tài khoản từ đối tác partner34 (qua API của partner34)
+// partner34 là nhóm PGP
+// body gửi lên có receiver_account_number
+router.post('/partner/find-pgp', async function(req, res){
+     
+    
+})
+
 // Body gửi lên gồm có receiver_account_number, bank_code và remind_name (remind_name có thể rỗng)
 // và type (type là String, type = 1 => req.body.remind_name == "", type = 2 : có tên gợi nhớ)
 router.post("/", async function (req, res) {
