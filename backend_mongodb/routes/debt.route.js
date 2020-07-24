@@ -218,7 +218,7 @@ router.post('/delete1/:debt_id', async function(req, res){
           html: `<div>
                         Xin chào ${fullname},
                         <br><br>
-                        Vừa có một yêu cầu hủy nhắc nợ từ ${} với nội dung là :<br>
+                        Vừa có một yêu cầu hủy nhắc nợ từ ... với nội dung là :<br>
                         ${req.body.notify_message}
                         <br><br>
                         Trân trọng
