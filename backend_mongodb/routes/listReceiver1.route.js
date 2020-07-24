@@ -1,6 +1,9 @@
 const express = require("express");
 const moment = require("moment");
 const md5 = require('md5');
+// const crypto = require('crypto');
+// const openpgp = require('openpgp');
+const sha256 = require('sha256');
 const axios = require('axios');
 const NodeRSA = require('node-rsa');
 const User = require("../models/user.model");
@@ -15,10 +18,13 @@ const router = express.Router();
 router.post('/partner/find', async function(req, res){
      // Đi tìm người nhận có receiver_account_number từ đối tác 25Bank
      const str1 = `-----BEGIN PUBLIC KEY-----
-     MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTJstKm8Uzb5fsi2dneTG4fPsR
-     WTxX4fsL7sHq9w0SilwSSS7AM4TZrK0/HhwzuXGotVPwxln9JRflZHnx8tzt1zwE
-     prBAuXaTnZwD15JHrF17jS2C0mze2j9olErB7oJa+OJ6hRYIB/kB4NaOTcl1f9n1
-     C0yM2o2SIGlTWWRd5QIDAQAB
+     MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlgYOdnw1EBNhzIiKP3Ep
+     ieY2sOhHhUYAdTKn7/kXX0DXdEdWU4Jnkkv6F8dtLhkGn6wL/tMsPuuLlms3ntoO
+     OfPyq3YCD6gpnVb2ns7058dI83AQMPEq8KLlf2JHbxOHIgdnhi8HF/q9D48eJR3m
+     V1BEOHzNpjN/URZ/1cF7x/FEAls5esotYle3NDeP31qIxGT/QSbEknBFwrDY73yj
+     BqRp/2nJ1ns6Nz2YFxlT/W8PLaq9g5rOh3HGg7bO8IuK8RubQqnSSEFOVShvNzmb
+     Q9G9IqqMyggY21r0Ft3e6WyntluVxIzVd8KkY9Gni/vWYC3MXTiGDLG0ABYnT44s
+     HwIDAQAB
      -----END PUBLIC KEY-----`;
      const key = new NodeRSA(str1);
      
@@ -82,7 +88,33 @@ router.post('/partner/find', async function(req, res){
 // partner34 là nhóm PGP
 // body gửi lên có receiver_account_number
 router.post('/partner/find-pgp', async function(req, res){
-     
+  const ts = moment().valueOf();
+  const key = 'Infymt';
+  const sig = sha256(ts+key);
+  
+  axios.defaults.headers = {
+      'x-time': ts,
+      'x-signature': sig,
+      'x-partner-code': "GO"
+    };
+  
+  axios({
+      method: 'get',
+      url: 'https://banking34.herokuapp.com/api/user/${receiver_account_number}'
+    }).then(async function (response) {
+        //const str2 = JSON.stringify(response.data);
+        const strTest = response.data.fullname + "";
+        if(strTest == "undefined"){
+         return res.status(400).send({ status: "NO_ACCOUNT", message: "Không tìm thấy người dùng." });
+        }else{
+         return res.status(200).send({ status: "OK", fullname:  response.data.fullname});
+        }
+      })
+      .catch(function (err) {
+         console.log(err.response.data);
+        //return console.log("\n"+JSON.stringify(err.response.data));
+        //return Response.SendMessaageRes(res.status(err.response.status), JSON.stringify(err.response.data))
+      })
     
 })
 

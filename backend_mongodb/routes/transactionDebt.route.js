@@ -202,7 +202,51 @@ router.post("/", async function (req, res) {
                   {isActive: 0}
                   );
               
-                  return res.status(200).send({status: "DONE", message: "Đã thanh toán"});
+
+              // Gửi mail notify cho người nhắc :
+              const _userSecond = await User.findOne({user_id: updateListDebt.user_id});
+              const emailSecond = _userSecond.email;
+
+              var transporter = nodemailer.createTransport({
+                service: "gmail",
+                auth: {
+                  user: "secondwebnc2020@gmail.com",
+                  pass: "infymt6620",
+                },
+              });
+        
+              var mainOptions = {
+                // thiết lập đối tượng, nội dung gửi mail
+                from: "secondwebnc2020@gmail.com",
+                to: emailSecond,
+                subject: "[Xác nhận OTP]",
+                text: "Tin nhắn từ ngân hàng Go ",
+                html: `<div>
+                                Xin chào ${updateListDebt.creditor_fullname},
+                                <br><br>
+                                Người nợ tên ${updateListDebt.debtor_fullname} đã thanh toán.
+                                <br><br>
+                                Trân trọng
+                            </div>`,
+              };
+        
+              transporter.sendMail(mainOptions, function (error, info) {
+                if (error) {
+                  res
+                    .status(500)
+                    .send({
+                      status: "ERROR",
+                      message: "Không thể gửi message. " + error,
+                    });
+                } else {
+                    return res.status(200).send({
+                      status: "DONE",
+                      message: "Đã thanh toán"
+                  });
+                }
+              });
+
+                  // return res.status(200).send({status: "DONE", message: "Đã thanh toán"});
           }catch(err){
                
             return res.status(500).send({ status: "ERROR", message: "Thất bại." + err});

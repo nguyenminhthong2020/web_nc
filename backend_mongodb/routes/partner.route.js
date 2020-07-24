@@ -43,7 +43,7 @@ const confirm = (req, type) => {
       hashSecretKey = md5(config.auth.secretPartnerForTestRSA);
     }
     if(partnerCode == "partner34"){
-      hashSecretKey = md5("Infymt");
+      hashSecretKey = md5("banking34");
     }
 
     const comparingSign = md5(ts + JSON.stringify(req.body) + hashSecretKey);
@@ -254,7 +254,7 @@ router.post("/recharge", async function (req, res) {
       } else if(partnerCode == "partner34"){
 
         // partner PGP
-        const privateKeyArmored = process.ourkey.PGP_PRIVATEKEY;
+        const privateKeyArmored = process.ourkey.PGP_PRIVATEKEY2;
         const {
           keys: [privateKey],
         } = await openpgp.key.readArmored(privateKeyArmored);
