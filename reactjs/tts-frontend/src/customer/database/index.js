@@ -12,16 +12,27 @@ import './css/util.css';
 import './css/main.css';
 
 /* Hàm dùng để refresh token */
-const refreshToken = () => {
+const refreshToken = async () => {
+
     const reqBody = {
         accessToken: localStorage.getItem('accessToken'),
         refreshToken: localStorage.getItem('refreshToken')
     }
-    axios({method: 'post', url: 'https://tts-bank.herokuapp.com/auth/refresh', data: reqBody}).then(function (response) {
+    const response = await connector.post("/auth/refresh", reqBody).then((response) => {
         localStorage.setItem('accessToken', response.data.accessToken);
-    }).catch(function (error) {
-        // Handle error
-    })
+    }, (error) => {
+        console.log("Error! Infor: ", error.response);
+        alert('Lỗi xảy ra 0!');
+    });
+
+
+
+
+    // axios({method: 'post', url: 'https://tts-bank.herokuapp.com/auth/refresh', data: reqBody}).then(function (response) {
+    //     localStorage.setItem('accessToken', response.data.accessToken);
+    // }).catch(function (error) {
+    //     // Handle error
+    // })
 }
 
 const listBanks = () => [

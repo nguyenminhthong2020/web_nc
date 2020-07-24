@@ -9,7 +9,6 @@ export default class Logout extends React.Component {
     render() {        
         // Sign out
         fakeAuth.signout();
-        alert('Signed out!');
 
         // Render
         return(
