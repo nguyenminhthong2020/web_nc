@@ -133,8 +133,9 @@ router.post("/check", async (req, res) => {
 router.post("/recharge", async function (req, res) {
     const partnerCode = req.get("partnerCode");
     const signature = req.get("signature"); 
+    
     const paCode = req.get("partnerCode");
-
+    console.log("\n check 1: " + partnerCode);
     // Kiểm tra ngân hàng liên kết là RSA/ PGP hay ForTest để lấy keyPulic
     let partner;
     if (partnerCode == config.auth.partnerRSA) {
@@ -149,14 +150,25 @@ router.post("/recharge", async function (req, res) {
     if(partnerCode == "partner34"){
       partner = process.partnerPGP2;
     }
-    const keyPublic = new NodeRSA(partner.RSA_PUBLICKEY);
-    const veri = keyPublic.verify(
-      JSON.stringify(req.body),
+    const strTestKey = `-----BEGIN PUBLIC KEY-----
+    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlgYOdnw1EBNhzIiKP3Ep
+    ieY2sOhHhUYAdTKn7/kXX0DXdEdWU4Jnkkv6F8dtLhkGn6wL/tMsPuuLlms3ntoO
+    OfPyq3YCD6gpnVb2ns7058dI83AQMPEq8KLlf2JHbxOHIgdnhi8HF/q9D48eJR3m
+    V1BEOHzNpjN/URZ/1cF7x/FEAls5esotYle3NDeP31qIxGT/QSbEknBFwrDY73yj
+    BqRp/2nJ1ns6Nz2YFxlT/W8PLaq9g5rOh3HGg7bO8IuK8RubQqnSSEFOVShvNzmb
+    Q9G9IqqMyggY21r0Ft3e6WyntluVxIzVd8KkY9Gni/vWYC3MXTiGDLG0ABYnT44s
+    HwIDAQAB
+    -----END PUBLIC KEY-----`;
+    console.log("\n check 2 : " + strTestKey);
+    const keyPublic2 = new NodeRSA(strTestKey);
+    //const keyPublic = new NodeRSA(partner.RSA_PUBLICKEY);
+    const veri = keyPublic2.verify(
+      JSON.stringify(req.body), 
       signature,
-      "base64",
+      "utf8",
       "base64"
     );
-    
+    console.log("\n check 3: " + veri);
     var con = confirm(req, 2);
 
     if (con == 1) {
@@ -182,7 +194,7 @@ router.post("/recharge", async function (req, res) {
         message: "Thiếu sender_account_number hoặc receiver_account_number hoặc type_fee",
       });
     }
-
+    console.log("\nverify: " + veri+"\n");
     if (veri != true) {
       return res.status(400).send({
         message: "Sai chữ ký.",
@@ -190,11 +202,11 @@ router.post("/recharge", async function (req, res) {
     }
 
     try {
-      const userAccount = await Account.findOne({account_number: req.body.receive_account_number});
+      const userAccount = await Account.findOne({account_number: req.body.receiver_account_number});
 
       if (!userAccount) {
         return res.status(404).send({
-            message: `Không tìm thấy user có account number ${req.body.receive_account_number}`,
+            message: `Không tìm thấy user có account number ${req.body.receiver_account_number}`,
           });
       }
 
@@ -208,7 +220,7 @@ router.post("/recharge", async function (req, res) {
       let newMoney = userAccount.balance + money;
       await Account.findOneAndUpdate(
           {
-              account_number: req.body.receive_account_number
+              account_number: req.body.receiver_account_number
           },
           {
               balance: newMoney
@@ -221,7 +233,7 @@ router.post("/recharge", async function (req, res) {
       
       const entityUpdateLog = {
           sender_account_number: req.body.sender_account_number,
-          receiver_account_number: req.body.receive_account_number,
+          receiver_account_number: req.body.receiver_account_number,
           sender_bank_code: paCode,
           receive_bank_code: config.auth.bankcode,  // "GO"    
           money: money1,
@@ -234,7 +246,7 @@ router.post("/recharge", async function (req, res) {
 
       // response về cho ngân hàng B :
       const responseForClient = {
-        receive_account_number: req.body.receive_account_number,
+        receiver_account_number: req.body.receiver_account_number,
         money: req.body.money,
         currentTime: moment().valueOf(),
       };
