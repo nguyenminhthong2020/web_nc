@@ -40,7 +40,9 @@ export default class Login extends Component {
             'username': username,
             'password': password
         }
+        // google recaptcha
 
+        // call axios
         axios({method: 'post', url: 'https://tts-bank.herokuapp.com/auth/login', data: reqBody}).then(function (response) {
             if (response.data.authenticated == false) {
                 alert('Sai thong tin dang nhap');
