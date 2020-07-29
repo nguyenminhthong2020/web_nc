@@ -100,7 +100,7 @@ router.post('/partner/find-pgp', async function(req, res){
   
   axios({
       method: 'get',
-      url: 'https://banking34.herokuapp.com/api/user/${receiver_account_number}'
+      url: 'https://banking34.herokuapp.com/api/user/${req.body.receiver_account_number}'
     }).then(async function (response) {
         //const str2 = JSON.stringify(response.data);
         const strTest = response.data.fullname + "";
@@ -265,6 +265,67 @@ router.post("/", async function (req, res) {
 
   }else{
        
+       // Đi tìm người nhận có receiver_account_number từ đối tác partner34
+       const ts = moment().valueOf();
+      const key = 'Infymt';
+      const sig = sha256(ts+key);
+      
+      axios.defaults.headers = {
+          'x-time': ts,
+          'x-signature': sig,
+          'x-partner-code': "GO"
+        };
+
+
+      axios({
+        method: 'get',
+        url: 'https://banking34.herokuapp.com/api/user/${req.body.receiver_account_number}'
+      }).then(async function (response) {
+        //  const str2 = JSON.stringify(response.data);
+        //  console.log(str2);
+        const strTest = response.data.fullname + "";
+
+         if(strTest == "undefined"){
+            return res.status(400).send({ status: "NO_ACCOUNT", message: "Không tìm thấy người dùng." });
+         }else{
+            //return res.status(200).send({ status: "OK", fullname:  response.data.TenKhachHang});
+
+         //return Response.Ok(res, {'bankName': response.data.TenKhachHang});
+
+            if (req.body.type == "1"){
+              const newReceiver4x = {
+                user_id: user_id,
+                receiver_account_number: req.body.receiver_account_number,
+                remind_name: response.data.fullname,
+                bank_code: req.body.bank_code,
+              };
+    
+              let newList4x = ListReceiver(newReceiver4x);
+              const ret4x = await newList4x.save();
+    
+              return res.status(201).send({ message: "thêm thành công" });
+            }else {
+              const newReceiver5x = {
+                user_id: user_id,
+                receiver_account_number: req.body.receiver_account_number,
+                remind_name: req.body.remind_name,
+                bank_code: req.body.bank_code,
+              };
+    
+              let newList5x = ListReceiver(newReceiver5x);
+              const ret5 = await newList5x.save();
+    
+              return res.status(201).send({ message: "thêm thành công" });
+            }
+          }
+         })
+         .catch(function (err) {
+            return res.status(500).send({ status: "ERROR", message: err.response.data});
+
+         //console.log(err)
+         //return console.log("\n"+JSON.stringify(err.response.data));
+         //return Response.SendMessaageRes(res.status(err.response.status), JSON.stringify(err.response.data))
+         })
   }
 
 });
