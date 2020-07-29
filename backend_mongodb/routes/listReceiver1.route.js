@@ -100,7 +100,7 @@ router.post('/partner/find-pgp', async function(req, res){
   
   axios({
       method: 'get',
-      url: 'https://banking34.herokuapp.com/api/user/${req.body.receiver_account_number}'
+      url: `https://banking34.herokuapp.com/api/user/${req.body.receiver_account_number}`
     }).then(async function (response) {
         //const str2 = JSON.stringify(response.data);
         const strTest = response.data.fullname + "";
@@ -170,10 +170,13 @@ router.post("/", async function (req, res) {
 
             // Đi tìm người nhận có receiver_account_number từ đối tác 25Bank
       const str1 = `-----BEGIN PUBLIC KEY-----
-      MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTJstKm8Uzb5fsi2dneTG4fPsR
-      WTxX4fsL7sHq9w0SilwSSS7AM4TZrK0/HhwzuXGotVPwxln9JRflZHnx8tzt1zwE
-      prBAuXaTnZwD15JHrF17jS2C0mze2j9olErB7oJa+OJ6hRYIB/kB4NaOTcl1f9n1
-      C0yM2o2SIGlTWWRd5QIDAQAB
+      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlgYOdnw1EBNhzIiKP3Ep
+      ieY2sOhHhUYAdTKn7/kXX0DXdEdWU4Jnkkv6F8dtLhkGn6wL/tMsPuuLlms3ntoO
+      OfPyq3YCD6gpnVb2ns7058dI83AQMPEq8KLlf2JHbxOHIgdnhi8HF/q9D48eJR3m
+      V1BEOHzNpjN/URZ/1cF7x/FEAls5esotYle3NDeP31qIxGT/QSbEknBFwrDY73yj
+      BqRp/2nJ1ns6Nz2YFxlT/W8PLaq9g5rOh3HGg7bO8IuK8RubQqnSSEFOVShvNzmb
+      Q9G9IqqMyggY21r0Ft3e6WyntluVxIzVd8KkY9Gni/vWYC3MXTiGDLG0ABYnT44s
+      HwIDAQAB
       -----END PUBLIC KEY-----`;
       const key = new NodeRSA(str1);
       
@@ -279,7 +282,7 @@ router.post("/", async function (req, res) {
 
       axios({
         method: 'get',
-        url: 'https://banking34.herokuapp.com/api/user/${req.body.receiver_account_number}'
+        url: `https://banking34.herokuapp.com/api/user/${req.body.receiver_account_number}`
       }).then(async function (response) {
         //  const str2 = JSON.stringify(response.data);
         //  console.log(str2);

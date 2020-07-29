@@ -15,6 +15,7 @@
       songoku.minhthong
       juernevte
    
+
    b) Quy ước: mỗi account_number có dạng 12020 + user_id
 
    c) Quy ước: mỗi saving_account_number có dạng 
