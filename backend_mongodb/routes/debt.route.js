@@ -267,7 +267,7 @@ router.post("/delete1/:debt_id", async function (req, res) {
 // Các nguyên nhân : đã trả xong, chưa muốn trả, không hề nợ (bên kia gửi nhầm),...
 // body gửi lên :
 // body gửi lên gồm notify_message
-router.post("/delete2/debt_id", async function (req, res) {
+router.post("/delete2/:debt_id", async function (req, res) {
   try {
     const ret = await ListDebt.findOneAndUpdate(
       {
