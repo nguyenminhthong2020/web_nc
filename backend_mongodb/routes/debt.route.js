@@ -9,7 +9,7 @@ const ListDebt = require("../models/listDebt.model");
 const { message } = require("openpgp");
 // const Otp = require("../models/otp.model");
 // const Transaction = require("../models/TransactionHistory.model");
-// var nodemailer = require("nodemailer");
+var nodemailer = require("nodemailer");
 // const config = require("../config/default.json");
 // const process1 = require("../config/process.config");
 
@@ -194,7 +194,7 @@ router.get("/view2", async function (req, res) {
 router.post("/delete1/:debt_id", async function (req, res) {
    //const { user_id } = req.tokenPayload;
   
-  try {
+  
     const ret = await ListDebt.findOneAndUpdate(
       {
         debt_id: req.params.debt_id,
@@ -203,8 +203,9 @@ router.post("/delete1/:debt_id", async function (req, res) {
         isActive: 0,
       }
     );
-
-    if (ret) {
+     
+    //const _ret = await ListDebt.findOne({debt_id : req.params.debt_id});
+    
       //const _accountSecond = await Account.findOne({account_number: ret.creditor_account_number});
       const _userSecond = await User.findOne({user_id: ret.user_id});
       const emailSecond = _userSecond.email;
@@ -223,7 +224,7 @@ router.post("/delete1/:debt_id", async function (req, res) {
         // thiết lập đối tượng, nội dung gửi mail
         from: "secondwebnc2020@gmail.com",
         to: emailSecond,
-        subject: "[Xác nhận OTP]",
+        subject: "[Hủy nhắc nợ]",
         text: "Tin nhắn từ ngân hàng Go ",
         html: `<div>
                         Xin chào ${ret.creditor_fullname},
@@ -252,15 +253,9 @@ router.post("/delete1/:debt_id", async function (req, res) {
       });
        
        
-    }
+    
 
-  } catch (err) {
-    return res.status(500).send({
-      status: "ERROR",
-      message: "Xóa thất bại",
-      err,
-    });
-  }
+  
 });
 
 // Hủy nhắc nợ (do bản thân tạo)
@@ -268,7 +263,7 @@ router.post("/delete1/:debt_id", async function (req, res) {
 // body gửi lên :
 // body gửi lên gồm notify_message
 router.post("/delete2/:debt_id", async function (req, res) {
-  try {
+ 
     const ret = await ListDebt.findOneAndUpdate(
       {
         debt_id: req.params.debt_id,
@@ -278,9 +273,9 @@ router.post("/delete2/:debt_id", async function (req, res) {
       }
     );
 
-    if (ret) {
-      //const _accountSecond = await Account.findOne({account_number: ret.creditor_account_number});
-      const _userSecond = await User.findOne({user_id: ret.user_id});
+    
+      const _accountSecond = await Account.findOne({account_number: ret.debtor_account_number});
+      const _userSecond = await User.findOne({user_id: _accountSecond.user_id});
       const emailSecond = _userSecond.email;
       //const fullnameSecond = _userSecond.fullname;
       //const fullname = ret.debtor_fullname;
@@ -297,12 +292,12 @@ router.post("/delete2/:debt_id", async function (req, res) {
         // thiết lập đối tượng, nội dung gửi mail
         from: "secondwebnc2020@gmail.com",
         to: emailSecond,
-        subject: "[Xác nhận OTP]",
+        subject: "[Hủy nhắc nợ]",
         text: "Tin nhắn từ ngân hàng Go ",
         html: `<div>
-                        Xin chào ${ret.creditor_fullname},
+                        Xin chào ${_userSecond.fullname},
                         <br><br>
-                        Vừa có một yêu cầu hủy nhắc nợ từ ${ret.debtor_fullname} với nội dung là :<br>
+                        Vừa có một yêu cầu hủy nhắc nợ từ ${ret.creditor_fullname} với nội dung là :<br>
                         ${req.body.notify_message}
                         <br><br>
                         Trân trọng
@@ -328,13 +323,6 @@ router.post("/delete2/:debt_id", async function (req, res) {
        
     }
 
-  } catch (err) {
-    return res.status(500).send({
-      status: "ERROR",
-      message: "Xóa thất bại",
-      err,
-    });
-  }
-});
+ );
 
 module.exports = router;
