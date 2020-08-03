@@ -147,7 +147,7 @@ router.post("/edit", async function (req, res) {
             { account_number: req.body.account_number }
           );
 
-          return res.status(500).send({ status:"OK",ret1 });
+          return res.status(200).send({ status:"OK",ret1 });
         } else {
           return res.status(500).send({ status: "FAIL" });
         }
@@ -178,7 +178,7 @@ router.post("/edit", async function (req, res) {
           { user_id: _user.user_id }
         );
 
-        return res.status(500).send({ status:"OK", ret1 });
+        return res.status(200).send({ status:"OK", ret1 });
       } else {
         return res.status(500).send({ status: "FAIL" });
       }
