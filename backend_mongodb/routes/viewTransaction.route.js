@@ -305,7 +305,7 @@ router.post('/admin2', async function(req, res){
 
                 for (let i = 0; i < allTran1.length; i++)
                 {
-                    if(((allTran1[i].sender_bank_code == _bank_code) || (allTran1[i].sender_bank_code == _bank_code)) && (moment(allTran1[i].created_at) >= startDate1) && (moment(allTran1[i].created_at) <= endDate1)){
+                    if(((allTran1[i].sender_bank_code == _bank_code) || (allTran1[i].receive_bank_code == _bank_code)) && (moment(allTran1[i].created_at) >= startDate1) && (moment(allTran1[i].created_at) <= endDate1)){
                         
                         money1 += allTran1[i].money;
                         data1.push(allTran1[i]);
