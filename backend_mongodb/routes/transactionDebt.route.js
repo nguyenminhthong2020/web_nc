@@ -59,7 +59,7 @@ router.post("/", async function (req, res) {
           .send({ status: "ERROR", message: "Không thể gửi message. " + error });
       } else {
 
-        const _debt = await ListDebt.findOne({debt_id: req.body.debt_id, user_id: user_id});
+        const _debt = await ListDebt.findOne({debt_id: req.body.debt_id});
         if(!_debt){
            return res.status(400).send({ status: "NO_DEBTID", message: "Không tồn tại debt_id"});
         }
