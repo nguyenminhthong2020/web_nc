@@ -101,7 +101,7 @@ router.post("/", async function (req, res) {
   });
   
   // Trong header có 2 trường là otp_id, email (chính là kết quả từ API phía trên)
-  // Trong body có trường là otp (req.body.otp)
+  // Trong body có trường là otp (req.body.otp), debt_id 
   router.post("/confirm", async function (req, res) {
     const time = moment().valueOf();
     const { user_id } = req.tokenPayload;
@@ -199,7 +199,7 @@ router.post("/", async function (req, res) {
   
               // Update List Debt Model
               const updateListDebt = await ListDebt.findOneAndUpdate(
-                  {debt_id: debt_id},
+                  {debt_id: req.body.debt_id},
                   {isActive: 0}
                   );
               
