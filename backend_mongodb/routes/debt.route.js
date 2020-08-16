@@ -5,8 +5,9 @@ const moment = require("moment");
 // const NodeRSA = require("node-rsa");
 const User = require("../models/user.model");
 const Account = require("../models/account.model");
+const Notify = require('../models/notify.model');
 const ListDebt = require("../models/listDebt.model");
-const { message } = require("openpgp");
+// const { message } = require("openpgp");
 // const Otp = require("../models/otp.model");
 // const Transaction = require("../models/TransactionHistory.model");
 var nodemailer = require("nodemailer");
@@ -194,7 +195,7 @@ router.get("/view2", async function (req, res) {
 router.post("/delete1/:debt_id", async function (req, res) {
    //const { user_id } = req.tokenPayload;
   
-  
+   try{
     const ret = await ListDebt.findOneAndUpdate(
       {
         debt_id: req.params.debt_id,
@@ -207,50 +208,78 @@ router.post("/delete1/:debt_id", async function (req, res) {
     //const _ret = await ListDebt.findOne({debt_id : req.params.debt_id});
     
       //const _accountSecond = await Account.findOne({account_number: ret.creditor_account_number});
-      const _userSecond = await User.findOne({user_id: ret.user_id});
-      const emailSecond = _userSecond.email;
+
+      // const _userSecond = await User.findOne({user_id: ret.user_id});
+      // const emailSecond = _userSecond.email;
+
+
       //const fullnameSecond = _userSecond.fullname;
       //const fullname = ret.debtor_fullname;
+       
+      // Gửi = giao diện client màn hình notify
+        const _body1 = {
+          sender_account_number: ret.debtor_account_number, 
+          sender_fullname : ret.debtor_fullname,
+          receiver_account_number: ret.creditor_account_number,
+          receiver_fullname: ret.creditor_fullname,
+          message: req.body.notify_message,    // Nội dung cần chuyển, Ví dụ: "tui ko có nợ ông"
+          created_at : moment().format('YYYY-MM-DD HH:mm:ss').toString()
+      } 
+      let newNoti = Notify( _body1);
+      const ret1 = await newNoti.save();
 
-      var transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: "secondwebnc2020@gmail.com",
-          pass: "infymt6620",
-        },
-      });
+      return res.status(200).send({
+        status: "OK",
+        message: "Đã xóa",
+        notify_id : ret1.notify_id
+    });
 
-      var mainOptions = {
-        // thiết lập đối tượng, nội dung gửi mail
-        from: "secondwebnc2020@gmail.com",
-        to: emailSecond,
-        subject: "[Hủy nhắc nợ]",
-        text: "Tin nhắn từ ngân hàng Go ",
-        html: `<div>
-                        Xin chào ${ret.creditor_fullname},
-                        <br><br>
-                        Vừa có một yêu cầu hủy nhắc nợ từ ${ret.debtor_fullname} với nội dung là :<br>
-                        ${req.body.notify_message}
-                        <br><br>
-                        Trân trọng
-                    </div>`,
-      };
-
-      transporter.sendMail(mainOptions, function (error, info) {
-        if (error) {
-          res
-            .status(500)
-            .send({
-              status: "ERROR",
-              message: "Không thể gửi message. " + error,
+    }catch(err){
+      return res.status(500).send({
+                status: "ERROR",
+                message: "Không thể xóa"
             });
-        } else {
-            return res.status(200).send({
-              status: "OK",
-              message: "Đã xóa"
-          });
-        }
-      });
+    }
+      // Gửi = email
+      // var transporter = nodemailer.createTransport({
+      //   service: "gmail",
+      //   auth: {
+      //     user: "secondwebnc2020@gmail.com",
+      //     pass: "infymt6620",
+      //   },
+      // });
+
+      // var mainOptions = {
+      //   // thiết lập đối tượng, nội dung gửi mail
+      //   from: "secondwebnc2020@gmail.com",
+      //   to: emailSecond,
+      //   subject: "[Hủy nhắc nợ]",
+      //   text: "Tin nhắn từ ngân hàng Go ",
+      //   html: `<div>
+      //                   Xin chào ${ret.creditor_fullname},
+      //                   <br><br>
+      //                   Vừa có một yêu cầu hủy nhắc nợ từ ${ret.debtor_fullname} với nội dung là :<br>
+      //                   ${req.body.notify_message}
+      //                   <br><br>
+      //                   Trân trọng
+      //               </div>`,
+      // };
+
+      // transporter.sendMail(mainOptions, function (error, info) {
+      //   if (error) {
+      //     res
+      //       .status(500)
+      //       .send({
+      //         status: "ERROR",
+      //         message: "Không thể gửi message. " + error,
+      //       });
+      //   } else {
+      //       return res.status(200).send({
+      //         status: "OK",
+      //         message: "Đã xóa"
+      //     });
+      //   }
+      // });
        
        
     
@@ -264,61 +293,87 @@ router.post("/delete1/:debt_id", async function (req, res) {
 // body gửi lên gồm notify_message
 router.post("/delete2/:debt_id", async function (req, res) {
  
-    const ret = await ListDebt.findOneAndUpdate(
-      {
-        debt_id: req.params.debt_id,
-      },
-      {
-        isActive: 0,
-      }
-    );
+    try{
+      const ret = await ListDebt.findOneAndUpdate(
+        {
+          debt_id: req.params.debt_id,
+        },
+        {
+          isActive: 0,
+        }
+      );
+          
+          // Gửi bằng giao diện client màn hình notify 
+          const _body1 = {
+            sender_account_number: ret.creditor_account_number,  
+            sender_fullname : ret.creditor_fullname, 
+            receiver_account_number: ret.debtor_account_number,
+            receiver_fullname: ret.debtor_fullname,
+            message: req.body.notify_message,    // Nội dung cần chuyển, Ví dụ: "tui gửi nhầm"
+            created_at : moment().format('YYYY-MM-DD HH:mm:ss').toString()
+        } 
+        let newNoti = Notify( _body1);
+        const ret1 = await newNoti.save();
+
+        return res.status(200).send({
+          status: "OK",
+          message: "Đã xóa",
+          notify_id : ret1.notify_id
+      });
+
+    }catch{err}{
+        return res.status(500).send({
+          status: "ERROR",
+          message: "Không thể xóa"
+      });     
+    }
 
     
-      const _accountSecond = await Account.findOne({account_number: ret.debtor_account_number});
-      const _userSecond = await User.findOne({user_id: _accountSecond.user_id});
-      const emailSecond = _userSecond.email;
-      //const fullnameSecond = _userSecond.fullname;
-      //const fullname = ret.debtor_fullname;
+      // const _accountSecond = await Account.findOne({account_number: ret.debtor_account_number});
+      // const _userSecond = await User.findOne({user_id: _accountSecond.user_id});
+      // const emailSecond = _userSecond.email;
+      // //const fullnameSecond = _userSecond.fullname;
+      // //const fullname = ret.debtor_fullname;
 
-      var transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: "secondwebnc2020@gmail.com",
-          pass: "infymt6620",
-        },
-      });
+      // var transporter = nodemailer.createTransport({
+      //   service: "gmail",
+      //   auth: {
+      //     user: "secondwebnc2020@gmail.com",
+      //     pass: "infymt6620",
+      //   },
+      // });
 
-      var mainOptions = {
-        // thiết lập đối tượng, nội dung gửi mail
-        from: "secondwebnc2020@gmail.com",
-        to: emailSecond,
-        subject: "[Hủy nhắc nợ]",
-        text: "Tin nhắn từ ngân hàng Go ",
-        html: `<div>
-                        Xin chào ${_userSecond.fullname},
-                        <br><br>
-                        Vừa có một yêu cầu hủy nhắc nợ từ ${ret.creditor_fullname} với nội dung là :<br>
-                        ${req.body.notify_message}
-                        <br><br>
-                        Trân trọng
-                    </div>`,
-      };
+      // var mainOptions = {
+      //   // thiết lập đối tượng, nội dung gửi mail
+      //   from: "secondwebnc2020@gmail.com",
+      //   to: emailSecond,
+      //   subject: "[Hủy nhắc nợ]",
+      //   text: "Tin nhắn từ ngân hàng Go ",
+      //   html: `<div>
+      //                   Xin chào ${_userSecond.fullname},
+      //                   <br><br>
+      //                   Vừa có một yêu cầu hủy nhắc nợ từ ${ret.creditor_fullname} với nội dung là :<br>
+      //                   ${req.body.notify_message}
+      //                   <br><br>
+      //                   Trân trọng
+      //               </div>`,
+      // };
 
-      transporter.sendMail(mainOptions, function (error, info) {
-        if (error) {
-          res
-            .status(500)
-            .send({
-              status: "ERROR",
-              message: "Không thể gửi message. " + error,
-            });
-        } else {
-            return res.status(200).send({
-              status: "OK",
-              message: "Đã xóa"
-          });
-        }
-      });
+      // transporter.sendMail(mainOptions, function (error, info) {
+      //   if (error) {
+      //     res
+      //       .status(500)
+      //       .send({
+      //         status: "ERROR",
+      //         message: "Không thể gửi message. " + error,
+      //       });
+      //   } else {
+      //       return res.status(200).send({
+      //         status: "OK",
+      //         message: "Đã xóa"
+      //     });
+      //   }
+      // });
        
        
     }

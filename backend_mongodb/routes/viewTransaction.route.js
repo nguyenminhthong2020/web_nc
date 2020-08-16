@@ -22,9 +22,20 @@ router.get('/receive', async function(req, res){
     
     try{
         const _account = await Account.findOne({user_id: user_id});
-        const list = await Transaction.find({receiver_account_number: _account.account_number})
+        const list1 = await Transaction.find({receiver_account_number: _account.account_number})
                                       .sort({transaction_id: -1});
 
+        var list = [];
+        const stime = moment('2020-07-30') - moment('2020-07-01');
+        const stimenow = moment().valueOf();
+        for (let i = 0; i < list1.length; i++)
+                {
+                    if(stimenow - moment(list1[i].created_at) <= stime)
+                    {
+                        
+                        list.push(list1[i]);
+                    }
+                }
         return res.status(200).send(list);
     }catch(err){
         return res.status(500).send(err.message);
@@ -37,9 +48,20 @@ router.get('/send', async function(req, res){
     
     try{
         const _account = await Account.findOne({user_id: user_id});
-        const list = await Transaction.find({sender_account_number: _account.account_number})
+        const list1 = await Transaction.find({sender_account_number: _account.account_number})
                                       .sort({transaction_id: -1});
-                                      
+        
+        var list = [];
+        const stime = moment('2020-07-30') - moment('2020-07-01');
+        const stimenow = moment().valueOf();
+        for (let i = 0; i < list1.length; i++)
+                {
+                    if(stimenow - moment(list1[i].created_at) <= stime)
+                    {
+                        
+                        list.push(list1[i]);
+                    }
+                }
         return res.status(200).send(list);
     }catch(err){
         return res.status(500).send(err.message);
@@ -56,9 +78,18 @@ router.get('/debt', async function(req, res){
 
     try{
         const _account = await Account.findOne({user_id: user_id});
-        const list = await TransactionDebt.find({debtor_account_number: _account.account_number})
+        const list1 = await TransactionDebt.find({debtor_account_number: _account.account_number})
                                        .sort({transaction_debt_id: -1});
-
+        var list = [];
+        const stime = moment('2020-07-30') - moment('2020-07-01');
+        const stimenow = moment().valueOf();
+        for (let i = 0; i < list1.length; i++)
+            {
+                if(stimenow - moment(list1[i].created_at) <= stime)
+                    {                               
+                       list.push(list1[i]);
+                    }
+            }
         return res.status(200).send(list);
     }catch(err){
         return res.status(500).send(err.message);
@@ -81,7 +112,7 @@ router.post('/employee/receive', async function(req, res){
         //const _account = await Account.findOne({account_number: req.body.account_number});
         const list = await Transaction.find({receiver_account_number: req.body.account_number})
                                       .sort({transaction_id: -1});
-
+        
         return res.status(200).send(list);
     }catch(err){
         return res.status(500).send(err.message);

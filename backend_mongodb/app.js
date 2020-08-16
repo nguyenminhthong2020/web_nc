@@ -71,7 +71,9 @@ app.get('/', (req, res) => {
   app.use('/auth', require('./routes/auth.route'));
 // // // Dành cho Admin hoặc Employee
 app.use('/account',  verify, require('./routes/account.route'));
+app.use('/account-saving', verify, require('./routes/accountSaving.route')); // tài khoản tiết kiệm
 app.use('/user', verify, require('./routes/user.route'));  
+app.use('/notify', verify, require('./routes/notify.route'));  
 
 app.use('/list-receiver', verify, require('./routes/listReceiver.route'));
 app.use('/list-receiver1', verify, require('./routes/listReceiver1.route'));

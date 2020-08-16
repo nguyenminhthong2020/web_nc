@@ -237,6 +237,8 @@ router.post("/employee/create-customer", async function (req, res) {
 
         return res.status(201).send({
             message: "Tạo thành công",
+            username: ret.username,
+            account_number: ret1.account_number,
             ret,
             ret1
             // username: ret.username,
