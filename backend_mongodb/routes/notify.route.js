@@ -44,7 +44,8 @@ router.get("/:id", async function (req, res) {
     //     res.status(400).send("Bạn không đủ thẩm quyền.");
     // }
     try {
-      const rows = await Notify.find({ receiver_account_number : _account.account_number });
+      const rows = await Notify.find({ receiver_account_number : _account.account_number })
+                               .sort({notify_id: -1});
       return res.status(200).send({
           rows
         });
