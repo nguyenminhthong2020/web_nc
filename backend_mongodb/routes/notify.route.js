@@ -35,7 +35,7 @@ router.get("/:id", async function (req, res) {
     }
   });
 
-  router.get("/all", async function (req, res) {
+  router.get("/all/", async function (req, res) {
     const { user_id } = req.tokenPayload;
     const _account  = await Account.findOne({user_id: user_id});
     //const checkUser = await User.findOne({user_id: user_id});
