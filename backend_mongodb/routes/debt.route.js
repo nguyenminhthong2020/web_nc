@@ -223,6 +223,7 @@ router.post("/delete1/:debt_id", async function (req, res) {
           receiver_account_number: ret.creditor_account_number,
           receiver_fullname: ret.creditor_fullname,
           message: req.body.notify_message,    // Nội dung cần chuyển, Ví dụ: "tui ko có nợ ông"
+          notify_type : "0",
           created_at : moment().format('YYYY-MM-DD HH:mm:ss').toString()
       } 
       let newNoti = Notify( _body1);
@@ -310,6 +311,7 @@ router.post("/delete2/:debt_id", async function (req, res) {
             receiver_account_number: ret.debtor_account_number,
             receiver_fullname: ret.debtor_fullname,
             message: req.body.notify_message,    // Nội dung cần chuyển, Ví dụ: "tui gửi nhầm"
+            notify_type : "0",
             created_at : moment().format('YYYY-MM-DD HH:mm:ss').toString()
         } 
         let newNoti = Notify( _body1);

@@ -108,14 +108,14 @@ router.post("/", async function (req, res) {
     const _otp_id = req.get("otp_id");
     const _email = req.get("email");
     const str = _email + "";
-  
+    console.log("\n1");
     if (!_otp_id) {
       return res
         .status(400)
         .send({ status_code: "NO_OTPID", message: "Thiếu otp_id" });
     } else {
       const _otp = await Otp.findOne({ otp_id: _otp_id });
-  
+      console.log("\n2");
       if (!_otp) {
         return res
           .status(404)
@@ -145,7 +145,7 @@ router.post("/", async function (req, res) {
             account_number: _otp.sender_account_number,
           });
           let balance1 = accountSend.balance;
-
+          console.log("\n3");
           let _m = _otp.money + 3000;
           
           if(accountSend.balance < _m)
@@ -158,7 +158,7 @@ router.post("/", async function (req, res) {
              });
            }
 
-          
+           console.log("\n4");
           try {
                 
   
@@ -166,7 +166,7 @@ router.post("/", async function (req, res) {
                 account_number: _otp.receiver_account_number,
               });
               let balance2 = accountReceive.balance;
-    
+              console.log("\n5");
               const ret1 = await Account.findOneAndUpdate(
                 {
                   account_number: _otp.sender_account_number,
@@ -175,7 +175,7 @@ router.post("/", async function (req, res) {
                   balance: balance1 - _otp.money - 3000,
                 }
               );
-    
+              console.log("\n6");
               const ret2 = await Account.findOneAndUpdate(
                 {
                   account_number: _otp.receive_bank_code,
@@ -184,7 +184,7 @@ router.post("/", async function (req, res) {
                   balance: balance2 + _otp.money,
                 }
               );
-    
+              console.log("\n7");
               // Update Transaction Debt Model
               const _body1 = {
                   creditor_account_number: _otp.receiver_account_number,   // chủ nợ
@@ -196,7 +196,7 @@ router.post("/", async function (req, res) {
     
               let newTransaction = TransactionDebt(_body1);
               const ret3 = await newTransaction.save();
-  
+              console.log("\n8");
               // Update List Debt Model
               const updateListDebt = await ListDebt.findOneAndUpdate(
                   {debt_id: req.body.debt_id},
@@ -211,11 +211,12 @@ router.post("/", async function (req, res) {
                   receiver_account_number: updateListDebt.creditor_account_number,
                   receiver_fullname: updateListDebt.creditor_fullname,
                   message: "Đã thanh toán nợ",  
+                  notify_type : "1",
                   created_at : moment().format('YYYY-MM-DD HH:mm:ss').toString()
               } 
               let newNoti = Notify( _body3);
               const ret7 = await newNoti.save();
-
+              console.log("\n8");
               return res.status(200).send({
                 status: "DONE",
                 message: "Đã thanh toán",

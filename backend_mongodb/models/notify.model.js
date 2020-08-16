@@ -13,6 +13,7 @@ const notifySchema = new Schema(
         receiver_account_number: String,
         receiver_fullname: String,
         message: String,    // Nội dung cần chuyển, Ví dụ: "gửi trả nợ cho ông A"
+        notify_type: String, // 0 : hủy nhắc nợ, 1 : thanh toán nhắc nợ
         created_at: String
     }
 );

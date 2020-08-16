@@ -39,17 +39,20 @@ router.get("/:id", async function (req, res) {
     const { user_id } = req.tokenPayload;
     const _account  = await Account.findOne({user_id: user_id});
     //const checkUser = await User.findOne({user_id: user_id});
-  
+    console.log("\n1");
     // if(checkUser.role == 0){
     //     res.status(400).send("Bạn không đủ thẩm quyền.");
     // }
     try {
+      console.log("\n2");
       const rows = await Notify.find({ receiver_account_number : _account.account_number })
                                .sort({notify_id: -1});
+      console.log("\n3");
       return res.status(200).send({
           rows
         });
     } catch (err) {
+      console.log("\n4");
       return res.status(500).send(err.message);
     }
   });
