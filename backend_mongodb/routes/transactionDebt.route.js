@@ -6,6 +6,7 @@ const moment = require("moment");
 const User = require("../models/user.model");
 const Account = require("../models/account.model");
 const ListDebt = require('../models/listDebt.model');
+const Notify = require('../models/notify.model');
 const Otp = require("../models/otp.model");
 const TransactionDebt = require("../models/transactionDebtHistory.model");
 var nodemailer = require("nodemailer");
@@ -58,7 +59,7 @@ router.post("/", async function (req, res) {
           .send({ status: "ERROR", message: "Không thể gửi message. " + error });
       } else {
 
-        const _debt = await ListDebt.findOne({debt_id: debt_id, user_id: user_id});
+        const _debt = await ListDebt.findOne({debt_id: req.body.debt_id, user_id: user_id});
         if(!_debt){
            return res.status(400).send({ status: "NO_DEBTID", message: "Không tồn tại debt_id"});
         }
@@ -202,49 +203,67 @@ router.post("/", async function (req, res) {
                   {isActive: 0}
                   );
               
+               // gửi notify 
+               // Gửi bằng giao diện client màn hình notify 
+                const _body3 = {
+                  sender_account_number: updateListDebt.debtor_account_number,  
+                  sender_fullname : updateListDebt.debtor_fullname, 
+                  receiver_account_number: updateListDebt.creditor_account_number,
+                  receiver_fullname: updateListDebt.creditor_fullname,
+                  message: "Đã thanh toán nợ",  
+                  created_at : moment().format('YYYY-MM-DD HH:mm:ss').toString()
+              } 
+              let newNoti = Notify( _body3);
+              const ret7 = await newNoti.save();
+
+              return res.status(200).send({
+                status: "DONE",
+                message: "Đã thanh toán",
+                notify_id : ret7.notify_id
+            });
 
               // Gửi mail notify cho người nhắc :
-              const _userSecond = await User.findOne({user_id: updateListDebt.user_id});
-              const emailSecond = _userSecond.email;
+              // const _userSecond = await User.findOne({user_id: updateListDebt.user_id});
+              // const emailSecond = _userSecond.email;
 
-              var transporter = nodemailer.createTransport({
-                service: "gmail",
-                auth: {
-                  user: "secondwebnc2020@gmail.com",
-                  pass: "infymt6620",
-                },
-              });
+              // var transporter = nodemailer.createTransport({
+              //   service: "gmail",
+              //   auth: {
+              //     user: "secondwebnc2020@gmail.com",
+              //     pass: "infymt6620",
+              //   },
+              // });
         
-              var mainOptions = {
-                // thiết lập đối tượng, nội dung gửi mail
-                from: "secondwebnc2020@gmail.com",
-                to: emailSecond,
-                subject: "[Xác nhận OTP]",
-                text: "Tin nhắn từ ngân hàng Go ",
-                html: `<div>
-                                Xin chào ${updateListDebt.creditor_fullname},
-                                <br><br>
-                                Người nợ tên ${updateListDebt.debtor_fullname} đã thanh toán.
-                                <br><br>
-                                Trân trọng
-                            </div>`,
-              };
+              // var mainOptions = {
+              //   // thiết lập đối tượng, nội dung gửi mail
+              //   from: "secondwebnc2020@gmail.com",
+              //   to: emailSecond,
+              //   subject: "[Xác nhận OTP]",
+              //   text: "Tin nhắn từ ngân hàng Go ",
+              //   html: `<div>
+              //                   Xin chào ${updateListDebt.creditor_fullname},
+              //                   <br><br>
+              //                   Người nợ tên ${updateListDebt.debtor_fullname} đã thanh toán.
+              //                   <br><br>
+              //                   Trân trọng
+              //               </div>`,
+              // };
         
-              transporter.sendMail(mainOptions, function (error, info) {
-                if (error) {
-                  res
-                    .status(500)
-                    .send({
-                      status: "ERROR",
-                      message: "Không thể gửi message. " + error,
-                    });
-                } else {
-                    return res.status(200).send({
-                      status: "DONE",
-                      message: "Đã thanh toán"
-                  });
-                }
-              });
+              // transporter.sendMail(mainOptions, function (error, info) {
+              //   if (error) {
+              //     res
+              //       .status(500)
+              //       .send({
+              //         status: "ERROR",
+              //         message: "Không thể gửi message. " + error,
+              //       });
+              //   } else {
+              //       return res.status(200).send({
+              //         status: "DONE",
+              //         message: "Đã thanh toán"
+              //     });
+              //   }
+              // });
 
                   // return res.status(200).send({status: "DONE", message: "Đã thanh toán"});
           }catch(err){
