@@ -114,7 +114,7 @@ router.post("/", async function (req, res) {
         .status(400)
         .send({ status_code: "NO_OTPID", message: "Thiếu otp_id" });
     } else {
-      const _otp = await Otp.findOne({ otp_id: otp_id });
+      const _otp = await Otp.findOne({ otp_id: _otp_id });
   
       if (!_otp) {
         return res
