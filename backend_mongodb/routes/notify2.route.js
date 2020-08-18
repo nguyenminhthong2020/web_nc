@@ -86,7 +86,7 @@ router.post("/setview-id/:id", async function (req, res) {
     // }
     try {
                                                  // chưa xem ---> đã xem
-      const rows = await Notify2.updateMany({is_view : "0"},{"$set":{is_view: "1"}});     
+      const rows = await Notify2.updateMany({is_view : "0"},{$set:{is_view: "1"}});     
       return res.status(200).send({
           rows
         });
