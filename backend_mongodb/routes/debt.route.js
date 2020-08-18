@@ -77,6 +77,21 @@ router.post("/create", async function (req, res) {
     const _x = await User.findOne({ user_id: user_id });
 
     const _userDebtor = await User.findOne({ user_id: accountNum.user_id });
+   
+      // Gửi = giao diện client màn hình notify
+      const _bodyx = {
+        sender_account_number: x.account_number, 
+        sender_fullname : _x.fullname,
+        receiver_account_number: accountNum.account_number,
+        receiver_fullname: _userDebtor.fullname,
+        message: req.body.message,    // Nội dung cần chuyển, Ví dụ: "tui ko có nợ ông"
+        notify_type : "0",  // "0"  gửi nn
+        created_at : moment().format('YYYY-MM-DD HH:mm:ss').toString(),
+        is_view : "0"  // chưa xem thông báo
+    } 
+    let newNotis = Notify2( _bodyx);
+    const retCreate = await newNotis.save();
+    
 
     const _body = {
       user_id: user_id,
@@ -91,7 +106,7 @@ router.post("/create", async function (req, res) {
       isTrue: 0, // Phải chờ xác nhận bên kia. 1: đúng (có nợ thật), 0: sai (ví dụ : gửi nhắc nợ nhầm người chẳng hạn)
       isActive: 1,
     };
-
+    
     ListDebt.create(_body, async (err, result) => {
       if (err) {
         return res.status(500).send({ status: "ERROR", message: err });
@@ -100,6 +115,7 @@ router.post("/create", async function (req, res) {
           status: "OK",
           message: "Đã gửi nhắc nợ",
           debt_id: result.debt_id,
+          notify2_id : retCreate.notify2_id
         });
       }
     });
@@ -223,7 +239,7 @@ router.post("/delete1/:debt_id", async function (req, res) {
           receiver_account_number: ret.creditor_account_number,
           receiver_fullname: ret.creditor_fullname,
           message: req.body.notify_message,    // Nội dung cần chuyển, Ví dụ: "tui ko có nợ ông"
-          notify_type : "0",
+          notify_type : "1",         // "1": hủy nhắc nợ người khác gửi
           created_at : moment().format('YYYY-MM-DD HH:mm:ss').toString(),
           is_view : "0"  // chưa xem thông báo
       } 
@@ -312,7 +328,7 @@ router.post("/delete2/:debt_id", async function (req, res) {
             receiver_account_number: ret.debtor_account_number,
             receiver_fullname: ret.debtor_fullname,
             message: req.body.notify_message,    // Nội dung cần chuyển, Ví dụ: "tui gửi nhầm"
-            notify_type : "0",
+            notify_type : "2",   // "2" : hủy nn bản thân tạo ra
             created_at : moment().format('YYYY-MM-DD HH:mm:ss').toString(),
             is_view : "0"  // chưa xem thông báo
         } 

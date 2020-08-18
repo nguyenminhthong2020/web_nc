@@ -13,9 +13,9 @@ const notify2Schema = new Schema(
         receiver_account_number: String,
         receiver_fullname: String,
         message: String,    // Nội dung cần chuyển, Ví dụ: "gửi trả nợ cho ông A"
-        notify_type: String, // 0 : hủy nhắc nợ, 1 : thanh toán nhắc nợ
+        notify_type: String, //"0": gửi nn, "1": hủy nhắc nợ ngườikhac,"2" : hủy nn bảnthân, "3" : thanh toán nn
         created_at: String,
-        is_view : String     // "0" : chưa xem, "1"  đã xem
+        is_view : String     //"0" : chưa xem, "1"  đã xem
     }
 );
 
