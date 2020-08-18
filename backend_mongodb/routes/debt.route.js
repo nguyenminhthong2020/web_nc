@@ -5,7 +5,7 @@ const moment = require("moment");
 // const NodeRSA = require("node-rsa");
 const User = require("../models/user.model");
 const Account = require("../models/account.model");
-const Notify = require('../models/notify.model');
+const Notify2 = require('../models/notify2.model');
 const ListDebt = require("../models/listDebt.model");
 // const { message } = require("openpgp");
 // const Otp = require("../models/otp.model");
@@ -224,15 +224,16 @@ router.post("/delete1/:debt_id", async function (req, res) {
           receiver_fullname: ret.creditor_fullname,
           message: req.body.notify_message,    // Nội dung cần chuyển, Ví dụ: "tui ko có nợ ông"
           notify_type : "0",
-          created_at : moment().format('YYYY-MM-DD HH:mm:ss').toString()
+          created_at : moment().format('YYYY-MM-DD HH:mm:ss').toString(),
+          is_view : "0"  // chưa xem thông báo
       } 
-      let newNoti = Notify( _body1);
+      let newNoti = Notify2( _body1);
       const ret1 = await newNoti.save();
 
       return res.status(200).send({
         status: "OK",
         message: "Đã xóa",
-        notify_id : ret1.notify_id
+        notify2_id : ret1.notify2_id
     });
 
     }catch(err){
@@ -312,15 +313,16 @@ router.post("/delete2/:debt_id", async function (req, res) {
             receiver_fullname: ret.debtor_fullname,
             message: req.body.notify_message,    // Nội dung cần chuyển, Ví dụ: "tui gửi nhầm"
             notify_type : "0",
-            created_at : moment().format('YYYY-MM-DD HH:mm:ss').toString()
+            created_at : moment().format('YYYY-MM-DD HH:mm:ss').toString(),
+            is_view : "0"  // chưa xem thông báo
         } 
-        let newNoti = Notify( _body1);
+        let newNoti = Notify2( _body1);
         const ret1 = await newNoti.save();
 
         return res.status(200).send({
           status: "OK",
           message: "Đã xóa",
-          notify_id : ret1.notify_id
+          notify2_id : ret1.notify2_id
       });
 
     }catch{err}{

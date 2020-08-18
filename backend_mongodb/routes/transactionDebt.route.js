@@ -6,7 +6,7 @@ const moment = require("moment");
 const User = require("../models/user.model");
 const Account = require("../models/account.model");
 const ListDebt = require('../models/listDebt.model');
-const Notify = require('../models/notify.model');
+const Notify2 = require('../models/notify2.model');
 const Otp = require("../models/otp.model");
 const TransactionDebt = require("../models/transactionDebtHistory.model");
 var nodemailer = require("nodemailer");
@@ -214,13 +214,13 @@ router.post("/", async function (req, res) {
                   notify_type : "1",
                   created_at : moment().format('YYYY-MM-DD HH:mm:ss').toString()
               } 
-              let newNoti = Notify( _body3);
+              let newNoti = Notify2( _body3);
               const ret7 = await newNoti.save();
               console.log("\n8");
               return res.status(200).send({
                 status: "DONE",
                 message: "Đã thanh toán",
-                notify_id : ret7.notify_id
+                notify2_id : ret7.notify2_id
             });
 
               // Gửi mail notify cho người nhắc :
