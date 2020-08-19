@@ -1,0 +1,9 @@
+
+// Import Font Awesome Icons Set
+@import '~font-awesome/css/font-awesome.min.css';
+// Import Simple Line Icons Set
+@import '~simple-line-icons/css/simple-line-icons.css';
+// Import styles
+@import "~@coreui/coreui/scss/coreui.scss";
+// Temp fix for reactstrap
+@import "~@coreui/coreui/scss/_dropdown-menu-right.scss";
