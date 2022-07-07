@@ -13,7 +13,7 @@
     "core-js": "^3.6.5",
     "jsonwebtoken": "^8.5.1",
     "md5": "^2.2.1",
-    "moment": "^2.26.0",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.31",
     "v-select2-component": "^0.4.3",
     "vee-validate": "^3.3.2",
