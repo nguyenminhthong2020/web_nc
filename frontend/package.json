@@ -14,7 +14,7 @@
     "jsonwebtoken": "^8.5.1",
     "md5": "^2.2.1",
     "moment": "^2.26.0",
-    "moment-timezone": "^0.5.31",
+    "moment-timezone": "^0.5.35",
     "v-select2-component": "^0.4.3",
     "vee-validate": "^3.3.2",
     "vue": "^2.6.11",
